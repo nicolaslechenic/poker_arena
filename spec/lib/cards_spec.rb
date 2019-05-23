@@ -34,4 +34,12 @@ RSpec.describe PokerArena::Card do
       expect(card.value).to eql('3')
     end
   end
+
+  describe '#score' do
+    it 'return 1304 for As' do
+      card = described_class.new('As')
+
+      expect(card.score).to eql(1304)
+    end
+  end
 end

@@ -32,6 +32,10 @@ module PokerArena
       @suit     = find_suit(litteral)
     end
 
+    def score
+      (value_score + suit_score).to_i
+    end
+
     private
 
     def valid?(litteral)
@@ -46,6 +50,14 @@ module PokerArena
 
     def find_suit(litteral)
       SUITS.find { |suit| suit[0] == litteral[1] }
+    end
+
+    def value_score
+      (VALUES.index(value) + 1).to_s.rjust(2, '0')
+    end
+
+    def suit_score
+      (SUITS.index(suit) + 1).to_s.rjust(2, '0')
     end
   end
 end

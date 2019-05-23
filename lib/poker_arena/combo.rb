@@ -125,13 +125,7 @@ module PokerArena
     # best combination !
 
     def straight?
-      self.class.straights.map do |straight|
-        occurences.key?(straight[0]) &&
-          occurences.key?(straight[1]) &&
-          occurences.key?(straight[2]) &&
-          occurences.key?(straight[3]) &&
-          occurences.key?(straight[4])
-      end.include?(true)
+      self.class.straights.include?(litterals_values)
     end
 
     def three_of_a_kind?
@@ -150,7 +144,6 @@ module PokerArena
     def high_card?
       true
     end
-
 
     private
 
@@ -190,6 +183,14 @@ module PokerArena
         end
 
       Score.(cards)
+    end
+
+    # @return [Array] sorted values
+    #   > ['5', '6', '7', 'T', 'J']
+    def litterals_values
+      ordered_cards = cards.sort_by(&:score)
+
+      ordered_cards.map(&:value)
     end
   end
 end

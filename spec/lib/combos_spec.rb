@@ -6,6 +6,22 @@ RSpec.describe PokerArena::Combo do
       expect(described_class.straights.count).to eql(Fixtures.straights['straights'].count)
     end
   end
+
+  describe '#straight?' do
+    it "return false when it's not a straight" do
+      cards = PokerArena::Card.array('7h Qc As 8c 9c')
+      combo = described_class.new(cards: cards)
+
+      expect(combo.straight?).to eql(false)
+    end
+
+    it "return true when it's a straight" do
+      cards = PokerArena::Card.array('7h Jc Ts 8c 9c')
+      combo = described_class.new(cards: cards)
+
+      expect(combo.straight?).to eql(true)
+    end
+  end
   
   describe '#score' do
     it 'return 11_311_080_706 for 7h Qc As 8c 9c' do
