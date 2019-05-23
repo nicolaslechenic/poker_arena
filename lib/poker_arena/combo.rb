@@ -116,14 +116,6 @@ module PokerArena
       true
     end
 
-    def score_for_occurence(nb)
-      cards = 
-        keep_cards_occurence(nb).map do |card_value|
-          Card.x(card_value)
-        end
-
-      Score.(cards)
-    end
 
     private
 
@@ -131,6 +123,11 @@ module PokerArena
       cards.count <= 5
     end
 
+    # Sorted occurence by value (higher to lower occurences)
+    #
+    # @return [Hash] example for combo: As Ac 2d 2c 3h
+    #   < occurences
+    #   > { 'A' => 2, '2' => 2, '3' => 1 }
     def occurences
       h = Hash.new(0)
 
@@ -141,8 +138,23 @@ module PokerArena
       h.sort_by { |_, value| -value }.to_h
     end
 
-    def keep_cards_occurence(nb)
-      occurences.select { |key, value| value == nb }.keys
+    # Get values of x times occured cards
+    #
+    # @return [Array] example for combo: As Ac 2d 2c 3h
+    #   < cards_occured(2)
+    #   > ['A', '2']
+    def cards_occured(times)
+      occurences.select { |key, value| value == times }.keys
+    end
+
+    # Get total score of x times occured cards
+    def score_for_occured(times)
+      cards = 
+        keep_cards_occurence(times).map do |card_value|
+          Card.x(card_value)
+        end
+
+      Score.(cards)
     end
   end
 end
