@@ -9,10 +9,11 @@ module PokerArena
 
     def max
       return combos.first.cards if combos.count == 1
+      combos.max_by(&:score)
     end
 
     def type
-      true
+      "(#{max.type.split('_').join(' ').capitalize})"
     end
   end
 end

@@ -29,86 +29,86 @@ module PokerArena
     end
 
     # Depends on combo best type and kickers
-    # Final score join type score and uniformized kicker score 
+    # Final score join type score and uniformized kicker score
     #
-    # Royal flush: 
+    # Royal flush:
     #   - type score: 10
     #   - kicker score: no kickers (0)
     #   - uniformized kicker score 0_000_000_000
     #   - score: 10 and 0_000_000_000 => 100_000_000_000
     #   => 0_000_000_000
     #
-    # Straight flush: 
+    # Straight flush:
     #   - type score: 9
-    #   - kicker score: 
+    #   - kicker score:
     #       depends on highest straight card
     #       3d4d5d6d7d => 7d => 06pts
     #   - uniformized kicker score 0_600_000_000
     #   - score: 9 and 0_600_000_000 => 90_600_000_000
     #   => score_for_best_card
     #
-    # Four of a kind: 
+    # Four of a kind:
     #   - type score: 8
-    #   - kicker score: 
-    #       depends Four of kind card 
+    #   - kicker score:
+    #       depends Four of kind card
     #       AxAxAxAxX => Ax => 13pts
     #   - uniformized kicker score 1_300_000_000
     #   - score: 8 and 1_300_000_000 => 81_300_000_000
     #   => score_for_occurence(4)
     #
-    # Full house: 
+    # Full house:
     #   - type score: 7
-    #   - kicker score: 
+    #   - kicker score:
     #       depends Three of kind card
     #       QxQxQx2x2x => Qx => 11pts
     #   - uniformized kicker score 1_100_000_000
     #   - score: 7 and 1_100_000_000 => 71_100_000_000
     #   => score_for_occurence(3)
     #
-    # Flush: 
+    # Flush:
     #   - type score: 6
-    #   - kicker score: 
+    #   - kicker score:
     #       depends all cards
     #       Ad9d7d6d5d => 13pts 08pts 06pts 05pts 04pts =>  1_308_060_504
     #   - uniformized kicker score 1_308_060_504
     #   - score: 6 and 1_308_060_504 => 61_308_060_504
     #   => kicker: Score.(cards)
     #
-    # Straight: 
+    # Straight:
     #   - type score: 5
-    #   - kicker score: 
+    #   - kicker score:
     #       depends the best card
     #       Td9h8c7c6c => Td => 08pts
     #   - uniformized kicker score 0_900_000_000
     #   - score: 5 and 0_900_000_000 => 50_900_000_000
     #   => score_for_best_card
     #
-    # Three of a kind: 
+    # Three of a kind:
     #   - type score: 4
-    #   - kicker score: 
+    #   - kicker score:
     #       depends Three of kind card
     #       QxQxQx3x2x => Qx => 11pts
     #   - uniformized kicker score 1_100_000_000
     #   - score: 4 and 1_100_000_000 => 41_100_000_000
     #   => score_for_occurence(3)
     #
-    # Two pairs: 
+    # Two pairs:
     #   - type score: 3
-    #   - kicker score: 
+    #   - kicker score:
     #       join pairs and count card
     #       AdAd5d5d7d => 13pts 04pts 05pts =>  130_406
     #   - uniformized kicker score 1_304_060_000
     #   - score: 3 and 1_304_060_000 => 31_304_060_000
     #
-    # Pair: 
+    # Pair:
     #   - type score: 2
-    #   - kicker score: 
+    #   - kicker score:
     #       join pair and count card
     #       AdAd7d5h4h => 13pts 06pts 04pts 03pts =>  13_060_403
     #   - uniformized kicker score 1_306_040_300
     #   - score: 2 and 1_306_040_300 => 21_306_040_300
     #
-    # High card: 
+    # High card:
     #   - type score: 1
     #       depends all cards
     #       Ac9s7h6d5c => 13pts 08pts 06pts 05pts 04pts =>  1_308_060_504
@@ -117,12 +117,63 @@ module PokerArena
     #   => Score.(cards)
     #
     def score
-      true
+      t, kicker =
+        case type
+        when 'royal_flush'
+          %w[10 0000000000]
+        when 'straight_flush'
+          ['09', Score.(cards.max_by(&:score))]
+        when 'four_of_a_kind'
+          ['08', score_for_occured(4)]
+        when 'full_house'
+          ['07', score_for_occured(3)]
+        when 'flush'
+          ['06', Score.(cards)]
+        when 'straight'
+          ['05', Score.(cards.max_by(&:score))]
+        when 'three_of_a_kind'
+          ['04', score_for_occured(3)]
+        when 'two_pairs'
+          ['03', score_for_occured(2)]
+        when 'pair'
+          ['02', score_for_occured(2)]
+        else
+          ['01', Score.(cards)]
+        end
+
+      Score.new(type: t, kicker: kicker).call
+    end
+
+    def type
+      @type ||=
+        TYPES.reverse_each do |type|
+          return type if send("#{type}?")
+        end
     end
 
     # The combos methods belows give an answer to the question
-    # do you have at least method_name? but it's not necessary your 
+    # do you have at least method_name? but it's not necessary your
     # best combination !
+
+    def royal_flush?
+      (litterals_values == %w[T J Q K A]) && flush?
+    end
+
+    def straight_flush?
+      straight? && flush?
+    end
+
+    def four_of_a_kind?
+      cards_occured(4).any?
+    end
+
+    def full_house?
+      three_of_a_kind? && pair?
+    end
+
+    def flush?
+      cards.map(&:suit).uniq.count == 1 && cards.count == 5
+    end
 
     def straight?
       self.class.straights.include?(litterals_values)
@@ -172,17 +223,17 @@ module PokerArena
     #   < cards_occured(2)
     #   > ['A', '2']
     def cards_occured(times)
-      occurences.select { |key, value| value == times }.keys
+      occurences.select { |_key, value| value == times }.keys
     end
 
     # Get total score of x times occured cards
     def score_for_occured(times)
-      cards = 
-        keep_cards_occurence(times).map do |card_value|
+      cards =
+        cards_occured(times).map do |card_value|
           Card.x(card_value)
         end
 
-      Score.(cards)
+      Score.call(cards)
     end
 
     # @return [Array] sorted values

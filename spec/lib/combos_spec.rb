@@ -7,6 +7,93 @@ RSpec.describe PokerArena::Combo do
     end
   end
 
+  describe '#royal_flush?' do
+    it "return false when it's not a royal flush" do
+      cards = PokerArena::Card.array('7c Jc Tc 8c 9c')
+      combo = described_class.new(cards: cards)
+
+      expect(combo.royal_flush?).to eql(false)
+    end
+
+    it "return true when it's a royal flush" do
+      cards = PokerArena::Card.array('Qc Jc Tc Kc Ac')
+      combo = described_class.new(cards: cards)
+
+      expect(combo.royal_flush?).to eql(true)
+    end
+  end
+
+  describe '#straight_flush?' do
+    it "return false when it's not a straight flush" do
+      cards = PokerArena::Card.array('7c Jc Th 8c 9c')
+      combo = described_class.new(cards: cards)
+
+      expect(combo.straight_flush?).to eql(false)
+    end
+
+    it "return true when it's a straight flush" do
+      cards = PokerArena::Card.array('7c Jc Tc 8c 9c')
+      combo = described_class.new(cards: cards)
+
+      expect(combo.straight?).to eql(true)
+    end
+  end
+
+  describe '#four_of_a_kind?' do
+    it "return false when it's not a four of a kind combo" do
+      cards = PokerArena::Card.array('7h Jc Ts 8c 9c')
+      combo = described_class.new(cards: cards)
+
+      expect(combo.four_of_a_kind?).to eql(false)
+    end
+
+    it "return true when it's a four of a kind combo" do
+      cards = PokerArena::Card.array('8h 8d 8s 8c 9c')
+      combo = described_class.new(cards: cards)
+
+      expect(combo.four_of_a_kind?).to eql(true)
+    end
+  end
+
+  describe '#full_house?' do
+    it "return false when it's not a full house" do
+      cards = PokerArena::Card.array('7h Qc As 8c 9c')
+      combo = described_class.new(cards: cards)
+
+      expect(combo.full_house?).to eql(false)
+    end
+
+    it "return true when it's a full house" do
+      cards = PokerArena::Card.array('Td Ts Tc 8c 8s')
+      combo = described_class.new(cards: cards)
+
+      expect(combo.full_house?).to eql(true)
+    end
+  end
+
+  describe '#flush?' do
+    it "return false when it's not a flush" do
+      cards = PokerArena::Card.array('7h Qc As 8c 9c')
+      combo = described_class.new(cards: cards)
+
+      expect(combo.flush?).to eql(false)
+    end
+
+    it 'return false when they are less than five cards' do
+      cards = PokerArena::Card.array('Qc Ac 8c 9c')
+      combo = described_class.new(cards: cards)
+
+      expect(combo.flush?).to eql(false)
+    end
+
+    it "return true when it's a flush" do
+      cards = PokerArena::Card.array('7c Jc Tc 8c 9c')
+      combo = described_class.new(cards: cards)
+
+      expect(combo.flush?).to eql(true)
+    end
+  end
+
   describe '#straight?' do
     it "return false when it's not a straight" do
       cards = PokerArena::Card.array('7h Qc As 8c 9c')
@@ -27,10 +114,10 @@ RSpec.describe PokerArena::Combo do
     it "return false when it's not a three of a kind combo" do
       cards = PokerArena::Card.array('7h Jc Ts 8c 9c')
       combo = described_class.new(cards: cards)
-      
+
       expect(combo.three_of_a_kind?).to eql(false)
     end
-    
+
     it "return true when it's a three of a kind combo" do
       cards = PokerArena::Card.array('8h Qc 8s 8c 9c')
       combo = described_class.new(cards: cards)
@@ -43,10 +130,10 @@ RSpec.describe PokerArena::Combo do
     it "return false when it's not a two pairs combo" do
       cards = PokerArena::Card.array('7h Jc Ts 8c 9c')
       combo = described_class.new(cards: cards)
-      
+
       expect(combo.two_pairs?).to eql(false)
     end
-    
+
     it "return true when it's a two pairs combo" do
       cards = PokerArena::Card.array('9h Qc 8s 8c 9c')
       combo = described_class.new(cards: cards)
@@ -54,16 +141,15 @@ RSpec.describe PokerArena::Combo do
       expect(combo.two_pairs?).to eql(true)
     end
   end
-  
 
   describe '#pair?' do
     it "return false when it's not a pair combo" do
       cards = PokerArena::Card.array('7h Jc Ts 8c 9c')
       combo = described_class.new(cards: cards)
-      
+
       expect(combo.pair?).to eql(false)
     end
-    
+
     it "return true when it's a pair combo" do
       cards = PokerArena::Card.array('6h Qc 8s 8c 9c')
       combo = described_class.new(cards: cards)
@@ -71,21 +157,20 @@ RSpec.describe PokerArena::Combo do
       expect(combo.pair?).to eql(true)
     end
   end
-  
-  
+
   describe '#score' do
     it 'return 11_311_080_706 for 7h Qc As 8c 9c' do
       cards = PokerArena::Card.array('7h Qc As 8c 9c')
       combo = described_class.new(cards: cards)
 
-      expect(combo.score).to eql(11_307_060_504)
+      expect(combo.score).to eql(11_311_080_706)
     end
 
     it 'return 21_311_080_600 for 7h Qc As Ac 9c' do
       cards = PokerArena::Card.array('7h Qc As Ac 9c')
       combo = described_class.new(cards: cards)
 
-      expect(combo.score).to eql(21_311_070_500)
+      expect(combo.score).to eql(21_311_080_600)
     end
 
     it 'return 31_301_110_000 for 2d Qc As Ac 2c' do
@@ -104,9 +189,9 @@ RSpec.describe PokerArena::Combo do
 
     it 'return 50_400_000_000 for Ad 5s 4c 3c 2c' do
       cards = PokerArena::Card.array('Ad 5s 4c 3c 2c')
-      combo = described_class.new(50_300_000_000)
+      combo = described_class.new(50_400_000_000)
 
-      expect(combo.score).to eql(50_300_000_000)
+      expect(combo.score).to eql(50_400_000_000)
     end
 
     it 'return 51_300_000_000 for Ad Kh Qc Js Tc' do

@@ -2,7 +2,7 @@ module PokerArena
   class Score
     class << self
       def call(cards)
-        cards.map do |card|
+        cards.sort_by(&:score).reverse.map do |card|
           (Card::VALUES.index(card.value) + 1).to_s.rjust(2, '0')
         end.join
       end
