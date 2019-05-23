@@ -15,6 +15,10 @@ module PokerArena
           new(cards: five_cards)
         end
       end
+
+      def straights
+        Card::VALUES.each_cons(5).to_a << %w[A 2 3 4 5]
+      end
     end
 
     attr_reader :cards
@@ -113,6 +117,37 @@ module PokerArena
     #   => Score.(cards)
     #
     def score
+      true
+    end
+
+    # The combos methods belows give an answer to the question
+    # do you have at least method_name? but it's not necessary your 
+    # best combination !
+
+    def straight?
+      self.class.straights.map do |straight|
+        occurences.key?(straight[0]) &&
+          occurences.key?(straight[1]) &&
+          occurences.key?(straight[2]) &&
+          occurences.key?(straight[3]) &&
+          occurences.key?(straight[4])
+      end.include?(true)
+    end
+
+    def three_of_a_kind?
+      cards_occured(3).any?
+    end
+
+    def two_pairs?
+      cards_occured(2).count == 2
+    end
+
+    def pair?
+      cards_occured(2).any?
+    end
+
+    # You have at least high card !
+    def high_card?
       true
     end
 

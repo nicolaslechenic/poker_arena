@@ -1,6 +1,12 @@
 require 'spec_helper'
 
 RSpec.describe PokerArena::Combo do
+  describe '.straights' do
+    it 'return all possible straights combos' do
+      expect(described_class.straights.count).to eql(Fixtures.straights['straights'].count)
+    end
+  end
+  
   describe '#score' do
     it 'return 11_311_080_706 for 7h Qc As 8c 9c' do
       cards = PokerArena::Card.array('7h Qc As 8c 9c')
