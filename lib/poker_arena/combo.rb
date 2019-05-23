@@ -37,9 +37,9 @@ module PokerArena
     #   - type score: 9
     #   - kicker score: 
     #       depends on highest straight card
-    #       3d4d5d6d7d => 7d => 05pts
-    #   - uniformized kicker score 0_500_000_000
-    #   - score: 9 and 0_500_000_000 => 90_500_000_000
+    #       3d4d5d6d7d => 7d => 06pts
+    #   - uniformized kicker score 0_600_000_000
+    #   - score: 9 and 0_600_000_000 => 90_600_000_000
     #
     # Four of a kind: 
     #   - type score: 8
@@ -61,17 +61,17 @@ module PokerArena
     #   - type score: 6
     #   - kicker score: 
     #       depends all cards
-    #       Ad9d7d6d5d => 13pts 07pts 05pts 04pts 03pts =>  1_307_050_403
-    #   - uniformized kicker score 1_307_050_403
-    #   - score: 6 and 1_307_050_403 => 61_307_050_403
+    #       Ad9d7d6d5d => 13pts 08pts 06pts 05pts 04pts =>  1_308_060_504
+    #   - uniformized kicker score 1_308_060_504
+    #   - score: 6 and 1_308_060_504 => 61_308_060_504
     #
     # Straight: 
     #   - type score: 5
     #   - kicker score: 
     #       depends the best card
     #       Td9h8c7c6c => Td => 08pts
-    #   - uniformized kicker score 0_800_000_000
-    #   - score: 5 and 0_800_000_000 => 50_800_000_000
+    #   - uniformized kicker score 0_900_000_000
+    #   - score: 5 and 0_900_000_000 => 50_900_000_000
     #
     # Three of a kind: 
     #   - type score: 4
@@ -85,27 +85,27 @@ module PokerArena
     #   - type score: 3
     #   - kicker score: 
     #       join pairs and count card
-    #       AdAd5d5d7d => 13pts 03pts 05pts =>  130_305
-    #   - uniformized kicker score 1_303_050_000
-    #   - score: 3 and 1_303_050_000 => 31_303_050_000
+    #       AdAd5d5d7d => 13pts 04pts 05pts =>  130_406
+    #   - uniformized kicker score 1_304_060_000
+    #   - score: 3 and 1_304_060_000 => 31_304_060_000
     #
     # Pair: 
     #   - type score: 2
     #   - kicker score: 
     #       join pair and count card
-    #       AdAd7d5h4h => 13pts 05pts 03pts 02pts =>  13_050_302
-    #   - uniformized kicker score 1_305_030_200
-    #   - score: 2 and 1_305_030_200 => 21_305_030_200
+    #       AdAd7d5h4h => 13pts 06pts 04pts 03pts =>  13_060_403
+    #   - uniformized kicker score 1_306_040_300
+    #   - score: 2 and 1_306_040_300 => 21_306_040_300
     #
     # High card: 
     #   - type score: 1
     #       depends all cards
-    #       Ac9s7h6d5c => 13pts 07pts 05pts 04pts 03pts =>  1_307_050_403
-    #   - uniformized kicker score 1_307_050_403
-    #   - score: 1 and 1_307_050_403 => 11_307_050_403
+    #       Ac9s7h6d5c => 13pts 08pts 06pts 05pts 04pts =>  1_308_060_504
+    #   - uniformized kicker score 1_308_060_504
+    #   - score: 1 and 1_308_060_504 => 11_308_060_504
     #
     def score
-      # Todo
+      true
     end
 
     private

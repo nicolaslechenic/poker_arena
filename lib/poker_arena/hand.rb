@@ -1,6 +1,6 @@
 module PokerArena
   class Hand
-    
+
     attr_reader :cards, :combos
     def initialize(cards:)
       @cards = cards
@@ -8,7 +8,11 @@ module PokerArena
     end
 
     def max
-      return combos.first if combos.count == 1
+      return combos.first.cards if combos.count == 1
+    end
+
+    def type
+      true
     end
   end
 end
