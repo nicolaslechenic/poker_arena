@@ -79,4 +79,13 @@ RSpec.describe PokerArena::Combo do
       expect(combo.score).to eql(100_000_000_000)
     end
   end
+
+  describe '#score_for_occurence' do
+    it 'return A for Ad Ah Qc As Ac' do
+      cards = PokerArena::Card.array('Ad Ah Qc As Ac')
+      combo = described_class.new(cards: cards)
+
+      expect(combo.score_for_occurence(4)).to eql('13')
+    end
+  end
 end

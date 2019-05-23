@@ -17,6 +17,10 @@ module PokerArena
           new(litteral)
         end
       end
+
+      def x(value)
+        new("#{value}#{SUITS.sample[0]}")
+      end
     end
 
     attr_reader :litteral, :value, :suit

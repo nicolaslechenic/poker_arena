@@ -27,4 +27,11 @@ RSpec.describe PokerArena::Card do
       expect(three_cards.count).to eql(3)
     end
   end
+
+  describe '.x' do
+    it 'return fake card' do
+      card = described_class.x('3')
+      expect(card.value).to eql('3')
+    end
+  end
 end

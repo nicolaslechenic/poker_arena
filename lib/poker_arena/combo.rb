@@ -32,6 +32,7 @@ module PokerArena
     #   - kicker score: no kickers (0)
     #   - uniformized kicker score 0_000_000_000
     #   - score: 10 and 0_000_000_000 => 100_000_000_000
+    #   => 0_000_000_000
     #
     # Straight flush: 
     #   - type score: 9
@@ -40,6 +41,7 @@ module PokerArena
     #       3d4d5d6d7d => 7d => 06pts
     #   - uniformized kicker score 0_600_000_000
     #   - score: 9 and 0_600_000_000 => 90_600_000_000
+    #   => score_for_best_card
     #
     # Four of a kind: 
     #   - type score: 8
@@ -48,6 +50,7 @@ module PokerArena
     #       AxAxAxAxX => Ax => 13pts
     #   - uniformized kicker score 1_300_000_000
     #   - score: 8 and 1_300_000_000 => 81_300_000_000
+    #   => score_for_occurence(4)
     #
     # Full house: 
     #   - type score: 7
@@ -56,6 +59,7 @@ module PokerArena
     #       QxQxQx2x2x => Qx => 11pts
     #   - uniformized kicker score 1_100_000_000
     #   - score: 7 and 1_100_000_000 => 71_100_000_000
+    #   => score_for_occurence(3)
     #
     # Flush: 
     #   - type score: 6
@@ -64,6 +68,7 @@ module PokerArena
     #       Ad9d7d6d5d => 13pts 08pts 06pts 05pts 04pts =>  1_308_060_504
     #   - uniformized kicker score 1_308_060_504
     #   - score: 6 and 1_308_060_504 => 61_308_060_504
+    #   => kicker: Score.(cards)
     #
     # Straight: 
     #   - type score: 5
@@ -72,6 +77,7 @@ module PokerArena
     #       Td9h8c7c6c => Td => 08pts
     #   - uniformized kicker score 0_900_000_000
     #   - score: 5 and 0_900_000_000 => 50_900_000_000
+    #   => score_for_best_card
     #
     # Three of a kind: 
     #   - type score: 4
@@ -80,6 +86,7 @@ module PokerArena
     #       QxQxQx3x2x => Qx => 11pts
     #   - uniformized kicker score 1_100_000_000
     #   - score: 4 and 1_100_000_000 => 41_100_000_000
+    #   => score_for_occurence(3)
     #
     # Two pairs: 
     #   - type score: 3
@@ -103,15 +110,39 @@ module PokerArena
     #       Ac9s7h6d5c => 13pts 08pts 06pts 05pts 04pts =>  1_308_060_504
     #   - uniformized kicker score 1_308_060_504
     #   - score: 1 and 1_308_060_504 => 11_308_060_504
+    #   => Score.(cards)
     #
     def score
       true
+    end
+
+    def score_for_occurence(nb)
+      cards = 
+        keep_cards_occurence(nb).map do |card_value|
+          Card.x(card_value)
+        end
+
+      Score.(cards)
     end
 
     private
 
     def valid?(cards)
       cards.count <= 5
+    end
+
+    def occurences
+      h = Hash.new(0)
+
+      cards.each do |card|
+        h[card.value] += 1
+      end
+
+      h.sort_by { |_, value| -value }.to_h
+    end
+
+    def keep_cards_occurence(nb)
+      occurences.select { |key, value| value == nb }.keys
     end
   end
 end
