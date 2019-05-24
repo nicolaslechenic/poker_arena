@@ -3,7 +3,8 @@ require 'spec_helper'
 RSpec.describe PokerArena::Combo do
   describe '.straights' do
     it 'return all possible straights combos' do
-      expect(described_class.straights.count).to eql(Fixtures.straights['straights'].count)
+      count_straight = Fixtures.straights['straights'].count
+      expect(described_class.straights.count).to eql(count_straight)
     end
   end
 
@@ -189,7 +190,7 @@ RSpec.describe PokerArena::Combo do
 
     it 'return 50_400_000_000 for Ad 5s 4c 3c 2c' do
       cards = PokerArena::Card.array('Ad 5s 4c 3c 2c')
-      combo = described_class.new(50_400_000_000)
+      combo = described_class.new(cards: cards)
 
       expect(combo.score).to eql(50_400_000_000)
     end
@@ -226,7 +227,7 @@ RSpec.describe PokerArena::Combo do
       cards = PokerArena::Card.array('Ac 5c 4c 3c 2c')
       combo = described_class.new(cards: cards)
 
-      expect(combo.score).to eql('(Straight flush)')
+      expect(combo.score).to eql(90_400_000_000)
     end
 
     it 'return 100_000_000_000 for Ac Kc Qc Jc Tc' do

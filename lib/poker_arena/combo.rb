@@ -17,7 +17,7 @@ module PokerArena
       end
 
       def straights
-        Card::VALUES.each_cons(5).to_a << %w[A 2 3 4 5]
+        Card::VALUES.each_cons(5).to_a << %w[2 3 4 5 A]
       end
     end
 
@@ -117,31 +117,32 @@ module PokerArena
     #   => Score.(cards)
     #
     def score
-      t, kicker =
+      kicker =
         case type
         when 'royal_flush'
-          %w[10 0000000000]
+          '0000000000'
         when 'straight_flush'
-          ['09', Score.(cards.max_by(&:score))]
+          score_for_straight
         when 'four_of_a_kind'
-          ['08', score_for_occured(4)]
+          score_for_occured(4)
         when 'full_house'
-          ['07', score_for_occured(3)]
-        when 'flush'
-          ['06', Score.(cards)]
+          score_for_occured(3)
         when 'straight'
-          ['05', Score.(cards.max_by(&:score))]
+          score_for_straight
         when 'three_of_a_kind'
-          ['04', score_for_occured(3)]
+          score_for_occured(3)
         when 'two_pairs'
-          ['03', score_for_occured(2)]
+          score_for_pairs
         when 'pair'
-          ['02', score_for_occured(2)]
+          score_for_pairs
         else
-          ['01', Score.(cards)]
+          Score.call(cards)
         end
 
-      Score.new(type: t, kicker: kicker).call
+      Score.new(
+        type: (TYPES.index(type) + 1).to_s.rjust(2, '0'),
+        kicker: kicker
+      ).call
     end
 
     def type
@@ -210,7 +211,7 @@ module PokerArena
     def occurences
       h = Hash.new(0)
 
-      cards.each do |card|
+      cards.sort_by(&:score).reverse_each do |card|
         h[card.value] += 1
       end
 
@@ -223,7 +224,7 @@ module PokerArena
     #   < cards_occured(2)
     #   > ['A', '2']
     def cards_occured(times)
-      occurences.select { |_key, value| value == times }.keys
+      occurences.select { |_, value| value == times }.keys
     end
 
     # Get total score of x times occured cards
@@ -236,12 +237,25 @@ module PokerArena
       Score.call(cards)
     end
 
+    def score_for_pairs
+      occurences.map do |value, _|
+        Card.x(value).value_score
+      end.join
+    end
+
     # @return [Array] sorted values
     #   > ['5', '6', '7', 'T', 'J']
     def litterals_values
       ordered_cards = cards.sort_by(&:score)
 
       ordered_cards.map(&:value)
+    end
+
+    def score_for_straight
+      top_card = cards.max_by(&:score)
+      return top_card.value_score if top_card.value != 'A' || litterals_values[-2] != '5'
+
+      Card.x(litterals_values[-2]).value_score
     end
   end
 end
