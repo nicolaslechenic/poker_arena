@@ -21,6 +21,10 @@ module PokerArena
       def x(value)
         new("#{value}#{SUITS.sample[0]}")
       end
+
+      def sorted(cards)
+        cards.sort_by(&:score)
+      end
     end
 
     attr_reader :litteral, :value, :suit
@@ -38,6 +42,10 @@ module PokerArena
 
     def value_score
       (VALUES.index(value) + 1).to_s.rjust(2, '0')
+    end
+
+    def value_index
+      VALUES.index(value)
     end
 
     private
