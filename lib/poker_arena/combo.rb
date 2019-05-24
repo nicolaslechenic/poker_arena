@@ -252,10 +252,9 @@ module PokerArena
     end
 
     def score_for_straight
-      top_card = cards.max_by(&:score)
-      return top_card.value_score if top_card.value != 'A' || litterals_values[-2] != '5'
+      return Card.x('5').value_score if (litterals_values - %w[A 5]).count == 3
 
-      Card.x(litterals_values[-2]).value_score
+      cards.max_by(&:score).value_score
     end
   end
 end
