@@ -8,19 +8,13 @@ module PokerArena
           case type
           when 'royal_flush'
             '0000000000'
-          when 'straight_flush'
+          when 'straight_flush', 'straight'
             straight(combo.litterals, combo.cards)
           when 'four_of_a_kind'
             occured(combo, 4)
-          when 'full_house'
+          when 'full_house', 'three_of_a_kind'
             occured(combo, 3)
-          when 'straight'
-            straight(combo.litterals, combo.cards)
-          when 'three_of_a_kind'
-            occured(combo, 3)
-          when 'two_pairs'
-            pairs(combo)
-          when 'pair'
+          when 'two_pairs', 'pair'
             pairs(combo)
           else
             sorted(combo.cards)
