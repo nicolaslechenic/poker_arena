@@ -13,11 +13,11 @@ module PokerArena
       end
 
       def array(litterals)
-        litterals.split.map do |litteral|
-          new(litteral)
-        end
+        litterals.split.map { |litteral| new(litteral) }
       end
 
+      # Generate card with random suit
+      # Useful to know the value score
       def x(value)
         new("#{value}#{SUITS.sample[0]}")
       end
@@ -41,7 +41,7 @@ module PokerArena
     end
 
     def value_score
-      (VALUES.index(value) + 1).to_s.rjust(2, '0')
+      (value_index + 1).to_s.rjust(2, '0')
     end
 
     def value_index

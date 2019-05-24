@@ -32,6 +32,8 @@ module PokerArena
       Score.call(self)
     end
 
+    # @return [String] the best combo type
+    #   - royal_flush, straight_flush...
     def type
       @type ||=
         TYPES.reverse_each do |type|
@@ -41,51 +43,6 @@ module PokerArena
 
     def type_index
       TYPES.index(type)
-    end
-
-    # The combos methods belows give an answer to the question
-    # do you have at least method_name? but it's not necessary your
-    # best combination !
-
-    def royal_flush?
-      (litterals == %w[T J Q K A]) && flush?
-    end
-
-    def straight_flush?
-      straight? && flush?
-    end
-
-    def four_of_a_kind?
-      cards_occured(4).any?
-    end
-
-    def full_house?
-      three_of_a_kind? && pair?
-    end
-
-    def flush?
-      cards.map(&:suit).uniq.count == 1 && cards.count == 5
-    end
-
-    def straight?
-      self.class.straights.include?(litterals)
-    end
-
-    def three_of_a_kind?
-      cards_occured(3).any?
-    end
-
-    def two_pairs?
-      cards_occured(2).count == 2
-    end
-
-    def pair?
-      cards_occured(2).any?
-    end
-
-    # You have at least high card !
-    def high_card?
-      true
     end
 
     # @return [Array] sorted values
@@ -118,6 +75,52 @@ module PokerArena
     #   > ['A', '2']
     def cards_occured(times)
       occurences.select { |_, value| value == times }.keys
+    end
+
+    # The combos methods belows give an answer to the question
+    # do you have at least method_name? but it's not necessary your
+    # best combination !
+
+    def royal_flush?
+      (litterals == %w[T J Q K A]) && flush?
+    end
+
+    def straight_flush?
+      straight? && flush?
+    end
+
+    def four_of_a_kind?
+      cards_occured(4).any?
+    end
+
+    def full_house?
+      three_of_a_kind? && pair?
+    end
+
+    def flush?
+      cards.map(&:suit).uniq.count == 1 &&
+        cards.count == 5
+    end
+
+    def straight?
+      self.class.straights.include?(litterals)
+    end
+
+    def three_of_a_kind?
+      cards_occured(3).any?
+    end
+
+    def two_pairs?
+      cards_occured(2).count == 2
+    end
+
+    def pair?
+      cards_occured(2).any?
+    end
+
+    # You have at least high card !
+    def high_card?
+      true
     end
 
     private

@@ -34,21 +34,28 @@ module PokerArena
 
       private
 
+      # @return [String] for cards that occure x times
+      #   Example for 2 times with cards below:
+      #   < Ax Ax Qx Qx 2x
+      #   > 1311
       def kicker_occured(combo, times)
-        cards =
-          combo.cards_occured(times).map do |card_value|
-            Card.x(card_value)
-          end
-
-        sorted(cards)
+        combo.cards_occured(times).map do |card_value|
+          Card.x(card_value).value_score
+        end.join
       end
 
+      # @return [String] highest straight card score
+      #   Example for Ax 2x 3x 4x 5x
+      #   > 04 (refer to 05x)
       def kicker_straight(litterals, cards)
         return Card.x('5').value_score if (litterals - %w[A 5]).count == 3
 
         cards.max_by(&:score).value_score
       end
 
+      # @return [String]
+      #   < Ax Ax Qx Qx 2x
+      #   > 131101
       def kicker_pairs(combo)
         combo.occurences.map do |value, _|
           Card.x(value).value_score
