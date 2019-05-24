@@ -8,6 +8,72 @@ RSpec.describe PokerArena::Hand do
     expect(hand.combos.count).to eql(6)
   end
 
+  describe '#>' do
+    it 'return true with best hand' do
+      hero_cards = PokerArena::Card.array('2c 7d Qd Ac 8d 9d 3d')
+      hero_hand = described_class.new(cards: hero_cards)
+
+      vilain_cards = PokerArena::Card.array('2d 7h Qc As 8c 9c 3c')
+      vilain_hand = described_class.new(cards: vilain_cards)
+
+      expect(hero_hand > vilain_hand).to be_truthy
+    end
+
+    it 'return false same hand' do
+      hero_cards = PokerArena::Card.array('2c 7s Qd Ac 8d 9d 3d')
+      hero_hand = described_class.new(cards: hero_cards)
+
+      vilain_cards = PokerArena::Card.array('2d 7h Qc As 8c 9c 3c')
+      vilain_hand = described_class.new(cards: vilain_cards)
+
+      expect(hero_hand > vilain_hand).to be_falsy
+    end
+  end
+
+  describe '#<' do
+    it 'return true with best hand' do
+      hero_cards = PokerArena::Card.array('2c 7s Qd Ac 8d 9d 3d')
+      hero_hand = described_class.new(cards: hero_cards)
+
+      vilain_cards = PokerArena::Card.array('2d 7c Qc As 8c 9c 3c')
+      vilain_hand = described_class.new(cards: vilain_cards)
+
+      expect(hero_hand < vilain_hand).to be_truthy
+    end
+
+    it 'return false same hand' do
+      hero_cards = PokerArena::Card.array('2c 7s Qd Ac 8d 9d 3d')
+      hero_hand = described_class.new(cards: hero_cards)
+
+      vilain_cards = PokerArena::Card.array('2d 7h Qc As 8c 9c 3c')
+      vilain_hand = described_class.new(cards: vilain_cards)
+
+      expect(hero_hand > vilain_hand).to be_falsy
+    end
+  end
+
+  describe '#==' do
+    it 'return false with best hand' do
+      hero_cards = PokerArena::Card.array('2c 7d Qd Ac 8d 9d 3d')
+      hero_hand = described_class.new(cards: hero_cards)
+
+      vilain_cards = PokerArena::Card.array('2d 7s Qc As 8c 9c 3c')
+      vilain_hand = described_class.new(cards: vilain_cards)
+
+      expect(hero_hand == vilain_hand).to be_falsy
+    end
+
+    it 'return true with same hand' do
+      hero_cards = PokerArena::Card.array('2c 7s Qd Ac 8d 9d 3d')
+      hero_hand = described_class.new(cards: hero_cards)
+
+      vilain_cards = PokerArena::Card.array('2d 7h Qc As 8c 9c 3c')
+      vilain_hand = described_class.new(cards: vilain_cards)
+
+      expect(hero_hand == vilain_hand).to be_truthy
+    end
+  end
+
   describe '#max' do
     it 'return all cards for hand with five cards or less' do
       four_cards = PokerArena::Card.array('Ad 5s 6h 7c')

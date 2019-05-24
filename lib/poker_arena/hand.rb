@@ -6,6 +6,18 @@ module PokerArena
       @combos = Combo.array(cards)
     end
 
+    def >(other)
+      max.score > other.max.score
+    end
+
+    def <(other)
+      max.score < other.max.score
+    end
+
+    def ==(other)
+      max.score == other.max.score
+    end
+
     def max
       return combos.first.cards if combos.count == 1
       combos.max_by(&:score)

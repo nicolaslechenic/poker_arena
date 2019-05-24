@@ -9,13 +9,13 @@ module PokerArena
           when 'royal_flush'
             '0000000000'
           when 'straight_flush', 'straight'
-            straight(combo.litterals, combo.cards)
+            kicker_straight(combo.litterals, combo.cards)
           when 'four_of_a_kind'
-            occured(combo, 4)
+            kicker_occured(combo, 4)
           when 'full_house', 'three_of_a_kind'
-            occured(combo, 3)
+            kicker_occured(combo, 3)
           when 'two_pairs', 'pair'
-            pairs(combo)
+            kicker_pairs(combo)
           else
             sorted(combo.cards)
           end
@@ -34,7 +34,7 @@ module PokerArena
 
       private
 
-      def occured(combo, times)
+      def kicker_occured(combo, times)
         cards =
           combo.cards_occured(times).map do |card_value|
             Card.x(card_value)
@@ -43,13 +43,13 @@ module PokerArena
         sorted(cards)
       end
 
-      def straight(litterals, cards)
+      def kicker_straight(litterals, cards)
         return Card.x('5').value_score if (litterals - %w[A 5]).count == 3
 
         cards.max_by(&:score).value_score
       end
 
-      def pairs(combo)
+      def kicker_pairs(combo)
         combo.occurences.map do |value, _|
           Card.x(value).value_score
         end.join
