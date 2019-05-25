@@ -1,6 +1,11 @@
 require 'spec_helper'
 
 RSpec.describe PokerArena::Combo do
+  it 'raise exception for too many cards' do
+    cards = PokerArena::Card.array('7c Jc Tc 8c 9c 5s')
+    expect { described_class.new(cards: cards) }.to raise_error(RangeError)
+  end
+
   describe '.straights' do
     it 'return all possible straights combos' do
       count_straight = Fixtures.straights['straights'].count

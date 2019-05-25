@@ -23,8 +23,7 @@ module PokerArena
 
     attr_reader :cards
     def initialize(cards:)
-      raise ArgumentError unless valid?(cards)
-
+      validate(cards)
       @cards = cards
     end
 
@@ -144,8 +143,8 @@ module PokerArena
 
     private
 
-    def valid?(cards)
-      cards.count <= 5
+    def validate(cards)
+      raise RangeError unless cards.count <= 5
     end
   end
 end
