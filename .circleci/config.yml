@@ -47,12 +47,4 @@ jobs:
       - run:
           name: Run Rspec
           command: |
-            bundle exec rspec --format RspecJunitFormatter -o /tmp/test-results/rspec.xml
-
-
-      # collect reports
-      - store_test_results:
-          path: /tmp/test-results
-      - store_artifacts:
-          path: /tmp/test-results
-          destination: test-results
+            bundle exec rspec 
