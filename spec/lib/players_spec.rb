@@ -9,9 +9,17 @@ RSpec.describe PokerArena::Player do
         player.receive_card(PokerArena::Card.x(litteral))
       end
 
-      expect {
+      expect do
         player.receive_card(PokerArena::Card.x('Q'))
-      }.to raise_error(ArgumentError)
+      end.to raise_error(RangeError)
+    end
+
+    it 'raise an error for card with wrong type' do
+      player = described_class.new
+
+      expect do
+        player.receive_card('Qs')
+      end.to raise_error(TypeError)
     end
 
     it 'return one card when added' do

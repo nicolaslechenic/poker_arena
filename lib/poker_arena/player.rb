@@ -1,12 +1,16 @@
 module PokerArena
   class Player
+    MAX_CARDS = 2
+
     attr_reader :cards
     def initialize
       @cards = []
     end
 
     def receive_card(card)
-      raise ArgumentError unless cards.count < 2
+      raise RangeError unless cards.count < MAX_CARDS
+      raise TypeError unless card.is_a?(Card)
+
       cards << card
     end
   end
