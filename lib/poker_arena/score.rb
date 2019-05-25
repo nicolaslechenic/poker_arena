@@ -1,38 +1,11 @@
 module PokerArena
   class Score
     class << self
-      def call(combo)
-        type = combo.type
-
-        kicker =
-          case type
-          when 'royal_flush'
-            '0000000000'
-          when 'straight_flush', 'straight'
-            kicker_straight(combo.litterals, combo.cards)
-          when 'four_of_a_kind'
-            kicker_occured(combo, 4)
-          when 'full_house', 'three_of_a_kind'
-            kicker_occured(combo, 3)
-          when 'two_pairs', 'pair'
-            kicker_pairs(combo)
-          else
-            sorted(combo.cards)
-          end
-
-        new(
-          type: (combo.type_index + 1).to_s.rjust(2, '0'),
-          kicker: kicker
-        ).call
-      end
-
       def sorted(cards)
         Card.sorted(cards).reverse.map do |card|
           (card.value_index + 1).to_s.rjust(2, '0')
         end.join
       end
-
-      private
 
       # @return [String] for cards that occure x times
       #   Example for 2 times with cards below:

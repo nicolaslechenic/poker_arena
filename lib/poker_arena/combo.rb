@@ -29,7 +29,26 @@ module PokerArena
     end
 
     def score
-      Score.call(self)
+      kicker =
+        case type
+        when 'royal_flush'
+          '0000000000'
+        when 'straight_flush', 'straight'
+          Score.kicker_straight(litterals, cards)
+        when 'four_of_a_kind'
+          Score.kicker_occured(self, 4)
+        when 'full_house', 'three_of_a_kind'
+          Score.kicker_occured(self, 3)
+        when 'two_pairs', 'pair'
+          Score.kicker_pairs(self)
+        else
+          Score.sorted(cards)
+        end
+
+      Score.new(
+        type: (type_index + 1).to_s.rjust(2, '0'),
+        kicker: kicker
+      ).call
     end
 
     # @return [String] the best combo type
