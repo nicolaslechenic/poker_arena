@@ -9,12 +9,9 @@ module PokerArena
       end
     end
 
-    attr_reader :dealer, :board, :label, :players
-    def initialize(dealer: Dealer.new, pot: Pot.new, board: Board.new, label:)
+    attr_reader :label, :players
+    def initialize(label:)
       @players = []
-      @dealer = dealer
-      @board = board
-      @pot = pot
       @label = label
     end
 

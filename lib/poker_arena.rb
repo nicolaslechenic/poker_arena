@@ -57,16 +57,7 @@ namespace '/api' do
 
   post '/tables' do
     label = json_params['label']
-    deck = PokerArena::Deck.new
-    dealer = PokerArena::Dealer.new(deck: deck)
-    board = PokerArena::Board.new
-    pot = PokerArena::Pot.new
 
-    PokerArena::Table.new(
-      dealer: dealer,
-      label: label,
-      board: board,
-      pot: pot
-    )
+    PokerArena::Table.new(label: label)
   end
 end

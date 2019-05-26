@@ -1,0 +1,6 @@
+test:
+  clients:
+    default:
+      database: pokerarena_test
+      hosts:
+        - localhost:27017

@@ -1,6 +1,7 @@
 require 'pry'
 require 'yaml'
 require 'poker_arena'
+# require 'server'
 
 Dir['spec/support/*.rb'].each { |path| require "./#{path}" }
 
