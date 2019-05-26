@@ -5,6 +5,8 @@ module PokerArena
     include BCrypt
     include Mongoid::Document
 
+    has_one :bankroll
+
     field :pseudo, type: String
     field :password, type: String
 

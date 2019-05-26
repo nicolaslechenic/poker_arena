@@ -1,10 +1,28 @@
 module PokerArena
   class Table
-    MAX_PLAYERS = 2.freeze
+    MAX_PLAYERS = 2
+    LIMIT = 100
 
-    attr_reader :players
-    def initialize
+    class << self
+      def instances
+        ObjectSpace.each_object(Table)
+      end
+    end
+
+    attr_reader :dealer, :board, :label, :players
+    def initialize(dealer: Dealer.new, pot: Pot.new, board: Board.new, label:)
       @players = []
+      @dealer = dealer
+      @board = board
+      @pot = pot
+      @label = label
+    end
+
+    def receive_card(card)
+      raise RangeError unless board.count < MAX_CARDS
+      raise TypeError unless card.is_a?(Card)
+
+      board << card
     end
 
     def seat_in(player)
@@ -13,6 +31,10 @@ module PokerArena
       raise IndexError if players.any? && players.first == player
 
       players << player
+    end
+
+    def seat_out(player)
+      players.delete(player)
     end
   end
 end
