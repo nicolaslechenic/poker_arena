@@ -1,8 +1,10 @@
 source 'https://rubygems.org'
 
+gem 'bcrypt'
 gem 'guard'
 gem 'guard-rspec'
-gem 'mongoid', '~> 6.1.0'
+gem 'mongoid'
 gem 'pry'
 gem 'rspec'
 gem 'sinatra'
+gem 'sinatra-contrib'
