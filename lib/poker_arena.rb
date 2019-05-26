@@ -1,11 +1,12 @@
-require 'poker_arena/card'
-require 'poker_arena/combo'
-require 'poker_arena/dealer'
-require 'poker_arena/deck'
-require 'poker_arena/hand'
-require 'poker_arena/player'
-require 'poker_arena/score'
-require 'poker_arena/table'
+%w[
+  card combo dealer deck
+  hand player score table
+].each do |file|
+  require_relative "poker_arena/#{file}"
+end
 
 module PokerArena
+  def self.run
+    'Welcome !'
+  end
 end
