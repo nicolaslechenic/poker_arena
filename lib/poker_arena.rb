@@ -32,27 +32,19 @@ namespace '/api' do
     player = PokerArena::Player.create_with_password(json_params)
 
     halt 422, { message: 'Invalid JSON' }.to_json unless player.save
-    bankroll = PokerArena::Bankroll.new(player_id: player.id)
-
-    halt 422, { message: 'Bankroll error...' }.to_json unless bankroll.save
+    
     status 200
   end
 
   get '/tables' do
-    tables =
-      PokerArena::Table.instances.map do |table|
-        {
-          players: table.players.count,
-          label: table.label
-        }
-      end
+    tables = PokerArena::Table.all
 
     json(tables: tables)
   end
 
   post '/tables' do
-    label = json_params['label']
+    name = json_params['name']
 
-    PokerArena::Table.new(label: label)
+    PokerArena::Table.new(name: name)
   end
 end
