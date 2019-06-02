@@ -3,35 +3,24 @@ module PokerArena
     MAX_PLAYERS = 2
     LIMIT = 100
 
-    class << self
-      def instances
-        ObjectSpace.each_object(Table)
-      end
-    end
+    include Mongoid::Document
 
-    attr_reader :label, :players
-    def initialize(label:)
-      @players = []
-      @label = label
-    end
+    field :name, type: String
 
-    def receive_card(card)
-      raise RangeError unless board.count < MAX_CARDS
-      raise TypeError unless card.is_a?(Card)
-
-      board << card
+    def seats
+      @seats ||= []
     end
 
     def seat_in(player)
-      raise RangeError unless players.count < MAX_PLAYERS
+      raise RangeError unless seats.count < MAX_PLAYERS
       raise TypeError unless player.is_a?(Player)
-      raise IndexError if players.any? && players.first == player
+      raise IndexError if seats.any? && @seats.first == player
 
-      players << player
+      @seats << player
     end
 
     def seat_out(player)
-      players.delete(player)
+      @seats.delete(player)
     end
   end
 end
