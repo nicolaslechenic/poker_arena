@@ -32,7 +32,7 @@ namespace '/api' do
     player = PokerArena::Player.create_with_password(json_params)
 
     halt 422, { message: 'Invalid JSON' }.to_json unless player.save
-    
+
     status 200
   end
 
