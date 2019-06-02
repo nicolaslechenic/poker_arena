@@ -5,14 +5,9 @@ require 'sinatra'
 require 'sinatra/json'
 require 'sinatra/namespace'
 
-%w[
-  bankroll board card combo dealer deck
-  hand player pot score table
-].each do |file|
-  require_relative "poker_arena/#{file}"
-end
-
 Mongoid.load!('./lib/config/mongoid.yml', :development)
+
+Dir['./lib/poker_arena/*.rb'].each { |file| require file }
 
 namespace '/api' do
   helpers do
