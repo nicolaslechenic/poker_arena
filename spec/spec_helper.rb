@@ -1,7 +1,10 @@
+ENV['APP_ENV'] ||= 'test'
+
 require 'pry'
 require 'yaml'
+require_relative '../configuration/initializers/sequel'
+Dir['./migrations/*.rb'].each { |file| require file }
 require 'poker_arena'
-
 Dir['spec/support/*.rb'].each { |path| require "./#{path}" }
 
 RSpec.configure do |config|
