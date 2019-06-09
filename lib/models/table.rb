@@ -15,6 +15,10 @@ module PokerArena
       ].freeze
 
     class << self
+      def generate
+        new.name
+      end
+
       def informations
         all.map do |table|
           {
