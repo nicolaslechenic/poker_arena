@@ -1,7 +1,18 @@
 module PokerArena
-  class Table < Sequel::Model(:tables)
+  class Table
     MAX_PLAYERS = 2
     LIMIT = 100
+    NAMES =
+      %w[
+        Tatooine
+        Harrenhal
+        Winterfell
+        Eyrie
+        Dragonstone
+        Coruscant
+        Dagobah
+        Kamino
+      ].freeze
 
     class << self
       def informations
@@ -13,10 +24,20 @@ module PokerArena
           }
         end
       end
+
+      def all
+        ObjectSpace.each_object(self).to_a
+      end
+
+      def available_names
+        NAMES - all.map(&:name)
+      end
     end
 
-    def seats
-      @seats ||= []
+    attr_reader :name, :seats
+    def initialize
+      @name = self.class.available_names.sample
+      @seats = []
     end
 
     def seat_in(player)
