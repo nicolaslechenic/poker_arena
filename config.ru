@@ -1,3 +1,3 @@
 require_relative './lib/poker_arena'
 
-run PokerArena::Endpoints
+run PokerArena::Launcher

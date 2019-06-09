@@ -1,13 +1,21 @@
 module PokerArena
   class Player < Sequel::Model(:players)
     MAX_CARDS = 2
+    PSEUDOS =
+      %w[Wallee Eve Ava Sonny Teddy R2D2 T800 Bishop Weebo Gerty].freeze
 
     class << self
-      def create_with_password(params)
-        new(
-          pseudo: params['pseudo'],
-          password: BCrypt::Password.create(params['password'])
+      def generate
+        available_pseudos = PSEUDOS - select_map(:pseudo)
+        pseudo = available_pseudos.sample
+        password = SecureRandom.hex(5)
+
+        create(
+          pseudo: pseudo,
+          password: BCrypt::Password.create(password)
         )
+
+        { pseudo: pseudo, password: password }
       end
 
       def login(params)

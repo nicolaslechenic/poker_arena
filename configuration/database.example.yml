@@ -7,3 +7,7 @@ default: &default
 development:
   <<: *default
   database: app_dev
+
+development:
+  <<: *default
+  database: app_test
