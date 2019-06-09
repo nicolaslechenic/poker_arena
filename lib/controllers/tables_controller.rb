@@ -1,5 +1,5 @@
 module PokerArena
-  class TablesController < ApplicationController
+  class TablesController < Sinatra::Base
     get '/api/tables/generate' do
       name = Table.generate
       json(table: name)

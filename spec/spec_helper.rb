@@ -1,6 +1,7 @@
 require 'pry'
 require 'yaml'
 require 'poker_arena'
+
 Dir['spec/support/*.rb'].each { |path| require "./#{path}" }
 
 RSpec.configure do |config|
