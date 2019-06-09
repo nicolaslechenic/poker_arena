@@ -1,21 +1,15 @@
 module PokerArena
   class Hand
+    include Comparable
+
     attr_reader :cards, :combos
     def initialize(cards:)
       @cards = cards
       @combos = Combo.array(cards)
     end
 
-    def >(other)
-      max.score > other.max.score
-    end
-
-    def <(other)
-      max.score < other.max.score
-    end
-
-    def ==(other)
-      max.score == other.max.score
+    def <=>(other)
+      max.score <=> other.max.score
     end
 
     def max
