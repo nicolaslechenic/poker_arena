@@ -1,18 +1,6 @@
 module PokerArena
-  class Player
+  class Player < Sequel::Model(:players)
     MAX_CARDS = 2
-
-    include BCrypt
-    include Mongoid::Document
-
-    field :pseudo, type: String
-    field :password, type: String
-
-    validates :pseudo, presence: true
-    validates :pseudo, uniqueness: true
-
-    validates :password, presence: true
-    validates_length_of :password, minimum: 8
 
     class << self
       def create_with_password(params)

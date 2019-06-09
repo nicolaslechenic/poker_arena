@@ -1,6 +1,0 @@
-development:
-  clients:
-    default:
-      database: pokerarena_dev
-      hosts:
-        - localhost:27017

@@ -1,11 +1,7 @@
 module PokerArena
-  class Table
+  class Table < Sequel::Model(:tables)
     MAX_PLAYERS = 2
     LIMIT = 100
-
-    include Mongoid::Document
-
-    field :name, type: String
 
     def seats
       @seats ||= []
