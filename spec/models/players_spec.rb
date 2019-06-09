@@ -25,7 +25,7 @@ RSpec.describe PokerArena::Player do
 
   describe '#receive_card' do
     it 'raise an error for full of card player' do
-      player = described_class.new(pseudo: 'Wall-e', password: 'password123')
+      player = described_class.new
 
       %w[A K].each do |litteral|
         player.receive_card(PokerArena::Card.x(litteral))
@@ -37,7 +37,7 @@ RSpec.describe PokerArena::Player do
     end
 
     it 'raise an error for card with wrong type' do
-      player = described_class.new(pseudo: 'Wall-e', password: 'password123')
+      player = described_class.new
 
       expect do
         player.receive_card('Qs')
@@ -45,7 +45,7 @@ RSpec.describe PokerArena::Player do
     end
 
     it 'return one card when added' do
-      player = described_class.new(pseudo: 'Wall-e', password: 'password123')
+      player = described_class.new
       player.receive_card(PokerArena::Card.x('Q'))
 
       expect(player.cards.count).to eql(1)
