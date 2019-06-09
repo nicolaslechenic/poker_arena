@@ -3,6 +3,18 @@ module PokerArena
     MAX_PLAYERS = 2
     LIMIT = 100
 
+    class << self
+      def informations
+        all.map do |table|
+          {
+            name: table.name,
+            max_players: MAX_PLAYERS,
+            available_seats: MAX_PLAYERS - table.seats.count
+          }
+        end
+      end
+    end
+
     def seats
       @seats ||= []
     end

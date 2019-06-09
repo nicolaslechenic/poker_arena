@@ -10,13 +10,14 @@ module PokerArena
       end
 
       def migrate(action, table)
-        yield(connect) unless action == :create && connect.table_exists?(table)
+        yield(connect) unless connect.table_exists?(table)
       end
 
       private
 
       def db_config
-        YAML.load_file('./configuration/database.yml')[ENV['APP_ENV']]
+        @db_config ||=
+          YAML.load_file('./configuration/database.yml')[ENV['APP_ENV']]
       end
     end
   end
