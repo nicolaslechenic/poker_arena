@@ -1,8 +1,8 @@
 module PokerArena
   class PlayersController < ApplicationController
     get '/api/players/generate' do
-      player = Player.generate
-      json(player: player)
+      token = Player.generate
+      json(player: token)
     end
   end
 end

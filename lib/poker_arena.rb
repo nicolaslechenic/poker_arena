@@ -5,6 +5,8 @@ require 'sinatra/json'
 require 'sinatra/namespace'
 require_relative '../configuration/initializers/sequel'
 
+PokerArena::SequelDb.connect
+
 Dir['./lib/models/*.rb'].each { |file| require file }
 Dir['./lib/controllers/*_controller.rb'].each { |file| require file }
 

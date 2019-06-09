@@ -10,7 +10,7 @@ module PokerArena
       end
 
       def migrate(action, table)
-        yield(connect) unless connect.table_exists?(table)
+        yield(connect) unless action == :create && connect.table_exists?(table)
       end
 
       private
@@ -22,5 +22,3 @@ module PokerArena
     end
   end
 end
-
-PokerArena::SequelDb.connect
