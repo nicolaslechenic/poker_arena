@@ -20,12 +20,13 @@ module PokerArena
       end
     end
 
-    attr_reader :name, :seats, :pot
+    attr_reader :name, :seats, :pot, :board
 
-    def initialize(tables_repository:)
+    def initialize(tables_repository:, board: Board.new)
       @seats = []
       @name = self.class.available_names(tables_repository).sample
       @pot = 0
+      @board = board
 
       if @name.nil?
         raise ArgumentError, 'No more available table names in that repository'

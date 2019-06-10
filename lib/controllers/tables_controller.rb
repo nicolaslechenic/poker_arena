@@ -17,7 +17,7 @@ module PokerArena
       tables =
         @tables_repository.all.map do |table|
           TableSerializer.new(table: table).(
-            without: [:small_blind, :big_blind, :pot]
+            without: %i[small_blind big_blind pot]
           )
         end
 
