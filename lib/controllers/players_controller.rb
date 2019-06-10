@@ -21,7 +21,7 @@ module PokerArena
       @players_repository.persist(player)
 
       if @players_repository.persist(player)
-        json(status: 200)
+        json(status: 200, token: player.token)
       else
         json(status: 400)
       end

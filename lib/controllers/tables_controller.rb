@@ -16,7 +16,9 @@ module PokerArena
     get '/api/tables' do
       tables =
         @tables_repository.all.map do |table|
-          TableSerializer.new(table: table).()
+          TableSerializer.new(table: table).(
+            without: [:small_blind, :big_blind, :pot]
+          )
         end
 
       json(tables: tables)
@@ -24,10 +26,15 @@ module PokerArena
 
     get '/api/tables/:name' do
       table = @tables_repository.find(params[:name].capitalize)
+      serialized_players =
+        table.seats.map do |player|
+          PlayerSerializer.new(player: player).(without: [:token])
+        end
 
-      json(
-        TableSerializer.new(table: table).()
-      )
+      serialized_custom =
+        TableSerializer.new(table: table).(with: { players: serialized_players })
+
+      json(serialized_custom)
     end
 
     post '/api/tables/:name/seat-in' do

@@ -40,6 +40,10 @@ module PokerArena
       MAX_PLAYERS - seats.count
     end
 
+    def limit
+      LIMIT
+    end
+
     def big_blind
       LIMIT / 100.0
     end

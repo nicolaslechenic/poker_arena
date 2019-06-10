@@ -11,6 +11,7 @@ module PokerArena
       @full_json ||=
         {
           name: table.name,
+          limit: table.limit,
           big_blind: table.big_blind,
           small_blind: table.small_blind,
           max_players: table.max_players,
