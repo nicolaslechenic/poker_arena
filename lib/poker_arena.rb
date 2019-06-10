@@ -2,6 +2,7 @@ require 'bcrypt'
 require 'pry'
 require 'sinatra'
 require 'sinatra/json'
+require './lib/serializers/application_serializer'
 
 Dir['./lib/models/*.rb'].each { |file| require file }
 Dir['./lib/serializers/*.rb'].each { |file| require file }
