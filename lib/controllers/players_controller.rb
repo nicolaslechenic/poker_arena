@@ -5,11 +5,26 @@ module PokerArena
       @players_repository = options.fetch(:players_repository)
     end
 
-    get '/api/players/generate' do
-      player = Player.new
+    get '/api/players' do
+      players =
+        @players_repository.all.map do |player|
+          PlayerSerializer.new(player: player).(without: [:token])
+        end
+
+      json(players: players)
+    end
+
+    post '/api/players' do
+      params.merge!(JSON.parse(request.body.read))
+
+      player = Player.new(pseudo: params[:pseudo])
       @players_repository.persist(player)
 
-      json(player: PlayerSerializer.new(player: player).())
+      if @players_repository.persist(player)
+        json(status: 200)
+      else
+        json(status: 400)
+      end
     end
   end
 end
