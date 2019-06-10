@@ -16,7 +16,7 @@ module PokerArena
     get '/api/tables' do
       tables =
         @tables_repository.all.map do |table|
-          TableSerializer.new(table: table).serialized_json
+          TableSerializer.new(table: table).()
         end
 
       json(tables: tables)
@@ -26,7 +26,7 @@ module PokerArena
       table = @tables_repository.find(params[:name].capitalize)
 
       json(
-        TableSerializer.new(table: table).serialized_json
+        TableSerializer.new(table: table).()
       )
     end
 

@@ -6,7 +6,7 @@ RSpec.describe PokerArena::TableSerializer do
     table = PokerArena::Table.new(tables_repository: repo)
     repo.persist(table)
 
-    expect(described_class.new(table: table).serialized_json).to eql(
+    expect(described_class.new(table: table).()).to eql(
       {
         name: table.name,
         big_blind: 1.0,
