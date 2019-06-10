@@ -1,5 +1,5 @@
 module PokerArena
-  class TableSerializer < ApplicationSerializer
+  class TableSerializer < ::PokerArena::ApplicationSerializer
     attr_reader :table
     def initialize(table:)
       @table = table
