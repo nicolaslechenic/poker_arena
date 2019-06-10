@@ -2,15 +2,17 @@ require 'bcrypt'
 require 'pry'
 require 'sinatra'
 require 'sinatra/json'
-require 'sinatra/namespace'
 
 Dir['./lib/models/*.rb'].each { |file| require file }
+Dir['./lib/repositories/*.rb'].each { |file| require file }
 Dir['./lib/controllers/*_controller.rb'].each { |file| require file }
 
 module PokerArena
   class Launcher < Sinatra::Base
-    register Sinatra::Namespace
-    use PlayersController
-    use TablesController
+    players_repository = PlayersRepository.new
+    tables_repository = TablesRepository.new
+
+    use PlayersController, players_repository: players_repository
+    use TablesController, tables_repository: tables_repository
   end
 end

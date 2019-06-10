@@ -15,33 +15,28 @@ module PokerArena
       ].freeze
 
     class << self
-      def generate
-        new.name
-      end
-
-      def informations
-        all.map do |table|
-          {
-            name: table.name,
-            max_players: MAX_PLAYERS,
-            available_seats: MAX_PLAYERS - table.seats.count
-          }
-        end
-      end
-
-      def all
-        ObjectSpace.each_object(self).to_a
-      end
-
-      def available_names
-        NAMES - all.map(&:name)
+      def available_names(tables_repository)
+        NAMES - tables_repository.all.map(&:name)
       end
     end
 
     attr_reader :name, :seats
-    def initialize
-      @name = self.class.available_names.sample
+
+    def initialize(tables_repository:)
       @seats = []
+      @name = self.class.available_names(tables_repository).sample
+
+      if @name.nil?
+        raise ArgumentError, 'No more available table names in that repository'
+      end
+    end
+
+    def max_players
+      MAX_PLAYERS
+    end
+
+    def available_seats
+      MAX_PLAYERS - seats.count
     end
 
     def seat_in(player)

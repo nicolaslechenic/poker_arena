@@ -1,8 +1,15 @@
 module PokerArena
   class PlayersController < Sinatra::Base
+    def initialize(app, options)
+      super(app)
+      @players_repository = options.fetch(:players_repository)
+    end
+
     get '/api/players/generate' do
-      token = Player.generate
-      json(player: token)
+      player = Player.new
+      @players_repository.persist(player)
+
+      json(player: player.token)
     end
   end
 end
