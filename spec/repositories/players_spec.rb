@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe PokerArena::PlayersRepository do
   describe '#persist' do
     let(:repo) { described_class.new(token_size: 1) }
-    let(:unpersisted_player) { PokerArena::Player.new }
+    let(:unpersisted_player) { PokerArena::Player.new(pseudo: 'Jon Snow') }
 
     it 'sets the token on the given player' do
       expect { repo.persist(unpersisted_player) }
@@ -21,7 +21,7 @@ RSpec.describe PokerArena::PlayersRepository do
 
     context 'when the player has already been persisted' do
       let!(:already_persisted_player) do
-        PokerArena::Player.new.tap { |player| repo.persist(player) }
+        PokerArena::Player.new(pseudo: 'Jon Snow').tap { |player| repo.persist(player) }
       end
 
       it "maintains the player's token" do
@@ -37,7 +37,7 @@ RSpec.describe PokerArena::PlayersRepository do
 
     context "when there isn't any more unique token" do
       it 'raise an error' do
-        expect { loop { repo.persist(PokerArena::Player.new) } }
+        expect { loop { repo.persist(PokerArena::Player.new(pseudo: 'Jon Snow')) } }
           .to raise_error(/Can't find a new and unused token/)
       end
     end

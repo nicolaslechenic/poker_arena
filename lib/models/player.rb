@@ -2,10 +2,11 @@ module PokerArena
   class Player
     MAX_CARDS = 2
 
-    attr_reader :token, :cards
+    attr_reader :token, :cards, :pseudo
 
-    def initialize
+    def initialize(pseudo:)
       @cards = []
+      @pseudo = pseudo
     end
 
     def receive_card(card)

@@ -25,18 +25,18 @@ RSpec.describe PokerArena::Table do
   describe '#seat_in' do
     it 'add players to the table' do
       expect {
-        table.seat_in(PokerArena::Player.new)
-        table.seat_in(PokerArena::Player.new)
+        table.seat_in(PokerArena::Player.new(pseudo: 'Jon Snow'))
+        table.seat_in(PokerArena::Player.new(pseudo: 'Jon Snow'))
       }.to change {
         table.seats.count
       }.from(0).to(2)
     end
 
     it 'restrict the number of players per table' do
-      table.seat_in(PokerArena::Player.new)
-      table.seat_in(PokerArena::Player.new)
+      table.seat_in(PokerArena::Player.new(pseudo: 'Jon Snow'))
+      table.seat_in(PokerArena::Player.new(pseudo: 'Jon Snow'))
 
-      expect { table.seat_in(PokerArena::Player.new) }
+      expect { table.seat_in(PokerArena::Player.new(pseudo: 'Jon Snow')) }
         .to raise_error(RangeError)
     end
 
@@ -45,7 +45,7 @@ RSpec.describe PokerArena::Table do
     end
 
     it 'restrict to uniq player' do
-      player = PokerArena::Player.new
+      player = PokerArena::Player.new(pseudo: 'Jon Snow')
 
       table.seat_in(player)
 

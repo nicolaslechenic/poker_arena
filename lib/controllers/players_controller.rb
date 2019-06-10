@@ -9,7 +9,7 @@ module PokerArena
       player = Player.new
       @players_repository.persist(player)
 
-      json(player: player.token)
+      json(player: PlayerSerializer.new(player: player).())
     end
   end
 end

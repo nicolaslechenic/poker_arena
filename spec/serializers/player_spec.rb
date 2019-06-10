@@ -1,0 +1,17 @@
+require 'spec_helper'
+
+RSpec.describe PokerArena::PlayerSerializer do
+  it 'return expected json format' do
+    pseudo = 'Jon Snow'
+    repo = PokerArena::PlayersRepository.new
+    player = PokerArena::Player.new(pseudo: pseudo)
+    repo.persist(player)
+
+    expect(described_class.new(player: player).()).to eql(
+      {
+        pseudo: pseudo,
+        token: player.token
+      }
+    )
+  end
+end
