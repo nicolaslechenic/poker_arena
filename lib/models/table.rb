@@ -20,11 +20,12 @@ module PokerArena
       end
     end
 
-    attr_reader :name, :seats
+    attr_reader :name, :seats, :pot
 
     def initialize(tables_repository:)
       @seats = []
       @name = self.class.available_names(tables_repository).sample
+      @pot = 0
 
       if @name.nil?
         raise ArgumentError, 'No more available table names in that repository'
@@ -39,8 +40,16 @@ module PokerArena
       MAX_PLAYERS - seats.count
     end
 
+    def big_blind
+      LIMIT / 100.0
+    end
+
+    def small_blind
+      big_blind / 2
+    end
+
     def seat_in(player)
-      raise RangeError unless seats.count < MAX_PLAYERS
+      raise RangeError unless seatable?
       raise TypeError unless player.is_a?(Player)
       raise IndexError if seats.any? && @seats.first == player
 
@@ -49,6 +58,10 @@ module PokerArena
 
     def seat_out(player)
       @seats.delete(player)
+    end
+
+    def seatable?
+      seats.count < MAX_PLAYERS
     end
   end
 end

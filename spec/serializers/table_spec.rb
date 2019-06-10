@@ -1,0 +1,20 @@
+require 'spec_helper'
+
+RSpec.describe PokerArena::TableSerializer do
+  it 'return expected json format' do
+    repo = PokerArena::TablesRepository.new
+    table = PokerArena::Table.new(tables_repository: repo)
+    repo.persist(table)
+
+    expect(described_class.new(table: table).serialized_json).to eql(
+      {
+        name: table.name,
+        big_blind: 1.0,
+        small_blind: 0.5,
+        max_players: 2,
+        available_seats: 2,
+        pot: 0
+      }
+    )
+  end
+end
