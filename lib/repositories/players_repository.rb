@@ -1,7 +1,10 @@
 module PokerArena
   class PlayersRepository
-    def initialize
+    DEFAULT_TOKEN_SIZE = 5
+
+    def initialize(token_size: DEFAULT_TOKEN_SIZE)
       @players = {}
+      @token_size = token_size
     end
 
     def all
@@ -34,7 +37,7 @@ module PokerArena
       iteration = 0
 
       loop do
-        token = SecureRandom.hex(5)
+        token = SecureRandom.hex(@token_size)
         return token unless @players.key?(token)
 
         iteration += 1
