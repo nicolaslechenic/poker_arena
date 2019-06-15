@@ -1,5 +1,17 @@
 module PokerArena
   class TablesRepository
+    NAMES =
+      %w[
+        Tatooine
+        Harrenhal
+        Winterfell
+        Eyrie
+        Dragonstone
+        Coruscant
+        Dagobah
+        Kamino
+      ].freeze
+
     def initialize
       @tables = {}
     end
@@ -10,6 +22,10 @@ module PokerArena
 
     def find(name)
       @tables.fetch(name)
+    end
+
+    def names
+      NAMES
     end
 
     def persist(table)

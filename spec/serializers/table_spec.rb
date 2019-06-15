@@ -14,7 +14,7 @@ RSpec.describe PokerArena::TableSerializer do
         small_blind: 0.5,
         max_players: 2,
         available_seats: 2,
-        pot: 0
+        pot: 0.0
       }
     )
   end

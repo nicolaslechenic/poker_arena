@@ -2,31 +2,21 @@ module PokerArena
   class Table
     MAX_PLAYERS = 2
     LIMIT = 100
-    NAMES =
-      %w[
-        Tatooine
-        Harrenhal
-        Winterfell
-        Eyrie
-        Dragonstone
-        Coruscant
-        Dagobah
-        Kamino
-      ].freeze
 
     class << self
       def available_names(tables_repository)
-        NAMES - tables_repository.all.map(&:name)
+        tables_repository.names - tables_repository.all.map(&:name)
       end
     end
 
-    attr_reader :name, :seats, :pot, :board
+    attr_reader :name, :seats, :pot, :board, :dealer
 
-    def initialize(tables_repository:, board: Board.new)
-      @seats = []
+    def initialize(tables_repository:, board: Board.new, dealer: Dealer.new)
       @name = self.class.available_names(tables_repository).sample
-      @pot = 0
+      @pot = 0.0
       @board = board
+      @dealer = dealer
+      @seats = []
 
       if @name.nil?
         raise ArgumentError, 'No more available table names in that repository'
@@ -46,7 +36,7 @@ module PokerArena
     end
 
     def big_blind
-      LIMIT / 100.0
+      limit / 100.0
     end
 
     def small_blind
@@ -54,7 +44,7 @@ module PokerArena
     end
 
     def seat_in(player)
-      raise RangeError unless seatable?
+      raise RangeError if full?
       raise TypeError unless player.is_a?(Player)
       raise IndexError if seats.any? && @seats.first == player
 
@@ -65,8 +55,8 @@ module PokerArena
       @seats.delete(player)
     end
 
-    def seatable?
-      seats.count < MAX_PLAYERS
+    def full?
+      seats.count >= MAX_PLAYERS
     end
   end
 end
