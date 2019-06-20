@@ -2,7 +2,7 @@ module PokerArena
   class Cash
     INIT_BANKROLL = 10_000
 
-    attr_accessor :bankroll, :stack, :stakes
+    attr_reader :bankroll, :stack, :stakes
     def initialize(bankroll: INIT_BANKROLL)
       @bankroll = INIT_BANKROLL
       # stack is a part of bankroll reserved to the current set
@@ -19,27 +19,32 @@ module PokerArena
       return if broke?
       return if stack >= Table::LIMIT
 
-      self.bankroll -= amount
-      self.stack += amount
+      @bankroll -= amount
+      @stack += amount
     end
 
     def stack_to_stakes(amount)
       raise ArgumentError unless stack >= amount
 
-      self.stack -= amount
-      self.stakes += amount
+      @stack -= amount
+      @stakes += amount
     end
 
     def delete_stakes
       stakes_value = stakes
-      self.stakes = 0
+      @stakes = 0
 
       stakes_value
     end
 
     def credit_stack(amount)
       raise TypeError unless amount.is_a?(Float)
-      self.stack += amount
+      @stack += amount
+    end
+
+    def stack_to_bankroll
+      @bankroll += stack
+      @stack = 0
     end
 
     def broke?

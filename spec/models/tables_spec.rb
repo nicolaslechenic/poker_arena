@@ -28,7 +28,7 @@ RSpec.describe PokerArena::Table do
         table.seat_in(PokerArena::Player.new(pseudo: 'Jon Snow'))
         table.seat_in(PokerArena::Player.new(pseudo: 'Jon Snow'))
       }.to change {
-        table.seats.count
+        table.players.count
       }.from(0).to(2)
     end
 
@@ -50,6 +50,43 @@ RSpec.describe PokerArena::Table do
       table.seat_in(player)
 
       expect { table.seat_in(player) }.to raise_error(IndexError)
+    end
+
+    it 'initialize match when full of players' do
+      %w[Jon Tyrion].each do |pseudo|
+        table.seat_in(PokerArena::Player.new(pseudo: pseudo))
+      end
+
+      expect(table.matches.count).to eql(1)
+    end
+  end
+
+  describe '#seat_out' do
+    it 'remove player to the table' do
+      player = PokerArena::Player.new(pseudo: 'Jon Snow')
+      table.seat_in(player)
+
+      expect {
+        table.seat_out(player)
+      }.to change {
+        table.players.count
+      }.from(1).to(0)
+    end
+  end
+
+  describe '#status' do
+    it 'return waiting_for_player with one player seated' do
+      table.seat_in(PokerArena::Player.new(pseudo: 'Jon Snow'))
+
+      expect(table.status).to eq(:waiting_for_players)
+    end
+
+    it 'return ingame with two player seated' do
+      %w[Jon Tyrion].each do |pseudo|
+        table.seat_in(PokerArena::Player.new(pseudo: pseudo))
+      end
+
+      expect(table.status).to eq(:in_match)
     end
   end
 end

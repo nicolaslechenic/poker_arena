@@ -15,5 +15,9 @@ module PokerArena
 
       cards << card
     end
+
+    def remove_cards
+      @cards = []
+    end
   end
 end
