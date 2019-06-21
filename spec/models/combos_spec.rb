@@ -18,6 +18,7 @@ RSpec.describe PokerArena::Combo do
       cards = PokerArena::Card.array('Jc Tc 8c 9c 7c ')
       combo = described_class.for(cards: cards)
 
+
       expect(combo.royal_flush?).to eql(false)
     end
 

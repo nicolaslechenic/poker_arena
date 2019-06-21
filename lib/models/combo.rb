@@ -9,22 +9,11 @@ module PokerArena
 
     class << self
       def for(cards:)
-        cards_type = type_for(cards)
+        camel_types.reverse_each do |type|
+          return new(cards: cards) if type == 'HighCard'
+          combo = Object.const_get("PokerArena::#{type}Combo")
 
-        return new(cards: cards) if cards_type == 'high_card'
-
-        prefix =
-          cards_type.split('_').collect(&:capitalize).join
-
-        combo_type =
-          Object.const_get("PokerArena::#{prefix}Combo")
-
-        combo_type.new(cards: cards)
-      end
-
-      def type_for(cards)
-        TYPES.reverse_each do |type|
-          return type if send("#{type}?", cards)
+          return combo.new(cards: cards) if combo.might_be?(cards)
         end
       end
 
@@ -40,47 +29,16 @@ module PokerArena
         Card::VALUES.reverse.each_cons(5).to_a << %w[A 5 4 3 2]
       end
 
-      def royal_flush?(cards)
-        (cards.map(&:litteral_value) == %w[A K Q J T]) && flush?(cards)
-      end
-
-      def straight_flush?(cards)
-        straight?(cards) && flush?(cards)
-      end
-
-      def four_of_a_kind?(cards)
-        new(cards: cards).cards_occured(4).any?
-      end
-
-      def full_house?(cards)
-        three_of_a_kind?(cards) && pair?(cards)
-      end
-
-      def flush?(cards)
-        cards.map(&:suit).uniq.count == 1 &&
-          cards.count == 5
-      end
-
-      def straight?(cards)
-        straights.include?(cards.map(&:litteral_value))
-      end
-
-      def three_of_a_kind?(cards)
-        new(cards: cards).cards_occured(3).any?
-      end
-
-      def two_pairs?(cards)
-        new(cards: cards).cards_occured(2).count == 2
-      end
-
-      def pair?(cards)
-        new(cards: cards).cards_occured(2).any?
-      end
-
       # You have at least high card !
       def high_card?(cards)
         return false if cards.empty?
         true
+      end
+
+      def camel_types
+        TYPES.map do |type|
+          type.split('_').collect(&:capitalize).join
+        end
       end
     end
 
@@ -114,7 +72,14 @@ module PokerArena
     end
 
     def type
-      @type ||= self.class.type_for(cards)
+      camel_type =
+        if self.class.name.split('::').last == 'Combo'
+          'HighCard'
+        else
+          self.class.name.split('::').last[0..-6]
+        end
+
+      @type ||= TYPES[self.class.camel_types.index(camel_type)]
     end
 
     # Get values of x times occured cards

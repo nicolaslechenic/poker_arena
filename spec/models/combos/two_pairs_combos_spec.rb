@@ -6,7 +6,7 @@ RSpec.describe PokerArena::TwoPairsCombo do
       cards = PokerArena::Card.array('7h Qc As Ac 9c')
       combo = described_class.new(cards: cards)
 
-      expect(combo.score).to eql([1, 13_110_806])
+      expect(combo.score).to eql([2, 13_110_806])
     end
   end
 end
