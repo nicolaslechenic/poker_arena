@@ -47,7 +47,7 @@ module PokerArena
     def seat_in(player)
       raise RangeError if full?
       raise TypeError unless player.is_a?(Player)
-      raise IndexError if players.any? && @players.first == player
+      raise IndexError if players&.first == player
 
       @players << player
       @matches << Match.new(players: @players) if full?
