@@ -20,7 +20,7 @@ module PokerArena
     get '/api/tables/:name' do
       table = @tables_repository.find(params[:name].capitalize)
       serialized_players =
-        table.seats.map do |player|
+        table.players.map do |player|
           PlayerSerializer.new(player: player).(without: [:token])
         end
 

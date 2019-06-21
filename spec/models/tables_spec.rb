@@ -28,7 +28,7 @@ RSpec.describe PokerArena::Table do
         table.seat_in(PokerArena::Player.new(pseudo: 'Jon Snow'))
         table.seat_in(PokerArena::Player.new(pseudo: 'Jon Snow'))
       }.to change {
-        table.seats.count
+        table.players.count
       }.from(0).to(2)
     end
 

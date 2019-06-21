@@ -24,7 +24,7 @@ module PokerArena
       match.play
 
       serialized_players =
-        match.table.seats.map.with_index do |player, index|
+        match.table.players.map.with_index do |player, index|
           seat = index + 1
           PlayerSerializer.new(player: player).(with: { seat: seat }, without: [:token])
         end

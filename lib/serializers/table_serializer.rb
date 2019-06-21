@@ -15,8 +15,9 @@ module PokerArena
           big_blind: table.big_blind,
           small_blind: table.small_blind,
           max_players: table.max_players,
-          available_seats: table.available_seats,
+          available_players: table.available_players,
           pot: table.pot
+          
         }
     end
   end
