@@ -13,19 +13,12 @@ module PokerArena
   class Launcher < Sinatra::Base
     players_repository  = PlayersRepository.new
     tables_repository   = TablesRepository.new
-    matches_repository  = MatchesRepository.new
 
     use(PlayersController, players_repository: players_repository)
     use(
       TablesController,
       tables_repository: tables_repository,
       players_repository: players_repository
-    )
-    use(
-      MatchesController,
-      matches_repository: matches_repository,
-      players_repository: players_repository,
-      tables_repository: tables_repository
     )
   end
 end
