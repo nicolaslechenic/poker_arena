@@ -1,9 +1,9 @@
 module PokerArena
   class FullHouseCombo < PokerArena::Combo
     class << self
-      def might_be?(cards)
-        PokerArena::ThreeOfAKindCombo.might_be?(cards) &&
-          PokerArena::PairCombo.might_be?(cards)
+      def available?(cards)
+        PokerArena::ThreeOfAKindCombo.available?(cards) &&
+          PokerArena::PairCombo.available?(cards)
       end
     end
 

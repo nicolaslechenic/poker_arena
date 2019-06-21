@@ -1,7 +1,7 @@
 module PokerArena
   class TwoPairsCombo < PokerArena::Combo
     class << self
-      def might_be?(cards)
+      def available?(cards)
         new(cards: cards).cards_occured(2).count == 2
       end
     end

@@ -1,7 +1,7 @@
 module PokerArena
   class StraightCombo < PokerArena::Combo
     class << self
-      def might_be?(cards)
+      def available?(cards)
         straights.include?(cards.map(&:litteral_value))
       end
     end

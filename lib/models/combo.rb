@@ -13,7 +13,7 @@ module PokerArena
           return new(cards: cards) if type == 'HighCard'
           combo = Object.const_get("PokerArena::#{type}Combo")
 
-          return combo.new(cards: cards) if combo.might_be?(cards)
+          return combo.new(cards: cards) if combo.available?(cards)
         end
       end
 
