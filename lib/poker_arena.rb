@@ -4,7 +4,7 @@ require 'sinatra'
 require 'sinatra/json'
 require './lib/serializers/application_serializer'
 
-Dir['./lib/models/*.rb'].each { |file| require file }
+Dir['./lib/models/**/*.rb'].each { |file| require file }
 Dir['./lib/serializers/*.rb'].each { |file| require file }
 Dir['./lib/repositories/*.rb'].each { |file| require file }
 Dir['./lib/controllers/*_controller.rb'].each { |file| require file }

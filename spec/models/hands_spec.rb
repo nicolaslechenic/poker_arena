@@ -76,10 +76,10 @@ RSpec.describe PokerArena::Hand do
 
   describe '#max' do
     it 'return all cards for hand with five cards or less' do
-      four_cards = PokerArena::Card.array('Ad 5s 6h 7c')
+      four_cards = PokerArena::Card.array('5s 6h 7c Ad')
       four_cards_hand = described_class.new(cards: four_cards)
 
-      five_cards = PokerArena::Card.array('Ad 5s 6h 7c 8d')
+      five_cards = PokerArena::Card.array('5s 6h 7c 8d Ad')
       five_cards_hand = described_class.new(cards: five_cards)
 
       expect(four_cards_hand.max).to eql(four_cards)
