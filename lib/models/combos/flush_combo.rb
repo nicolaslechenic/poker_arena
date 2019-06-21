@@ -1,4 +1,3 @@
 module PokerArena
-  class FlushCombo < PokerArena::Combo
-  end
+  FlushCombo = Class.new(PokerArena::Combo)
 end

@@ -96,7 +96,7 @@ module PokerArena
     attr_reader :cards
     def initialize(cards:)
       validate(cards)
-      @cards = Card.sorted(cards)
+      @cards = Card.sorted(cards).reverse
     end
 
     def score
@@ -108,10 +108,12 @@ module PokerArena
     end
     alias type_score type_index
 
+    def kicker_cards
+      cards
+    end
+
     def kicker_score
-      cards.reverse.map do |card|
-        (card.value_index + 1).to_s.rjust(2, '0')
-      end.join.to_i
+      Score.new(cards: kicker_cards).()
     end
 
     # @return [Array] sorted values
@@ -141,7 +143,7 @@ module PokerArena
     def occurences
       h = Hash.new(0)
 
-      cards.sort_by(&:score).reverse_each do |card|
+      cards.each do |card|
         h[card.value] += 1
       end
 
