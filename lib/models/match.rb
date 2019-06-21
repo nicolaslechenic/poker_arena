@@ -1,22 +1,12 @@
 module PokerArena
   class Match
-    attr_reader :id, :table, :sets
-    def initialize(table:)
+    attr_reader :id, :players, :sets
+    def initialize(players:)
+      raise ArgumentError unless players.count == 2
+
       @id = SecureRandom.hex(5)
-      @table = table
+      @players = players
       @sets = []
-    end
-
-    def join(player)
-      table.seat_in(player)
-    end
-
-    def leave(player)
-      table.seat_out(player)
-    end
-
-    def status
-      table.full? ? :ingame : :waiting_for_player
     end
   end
 end

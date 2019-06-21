@@ -51,7 +51,7 @@ module PokerArena
       end
     end
 
-     post '/api/tables/:name/leave' do
+    post '/api/tables/:name/leave' do
       merge_params
       if table.seat_out(player)
         json(status: 200)

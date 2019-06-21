@@ -2,10 +2,15 @@ require 'spec_helper'
 
 RSpec.describe PokerArena::MatchesRepository do
   describe '#persist' do
-    let(:tables_repo) { PokerArena::TablesRepository.new }
-    let(:table) { PokerArena::Table.new(tables_repository: tables_repo) }
+    let(:players) {
+      [
+        PokerArena::Player.new(pseudo: 'Jon'),
+        PokerArena::Player.new(pseudo: 'Tyrion')
+      ]
+    }
+
     let(:repo) { PokerArena::MatchesRepository.new }
-    let(:unpersisted_match) { PokerArena::Match.new(table: table) }
+    let(:unpersisted_match) { PokerArena::Match.new(players: players) }
 
     it 'adds the match into the repository' do
       expect { repo.persist(unpersisted_match) }
@@ -16,7 +21,7 @@ RSpec.describe PokerArena::MatchesRepository do
 
     context 'when the match has already been persisted' do
       let!(:already_persisted_match) do
-        PokerArena::Match.new(table: table).tap do |match|
+        PokerArena::Match.new(players: players).tap do |match|
           repo.persist(match)
         end
       end

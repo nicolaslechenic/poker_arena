@@ -17,6 +17,7 @@ module PokerArena
       @board = board
       @dealer = dealer
       @players = []
+      @matches = []
 
       if @name.nil?
         raise ArgumentError, 'No more available table names in that repository'
@@ -49,6 +50,7 @@ module PokerArena
       raise IndexError if players.any? && @players.first == player
 
       @players << player
+      @matches << Match.new(players: @players) if full?
     end
 
     def seat_out(player)
