@@ -48,6 +48,10 @@ module PokerArena
       VALUES.index(value)
     end
 
+    def litteral_value
+      litteral[0]
+    end
+
     private
 
     def valid?(litteral)

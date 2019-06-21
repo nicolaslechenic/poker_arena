@@ -2,8 +2,8 @@ require 'spec_helper'
 
 RSpec.describe PokerArena::StraightCombo do
   describe '#score' do
-    it 'return expected array for Ad 5s 4c 3c 2c' do
-      cards = PokerArena::Card.array('Ad 5s 4c 3c 2c')
+    it 'return expected array for 5s 4c 3c 2c Ad' do
+      cards = PokerArena::Card.array('5s 4c 3c 2c Ad')
       combo = described_class.new(cards: cards)
 
       expect(combo.score).to eql([4, 4])

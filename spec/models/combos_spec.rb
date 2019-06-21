@@ -15,14 +15,14 @@ RSpec.describe PokerArena::Combo do
 
   describe '#royal_flush?' do
     it "return false when it's not a royal flush" do
-      cards = PokerArena::Card.array('7c Jc Tc 8c 9c')
+      cards = PokerArena::Card.array('Jc Tc 8c 9c 7c ')
       combo = described_class.for(cards: cards)
 
       expect(combo.royal_flush?).to eql(false)
     end
 
     it "return true when it's a royal flush" do
-      cards = PokerArena::Card.array('Qc Jc Tc Kc Ac')
+      cards = PokerArena::Card.array('Ac Kc Qc Jc Tc')
       combo = described_class.for(cards: cards)
 
       expect(combo.royal_flush?).to eql(true)
@@ -31,14 +31,14 @@ RSpec.describe PokerArena::Combo do
 
   describe '#straight_flush?' do
     it "return false when it's not a straight flush" do
-      cards = PokerArena::Card.array('7c Jc Th 8c 9c')
+      cards = PokerArena::Card.array('Jc Th 8c 9c 7c')
       combo = described_class.for(cards: cards)
 
       expect(combo.straight_flush?).to eql(false)
     end
 
     it "return true when it's a straight flush" do
-      cards = PokerArena::Card.array('7c Jc Tc 8c 9c')
+      cards = PokerArena::Card.array('Jc Tc 9c 8c 7c')
       combo = described_class.for(cards: cards)
 
       expect(combo.straight_flush?).to eql(true)
@@ -47,7 +47,7 @@ RSpec.describe PokerArena::Combo do
 
   describe '#four_of_a_kind?' do
     it "return false when it's not a four of a kind combo" do
-      cards = PokerArena::Card.array('7h Jc Ts 8c 9c')
+      cards = PokerArena::Card.array('Jc Ts 8c 9c 7h')
       combo = described_class.for(cards: cards)
 
       expect(combo.four_of_a_kind?).to eql(false)
@@ -102,14 +102,14 @@ RSpec.describe PokerArena::Combo do
 
   describe '#straight?' do
     it "return false when it's not a straight" do
-      cards = PokerArena::Card.array('7h Qc As 8c 9c')
+      cards = PokerArena::Card.array('Qc As 8c 9c 7h')
       combo = described_class.for(cards: cards)
 
       expect(combo.straight?).to eql(false)
     end
 
     it "return true when it's a straight" do
-      cards = PokerArena::Card.array('7h Jc Ts 8c 9c')
+      cards = PokerArena::Card.array('Jc Ts 9c 8c 7h')
       combo = described_class.for(cards: cards)
 
       expect(combo.straight?).to eql(true)

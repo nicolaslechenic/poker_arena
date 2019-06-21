@@ -13,8 +13,11 @@ module PokerArena
 
         return new(cards: cards) if cards_type == 'high_card'
 
-        prefix = cards_type.split('_').collect(&:capitalize).join
-        combo_type = Object.const_get("PokerArena::#{prefix}Combo")
+        prefix =
+          cards_type.split('_').collect(&:capitalize).join
+
+        combo_type =
+          Object.const_get("PokerArena::#{prefix}Combo")
 
         combo_type.new(cards: cards)
       end
@@ -23,14 +26,6 @@ module PokerArena
         TYPES.reverse_each do |type|
           return type if send("#{type}?", cards)
         end
-      end
-
-      # @return [Array] sorted values
-      #   > ['5', '6', '7', 'T', 'J']
-      def litterals(cards)
-        ordered_cards = cards.sort_by(&:score)
-
-        ordered_cards.map(&:value)
       end
 
       def array(cards)
@@ -42,15 +37,11 @@ module PokerArena
       end
 
       def straights
-        Card::VALUES.each_cons(5).to_a << %w[2 3 4 5 A]
+        Card::VALUES.reverse.each_cons(5).to_a << %w[A 5 4 3 2]
       end
 
-      # The combos methods belows give an answer to the question
-      # do you have at least method_name? but it's not necessary your
-      # best combination !
-
       def royal_flush?(cards)
-        (litterals(cards) == %w[T J Q K A]) && flush?(cards)
+        (cards.map(&:litteral_value) == %w[A K Q J T]) && flush?(cards)
       end
 
       def straight_flush?(cards)
@@ -71,7 +62,7 @@ module PokerArena
       end
 
       def straight?(cards)
-        straights.include?(litterals(cards))
+        straights.include?(cards.map(&:litteral_value))
       end
 
       def three_of_a_kind?(cards)
@@ -118,8 +109,8 @@ module PokerArena
 
     # @return [Array] sorted values
     #   > ['5', '6', '7', 'T', 'J']
-    def litterals
-      self.class.litterals(cards)
+    def litteral_values
+      cards.map(&:litteral_value).reverse
     end
 
     def type
@@ -150,6 +141,8 @@ module PokerArena
       h.sort_by { |_, value| -value }.to_h
     end
 
+    # Auto generate verification boolean type methods
+    #  high_card? pair? two_pairs? ...
     TYPES.each do |method|
       define_method("#{method}?") do
         return true if method == 'high_card'
