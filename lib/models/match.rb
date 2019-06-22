@@ -8,5 +8,11 @@ module PokerArena
       @players = players
       @sets = []
     end
+
+    def add_set(set)
+      raise TypeError unless set.is_a?(PokerArena::Set)
+
+      @sets << set
+    end
   end
 end
