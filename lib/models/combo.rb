@@ -29,7 +29,7 @@ module PokerArena
       private
 
       def array(cards)
-        return [new(cards: cards)] if cards.count <= 5
+        return [Combo.for(cards: cards)] unless cards.count > 5
 
         cards.combination(5).to_a.map do |five_cards|
           Combo.for(cards: five_cards)
@@ -74,13 +74,6 @@ module PokerArena
     end
 
     def type
-      camel_type =
-        if self.class.name.split('::').last == 'Combo'
-          'HighCard'
-        else
-          self.class.name.split('::').last[0..-6]
-        end
-
       @type ||= TYPES[self.class.camel_types.index(camel_type)]
     end
 
@@ -112,8 +105,6 @@ module PokerArena
     #  high_card? pair? two_pairs? ...
     TYPES.each do |method|
       define_method("#{method}?") do
-        return true if method == 'high_card'
-
         prefix = method.split('_').collect(&:capitalize).join
         self.class.name == "PokerArena::#{prefix}Combo"
       end
@@ -123,6 +114,10 @@ module PokerArena
 
     def validate(cards)
       raise RangeError unless cards.count <= 5
+    end
+
+    def camel_type
+      self.class.name.split('::').last[0..-6]
     end
   end
 end
