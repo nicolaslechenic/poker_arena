@@ -9,12 +9,7 @@ module PokerArena
 
     class << self
       def for(cards:)
-        camel_types.reverse_each do |type|
-          return new(cards: cards) if type == 'HighCard'
-          combo = Object.const_get("PokerArena::#{type}Combo")
-
-          return combo.new(cards: cards) if combo.available?(cards)
-        end
+        find_best_type(cards).new(cards: cards)
       end
 
       def best(cards)
@@ -23,12 +18,6 @@ module PokerArena
 
       def straights
         Card::VALUES.reverse.each_cons(5).to_a << %w[A 5 4 3 2]
-      end
-
-      # You have at least high card !
-      def high_card?(cards)
-        return false if cards.empty?
-        true
       end
 
       def camel_types
@@ -44,6 +33,13 @@ module PokerArena
 
         cards.combination(5).to_a.map do |five_cards|
           Combo.for(cards: five_cards)
+        end
+      end
+
+      def find_best_type(cards)
+        camel_types.reverse_each do |type|
+          combo = Object.const_get("PokerArena::#{type}Combo")
+          return combo if combo.available?(cards)
         end
       end
     end
