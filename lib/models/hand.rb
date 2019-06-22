@@ -2,23 +2,19 @@ module PokerArena
   class Hand
     include Comparable
 
-    attr_reader :cards, :combos
+    attr_reader :cards, :best_combo, :highest_score
     def initialize(cards:)
       @cards = cards
-      @combos = Combo.array(cards)
+      @best_combo = Combo.array(cards).max_by(&:score) # to Combo.best(cards)
+      @highest_score = @best_combo.score
     end
 
     def <=>(other)
-      max.score <=> other.max.score
-    end
-
-    def max
-      return combos.first.cards if combos.count == 1
-      combos.max_by(&:score)
+      highest_score <=> other.highest_score
     end
 
     def type
-      "(#{max.type.split('_').join(' ').capitalize})"
+      "(#{best_combo.type.split('_').join(' ').capitalize})"
     end
   end
 end

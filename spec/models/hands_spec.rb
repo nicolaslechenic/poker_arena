@@ -1,13 +1,6 @@
 require 'spec_helper'
 
 RSpec.describe PokerArena::Hand do
-  it 'return return six combos for six cards in hand' do
-    six_cards = PokerArena::Card.array('Ad 5s 6h 7c Tc 2s')
-    hand = described_class.new(cards: six_cards)
-
-    expect(hand.combos.count).to eql(6)
-  end
-
   describe '#>' do
     it 'return true with best hand' do
       hero_cards = PokerArena::Card.array('2c 7d Qd Ac 8d 9d 3d')
@@ -74,7 +67,7 @@ RSpec.describe PokerArena::Hand do
     end
   end
 
-  describe '#max' do
+  describe '#best_combo' do
     it 'return all cards for hand with five cards or less' do
       four_cards = PokerArena::Card.array('Ad 7c 6h 5s')
       four_cards_hand = described_class.new(cards: four_cards)
@@ -82,8 +75,8 @@ RSpec.describe PokerArena::Hand do
       five_cards = PokerArena::Card.array('Ad 8d 7c 6h 5s')
       five_cards_hand = described_class.new(cards: five_cards)
 
-      expect(four_cards_hand.max).to eql(four_cards)
-      expect(five_cards_hand.max).to eql(five_cards)
+      expect(four_cards_hand.best_combo.cards).to eql(four_cards)
+      expect(five_cards_hand.best_combo.cards).to eql(five_cards)
     end
   end
 
