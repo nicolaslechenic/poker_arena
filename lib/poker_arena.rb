@@ -3,6 +3,7 @@ require 'pry'
 require 'sinatra'
 require 'sinatra/json'
 require './lib/serializers/application_serializer'
+require './lib/models/combo'
 
 Dir['./lib/models/**/*.rb'].each { |file| require file }
 Dir['./lib/serializers/*.rb'].each { |file| require file }
