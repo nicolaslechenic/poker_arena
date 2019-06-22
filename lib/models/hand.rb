@@ -5,7 +5,7 @@ module PokerArena
     attr_reader :cards, :best_combo, :highest_score
     def initialize(cards:)
       @cards = cards
-      @best_combo = Combo.array(cards).max_by(&:score) # to Combo.best(cards)
+      @best_combo = Combo.best(cards)
       @highest_score = @best_combo.score
     end
 

@@ -17,12 +17,8 @@ module PokerArena
         end
       end
 
-      def array(cards)
-        return [new(cards: cards)] if cards.count <= 5
-
-        cards.combination(5).to_a.map do |five_cards|
-          Combo.for(cards: five_cards)
-        end
+      def best(cards)
+        array(cards).max_by(&:score)
       end
 
       def straights
@@ -38,6 +34,16 @@ module PokerArena
       def camel_types
         TYPES.map do |type|
           type.split('_').collect(&:capitalize).join
+        end
+      end
+
+      private
+
+      def array(cards)
+        return [new(cards: cards)] if cards.count <= 5
+
+        cards.combination(5).to_a.map do |five_cards|
+          Combo.for(cards: five_cards)
         end
       end
     end
