@@ -1,5 +1,5 @@
 module PokerArena
-  class ThreeOfAKindCombo < PokerArena::Combo
+  class ThreeOfAKindCombo < ::PokerArena::Combo
     class << self
       def available?(cards)
         new(cards: cards).cards_occured(3).any?

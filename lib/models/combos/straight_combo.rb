@@ -1,5 +1,5 @@
 module PokerArena
-  class StraightCombo < PokerArena::Combo
+  class StraightCombo < ::PokerArena::Combo
     class << self
       def available?(cards)
         straights.include?(cards.map(&:litteral_value))

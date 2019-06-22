@@ -1,5 +1,5 @@
 module PokerArena
-  class StraightFlushCombo < PokerArena::Combo
+  class StraightFlushCombo < ::PokerArena::Combo
     class << self
       def available?(cards)
         PokerArena::StraightCombo.available?(cards) &&

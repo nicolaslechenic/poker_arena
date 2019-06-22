@@ -1,5 +1,5 @@
 module PokerArena
-  class RoyalFlushCombo < PokerArena::Combo
+  class RoyalFlushCombo < ::PokerArena::Combo
     class << self
       def available?(cards)
         (cards.map(&:litteral_value) == %w[A K Q J T]) &&

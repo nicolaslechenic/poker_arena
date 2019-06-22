@@ -1,5 +1,5 @@
 module PokerArena
-  class PairCombo < PokerArena::Combo
+  class PairCombo < ::PokerArena::Combo
     class << self
       def available?(cards)
         new(cards: cards).cards_occured(2).any?
