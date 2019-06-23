@@ -9,7 +9,7 @@ module PokerArena
     end
 
     def add_action(action)
-      raise TypeError unless action.is_a?(PokerArena::Action)
+      raise TypeError unless action.is_a?(Action)
 
       @actions << action
     end
