@@ -6,3 +6,5 @@
 
 
 [Texas Hold'em no limit rules](https://www.pokernews.com/poker-rules/texas-holdem.htm)
+
+Une petite modification !
