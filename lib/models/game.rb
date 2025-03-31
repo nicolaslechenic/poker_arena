@@ -21,7 +21,7 @@ module PokerArena
     def current_bet
       return 0 if actions.empty?
 
-      selected_actions = 
+      selected_actions =
         actions.select { |action| %i[bet raise].include?(action.type) }
 
       selected_actions

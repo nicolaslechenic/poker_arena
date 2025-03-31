@@ -27,9 +27,7 @@ module PokerArena
     def next_player_position(after_position)
       position = (after_position + 1) % players.count
 
-      while current_game && player_folded?(players[position])
-        position = (position + 1) % players.count
-      end
+      position = (position + 1) % players.count while current_game && player_folded?(players[position])
 
       position
     end

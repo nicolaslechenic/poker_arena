@@ -77,7 +77,6 @@ RSpec.describe PokerArena::GamesController do
 
       post "/api/tables/#{table.name}/start", { token: player1.token }.to_json, { 'CONTENT_TYPE' => 'application/json' }
 
-      # Check for error message in response body
       response_body = JSON.parse(last_response.body)
       expect(response_body['error']).to eq('Not enough players to start a game')
     end
@@ -120,7 +119,6 @@ RSpec.describe PokerArena::GamesController do
         value: table.big_blind
       }.to_json, { 'CONTENT_TYPE' => 'application/json' }
 
-      # Check for error message in response body
       response_body = JSON.parse(last_response.body)
       expect(response_body['error']).to eq('Invalid action type')
     end
@@ -137,7 +135,6 @@ RSpec.describe PokerArena::GamesController do
         value: table.big_blind
       }.to_json, { 'CONTENT_TYPE' => 'application/json' }
 
-      # Check for error message in response body
       response_body = JSON.parse(last_response.body)
       expect(response_body['error']).to eq('Not your turn')
     end

@@ -21,6 +21,9 @@ module PokerArena
     players_repository  = PlayersRepository.new
     tables_repository   = TablesRepository.new
 
+    # Initialize predefined tables
+    UseCases::InitializeTables.new(tables_repository).call
+
     use(PlayersController, players_repository: players_repository)
     use(
       TablesController,

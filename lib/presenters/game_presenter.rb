@@ -4,7 +4,6 @@ module PokerArena
   module Presenters
     # GamePresenter formats game data for API responses
     class GamePresenter
-
       def current_player_data(table, current_set, game_service)
         return {} if current_set.nil?
 

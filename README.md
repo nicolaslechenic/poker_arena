@@ -31,12 +31,63 @@ Response:
 
 Save this token as it will be used for all future requests.
 
-### Joining a Table
+### Available Tables
 
-To join a table, send a POST request to `/api/tables/:name/join`:
+The API automatically creates tables with the following names:
+- Tatooine
+- Harrenhal
+- Winterfell
+- Eyrie
+- Dragonstone
+- Coruscant
+- Dagobah
+- Kamino
+
+You can get a list of all tables by sending a GET request to `/api/tables`:
 
 ```
-POST /api/tables/Alpha/join
+GET /api/tables
+```
+
+Response:
+```json
+{
+  "tables": [
+    {
+      "name": "Tatooine",
+      "players": []
+    },
+    {
+      "name": "Harrenhal",
+      "players": []
+    },
+    ...
+  ]
+}
+```
+
+### Joining a Table
+
+To join a table, send a POST request to `/api/tables/:name/join` with one of the available table names:
+
+```
+POST /api/tables/Tatooine/join
+{
+  "token": "player_token_here"
+}
+```
+
+Response:
+```json
+{
+  "status": 200
+}
+```
+
+You can also leave a table by sending a POST request to `/api/tables/:name/leave`:
+
+```
+POST /api/tables/Tatooine/leave
 {
   "token": "player_token_here"
 }
@@ -153,6 +204,30 @@ Available action types:
 3. **Analyze the board and your cards** to make decisions.
 4. **Track the pot and player stacks** to calculate pot odds.
 5. **Handle errors gracefully** by checking the status code and error messages.
+
+## Running Locally
+
+To run Poker Arena locally for testing:
+
+1. **Clone the repository**
+   ```
+   git clone https://github.com/nicolaslechenic/poker_arena.git
+   cd poker_arena
+   ```
+
+2. **Install dependencies**
+   ```
+   bundle install
+   ```
+
+3. **Run the server**
+   ```
+    rackup -p 3000
+   ```
+
+4. **Access the API**
+   The API will be available at `http://localhost:3000`
+
 
 ## Project Status
 

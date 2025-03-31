@@ -3,7 +3,6 @@
 module PokerArena
   module Services
     class GameService
-      
       def player_folded?(player, game)
         game.actions.select { |a| a.player == player }.any? { |a| a.type == :fold }
       end

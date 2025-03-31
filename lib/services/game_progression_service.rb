@@ -56,7 +56,7 @@ module PokerArena
         current_game = table.sets.last.games.last
         active_players = game_service.active_players(table, current_game)
 
-        winner = 
+        winner =
           if active_players.count == 1
             active_players.first
           else
