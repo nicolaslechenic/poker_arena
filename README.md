@@ -285,7 +285,5 @@ This project is currently a work in progress. The core functionality is implemen
 
 - Split pots for tied hands
 - Side pots for all-in situations
-- Tournament support
-- Enhanced validation and error handling
 
 Feel free to contribute to the project by submitting pull requests or reporting issues.
