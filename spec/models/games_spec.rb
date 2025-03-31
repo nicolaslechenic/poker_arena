@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe PokerArena::Game do
@@ -6,9 +8,9 @@ RSpec.describe PokerArena::Game do
 
   describe '#add_action' do
     it 'change from 0 action to 1' do
-      expect {
+      expect do
         game.add_action(PokerArena::Action.new(player: player, type: :bet, value: 5))
-      }.to change {
+      end.to change {
         game.actions.count
       }.from(0).to(1)
     end

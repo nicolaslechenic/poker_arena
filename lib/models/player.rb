@@ -1,8 +1,12 @@
+# frozen_string_literal: true
+
 module PokerArena
   class Player
     MAX_CARDS = 2
 
-    attr_reader :token, :cards, :pseudo, :stack, :cash
+    attr_reader :token, :pseudo, :stack, :cash
+    attr_accessor :cards
+
     def initialize(pseudo:, cash: Cash.new)
       @cards = []
       @pseudo = pseudo

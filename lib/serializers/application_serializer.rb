@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PokerArena
   class ApplicationSerializer
     def call(with: {}, without: {})

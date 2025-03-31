@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe PokerArena::BoardSerializer do
@@ -8,7 +10,7 @@ RSpec.describe PokerArena::BoardSerializer do
       board.receive_card(card)
     end
 
-    expect(described_class.new(board: board).()).to eql(
+    expect(described_class.new(board: board).call).to eql(
       {
         flop: %w[As 7h 3d],
         turn: nil,

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe PokerArena::TableSerializer do
@@ -6,7 +8,7 @@ RSpec.describe PokerArena::TableSerializer do
     table = PokerArena::Table.new(tables_repository: repo)
     repo.persist(table)
 
-    expect(described_class.new(table: table).()).to eql(
+    expect(described_class.new(table: table).call).to eql(
       {
         name: table.name,
         limit: 100,

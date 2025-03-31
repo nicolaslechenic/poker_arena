@@ -1,8 +1,12 @@
+# frozen_string_literal: true
+
 module PokerArena
   class Cash
     INIT_BANKROLL = 10_000
 
-    attr_reader :bankroll, :stack, :stakes
+    attr_reader :bankroll, :stakes
+    attr_accessor :stack
+
     def initialize(bankroll: INIT_BANKROLL)
       @bankroll = INIT_BANKROLL
       # stack is a part of bankroll reserved to the current set
@@ -39,6 +43,7 @@ module PokerArena
 
     def credit_stack(amount)
       raise TypeError unless amount.is_a?(Float)
+
       @stack += amount
     end
 
@@ -51,11 +56,19 @@ module PokerArena
       bankroll.zero?
     end
 
+    def amount
+      stack
+    end
+
+    def amount=(value)
+      self.stack = value
+    end
+
     private
 
     def bankroll_to_stack_max_amount
       max_rebuy = (Table::LIMIT - stack)
-      (max_rebuy > bankroll) ? bankroll : max_rebuy
+      max_rebuy > bankroll ? bankroll : max_rebuy
     end
   end
 end

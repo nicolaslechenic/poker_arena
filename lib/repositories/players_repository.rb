@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PokerArena
   class PlayersRepository
     DEFAULT_TOKEN_SIZE = 5
@@ -17,11 +19,10 @@ module PokerArena
 
     def persist(player)
       if @players.key?(player.token)
-        if find(player.token) != player
-          raise ArgumentError, "Another player with token '#{player.token}' exists."
-        else
-          return true
-        end
+        raise ArgumentError, "Another player with token '#{player.token}' exists." if find(player.token) != player
+
+        return true
+
       end
 
       token = unused_token

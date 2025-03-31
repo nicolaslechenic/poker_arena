@@ -1,11 +1,15 @@
+# frozen_string_literal: true
+
 module PokerArena
   class TableSerializer < ::PokerArena::ApplicationSerializer
     attr_reader :table
+
     def initialize(table:)
       @table = table
     end
 
     private
+
     # Have to be flat
     def full_json
       @full_json ||=
@@ -17,7 +21,7 @@ module PokerArena
           max_players: table.max_players,
           available_players: table.available_players,
           pot: table.pot
-          
+
         }
     end
   end

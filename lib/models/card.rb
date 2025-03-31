@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PokerArena
   class Card
     VALUES  = %w[2 3 4 5 6 7 8 9 T J Q K A].freeze
@@ -28,6 +30,7 @@ module PokerArena
     end
 
     attr_reader :litteral, :value, :suit
+
     def initialize(litteral)
       raise ArgumentError unless valid?(litteral)
 

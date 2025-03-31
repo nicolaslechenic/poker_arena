@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe PokerArena::StraightCombo do
@@ -15,6 +17,5 @@ RSpec.describe PokerArena::StraightCombo do
 
       expect(combo.score).to eql([4, 13])
     end
-
   end
 end

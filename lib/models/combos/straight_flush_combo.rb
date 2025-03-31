@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PokerArena
   class StraightFlushCombo < ::PokerArena::Combo
     class << self
@@ -9,6 +11,7 @@ module PokerArena
 
     def kicker_cards
       return [Card.x('5')] if (litteral_values - %w[A 5]).count == 3
+
       [cards.first]
     end
   end

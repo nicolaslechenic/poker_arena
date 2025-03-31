@@ -4,5 +4,163 @@
   <a href="https://codeclimate.com/github/nicolaslechenic/poker_arena/maintainability"><img src="https://api.codeclimate.com/v1/badges/5ca029ec4c9615869359/maintainability" /></a>
 </div>
 
+# Poker Arena API (Work in Progress)
 
-[Texas Hold'em no limit rules](https://www.pokernews.com/poker-rules/texas-holdem.htm)
+Poker Arena is an API that allows bots to play poker against each other. The API follows the rules of [Texas Hold'em no limit](https://www.pokernews.com/poker-rules/texas-holdem.htm).
+
+## API Usage for Bots
+
+### Creating a Player
+
+To create a player, send a POST request to `/api/players`:
+
+```
+POST /api/players
+{
+  "pseudo": "YourBotName"
+}
+```
+
+Response:
+```json
+{
+  "status": 200,
+  "token": "player_token_here"
+}
+```
+
+Save this token as it will be used for all future requests.
+
+### Joining a Table
+
+To join a table, send a POST request to `/api/tables/:name/join`:
+
+```
+POST /api/tables/Alpha/join
+{
+  "token": "player_token_here"
+}
+```
+
+Response:
+```json
+{
+  "status": 200
+}
+```
+
+### Starting a Game
+
+To start a game (when at least 2 players are present), send a POST request to `/api/tables/:name/start`:
+
+```
+POST /api/tables/Alpha/start
+{
+  "token": "player_token_here"
+}
+```
+
+Response:
+```json
+{
+  "status": 200,
+  "message": "Game started"
+}
+```
+
+### Getting Game State
+
+To get the current state of the game, send a GET request to `/api/tables/:name/state`:
+
+```
+GET /api/tables/Alpha/state?token=player_token_here
+```
+
+Response (when a game is in progress):
+```json
+{
+  "status": 200,
+  "state": "active",
+  "game": {
+    "status": "preflop",
+    "pot": 1.5,
+    "current_player": {
+      "pseudo": "YourBotName",
+      "position": 0
+    },
+    "board": {
+      "flop": null,
+      "turn": null,
+      "river": null
+    },
+    "players": [
+      {
+        "pseudo": "YourBotName",
+        "stack": 100,
+        "position": 0,
+        "cards": ["As", "Kh"]
+      },
+      {
+        "pseudo": "OtherBot",
+        "stack": 100,
+        "position": 1
+      }
+    ]
+  }
+}
+```
+
+Response (when no game is in progress):
+```json
+{
+  "status": 200,
+  "state": "waiting",
+  "message": "No game in progress"
+}
+```
+
+### Performing an Action
+
+To perform an action (bet, call, raise, fold), send a POST request to `/api/tables/:name/action`:
+
+```
+POST /api/tables/Alpha/action
+{
+  "token": "player_token_here",
+  "action_type": "call",
+  "value": 1.0
+}
+```
+
+Response:
+```json
+{
+  "status": 200,
+  "message": "Action processed"
+}
+```
+
+Available action types:
+- `bet`: Place a bet (when no bet has been made yet)
+- `call`: Match the current bet
+- `raise`: Increase the current bet
+- `fold`: Forfeit the hand
+
+## Bot Implementation Tips
+
+1. **Poll the game state regularly** to check if it's your turn to act.
+2. **Check the current_player field** in the game state to see if it's your turn.
+3. **Analyze the board and your cards** to make decisions.
+4. **Track the pot and player stacks** to calculate pot odds.
+5. **Handle errors gracefully** by checking the status code and error messages.
+
+## Project Status
+
+This project is currently a work in progress. The core functionality is implemented, but some features are still under development:
+
+- Split pots for tied hands
+- Side pots for all-in situations
+- Tournament support
+- Enhanced validation and error handling
+
+Feel free to contribute to the project by submitting pull requests or reporting issues.

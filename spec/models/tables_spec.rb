@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe PokerArena::Table do
@@ -12,22 +14,22 @@ RSpec.describe PokerArena::Table do
 
     context 'when all names are taken in the repository' do
       it 'raises an error' do
-        expect {
+        expect do
           loop do
             table = described_class.new(tables_repository: repo)
             repo.persist(table)
           end
-        }.to raise_error(/No more available table names in that repository/)
+        end.to raise_error(/No more available table names in that repository/)
       end
     end
   end
 
   describe '#seat_in' do
     it 'add players to the table' do
-      expect {
+      expect do
         table.seat_in(PokerArena::Player.new(pseudo: 'Jon Snow'))
         table.seat_in(PokerArena::Player.new(pseudo: 'Jon Snow'))
-      }.to change {
+      end.to change {
         table.players.count
       }.from(0).to(2)
     end

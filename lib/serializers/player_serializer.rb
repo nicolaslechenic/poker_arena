@@ -1,11 +1,15 @@
+# frozen_string_literal: true
+
 module PokerArena
   class PlayerSerializer < ::PokerArena::ApplicationSerializer
     attr_reader :player
+
     def initialize(player:)
       @player = player
     end
 
     private
+
     # Have to be flat
     def full_json
       @full_json ||=

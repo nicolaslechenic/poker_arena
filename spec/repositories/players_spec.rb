@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe PokerArena::PlayersRepository do
@@ -26,12 +28,12 @@ RSpec.describe PokerArena::PlayersRepository do
 
       it "maintains the player's token" do
         expect { repo.persist(already_persisted_player) }
-          .not_to change { already_persisted_player.token }
+          .not_to(change { already_persisted_player.token })
       end
 
       it 'keeps only one copy of the player in the repository' do
         expect { repo.persist(already_persisted_player) }
-          .not_to change { repo.all.size }
+          .not_to(change { repo.all.size })
       end
     end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PokerArena
   class TwoPairsCombo < ::PokerArena::Combo
     class << self

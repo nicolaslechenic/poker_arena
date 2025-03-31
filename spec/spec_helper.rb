@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pry'
 require 'yaml'
 require 'poker_arena'

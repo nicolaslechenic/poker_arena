@@ -1,19 +1,21 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe PokerArena::Set do
-  let(:players) {
+  let(:players) do
     [
       PokerArena::Player.new(pseudo: 'Jon'),
       PokerArena::Player.new(pseudo: 'Tyrion')
     ]
-  }
+  end
   let(:set) { described_class.new(players: players) }
 
   describe '#add_game' do
     it 'change from 0 set to 1' do
-      expect {
+      expect do
         set.add_game(PokerArena::Game.new(status: :blinds))
-      }.to change {
+      end.to change {
         set.games.count
       }.from(0).to(1)
     end

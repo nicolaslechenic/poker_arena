@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe PokerArena::Combo do
@@ -17,7 +19,6 @@ RSpec.describe PokerArena::Combo do
     it "return false when it's not a royal flush" do
       cards = PokerArena::Card.array('Jc Tc 8c 9c 7c ')
       combo = described_class.for(cards: cards)
-
 
       expect(combo.royal_flush?).to eql(false)
     end

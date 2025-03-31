@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe PokerArena::TablesRepository do
@@ -21,7 +23,7 @@ RSpec.describe PokerArena::TablesRepository do
 
       it 'keeps only one copy of the table in the repository' do
         expect { repo.persist(already_persisted_table) }
-          .not_to change { repo.all.size }
+          .not_to(change { repo.all.size })
       end
     end
   end

@@ -1,11 +1,15 @@
+# frozen_string_literal: true
+
 module PokerArena
   class BoardSerializer < ::PokerArena::ApplicationSerializer
     attr_reader :board
+
     def initialize(board:)
       @board = board
     end
 
     private
+
     # Have to be flat
     def full_json
       {

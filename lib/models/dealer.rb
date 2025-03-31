@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 module PokerArena
   class Dealer
     attr_reader :deck
+
     def initialize(deck: Deck.new)
       @deck = deck
     end

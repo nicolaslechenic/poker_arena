@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PokerArena
   class TablesController < Sinatra::Base
     def initialize(app, options)
@@ -9,9 +11,7 @@ module PokerArena
     get '/api/tables' do
       tables =
         @tables_repository.all.map do |table|
-          TableSerializer.new(table: table).(
-            without: %i[small_blind big_blind pot]
-          )
+          TableSerializer.new(table: table).call(without: %i[small_blind big_blind pot])
         end
 
       json(tables: tables)
@@ -22,7 +22,7 @@ module PokerArena
 
       if @tables_repository.persist(current_table)
         output =
-          TableSerializer.new(table: current_table).()
+          TableSerializer.new(table: current_table).call
 
         json(status: 200, table: output)
       else
@@ -33,11 +33,11 @@ module PokerArena
     get '/api/tables/:name' do
       serialized_players =
         table.players.map do |player|
-          PlayerSerializer.new(player: player).(without: [:token])
+          PlayerSerializer.new(player: player).call(without: [:token])
         end
 
       output =
-        TableSerializer.new(table: table).(with: { players: serialized_players })
+        TableSerializer.new(table: table).call(with: { players: serialized_players })
 
       json(output)
     end

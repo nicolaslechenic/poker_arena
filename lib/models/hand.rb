@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 module PokerArena
   class Hand
     include Comparable
 
     attr_reader :cards, :best_combo, :highest_score
+
     def initialize(cards:)
       @cards = cards
       @best_combo = Combo.best(cards)

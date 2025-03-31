@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PokerArena
   class PlayersController < Sinatra::Base
     def initialize(app, options)
@@ -8,7 +10,7 @@ module PokerArena
     get '/api/players' do
       players =
         @players_repository.all.map do |player|
-          PlayerSerializer.new(player: player).(without: [:token])
+          PlayerSerializer.new(player: player).call(without: [:token])
         end
 
       json(players: players)

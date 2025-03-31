@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PokerArena
   class TablesRepository
     NAMES =
@@ -30,11 +32,10 @@ module PokerArena
 
     def persist(table)
       if @tables.key?(table.name)
-        if find(table.name) != table
-          raise ArgumentError, "Another table named '#{table.name}' exists."
-        else
-          return true
-        end
+        raise ArgumentError, "Another table named '#{table.name}' exists." if find(table.name) != table
+
+        return true
+
       end
 
       @tables[table.name] = table

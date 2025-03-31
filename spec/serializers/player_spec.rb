@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe PokerArena::PlayerSerializer do
@@ -7,7 +9,7 @@ RSpec.describe PokerArena::PlayerSerializer do
     player = PokerArena::Player.new(pseudo: pseudo)
     repo.persist(player)
 
-    expect(described_class.new(player: player).()).to eql(
+    expect(described_class.new(player: player).call).to eql(
       {
         pseudo: pseudo,
         token: player.token
@@ -21,6 +23,6 @@ RSpec.describe PokerArena::PlayerSerializer do
     player = PokerArena::Player.new(pseudo: pseudo)
     repo.persist(player)
 
-    expect(described_class.new(player: player).(without: [:token])).to eql({ pseudo: pseudo })
+    expect(described_class.new(player: player).call(without: [:token])).to eql({ pseudo: pseudo })
   end
 end

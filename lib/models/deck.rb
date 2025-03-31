@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 module PokerArena
   class Deck
     attr_reader :remaining_cards
+
     def initialize
       @remaining_cards = Card.all
     end

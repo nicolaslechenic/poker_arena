@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PokerArena
   class Combo
     TYPES =
@@ -45,6 +47,7 @@ module PokerArena
     end
 
     attr_reader :cards
+
     def initialize(cards:)
       validate(cards)
       @cards = Card.sorted(cards).reverse
@@ -64,7 +67,7 @@ module PokerArena
     end
 
     def kicker_score
-      Score.new(cards: kicker_cards).()
+      Score.new(cards: kicker_cards).call
     end
 
     # @return [Array] sorted values

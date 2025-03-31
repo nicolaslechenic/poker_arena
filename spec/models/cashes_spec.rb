@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe PokerArena::Cash do
@@ -19,7 +21,7 @@ RSpec.describe PokerArena::Cash do
     end
 
     it 'return true when bankroll == 0' do
-      cash  = described_class.new
+      cash = described_class.new
 
       100.times do
         cash.rebuy_max

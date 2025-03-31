@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PokerArena
   class ThreeOfAKindCombo < ::PokerArena::Combo
     class << self

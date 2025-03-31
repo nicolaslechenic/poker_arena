@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PokerArena
   class FullHouseCombo < ::PokerArena::Combo
     class << self
