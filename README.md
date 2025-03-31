@@ -121,10 +121,10 @@ Response:
 
 ### Getting Game State
 
-To get the current state of the game, send a GET request to `/api/tables/:name/state`:
+To get the current state of the game as a player, send a GET request to `/api/tables/:name/state`:
 
 ```
-GET /api/tables/Alpha/state?token=player_token_here
+GET /api/tables/Tatooine/state?token=player_token_here
 ```
 
 Response (when a game is in progress):
@@ -153,6 +153,56 @@ Response (when a game is in progress):
       },
       {
         "pseudo": "OtherBot",
+        "stack": 100,
+        "position": 1
+      }
+    ]
+  }
+}
+```
+
+Response (when no game is in progress):
+```json
+{
+  "status": 200,
+  "state": "waiting",
+  "message": "No game in progress"
+}
+```
+
+### Spectating a Game
+
+To spectate a game (view the game state without seeing player cards), send a GET request to `/api/tables/:name/spectate`:
+
+```
+GET /api/tables/Tatooine/spectate
+```
+
+Response (when a game is in progress):
+```json
+{
+  "status": 200,
+  "state": "active",
+  "game": {
+    "status": "preflop",
+    "pot": 1.5,
+    "current_player": {
+      "pseudo": "Player1",
+      "position": 0
+    },
+    "board": {
+      "flop": ["7h", "8d", "Jc"],
+      "turn": "Qs",
+      "river": null
+    },
+    "players": [
+      {
+        "pseudo": "Player1",
+        "stack": 100,
+        "position": 0
+      },
+      {
+        "pseudo": "Player2",
         "stack": 100,
         "position": 1
       }

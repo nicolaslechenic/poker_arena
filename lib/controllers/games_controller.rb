@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 module PokerArena
-  # Controller for managing poker games
-  # Handles game start, player actions, and game state
   class GamesController < Sinatra::Base
     def initialize(app, options)
       super(app)
@@ -11,6 +9,7 @@ module PokerArena
       @start_game_use_case = UseCases::StartGame.new(@tables_repository)
       @process_action_use_case = UseCases::ProcessAction.new(@tables_repository, @players_repository)
       @get_game_state_use_case = UseCases::GetGameState.new(@tables_repository, @players_repository)
+      @get_table_state_use_case = UseCases::GetTableState.new(@tables_repository)
     end
 
     post '/api/tables/:name/start' do
@@ -32,6 +31,11 @@ module PokerArena
 
     get '/api/tables/:name/state' do
       result = @get_game_state_use_case.call(params[:name], params[:token])
+      json(result)
+    end
+
+    get '/api/tables/:name/spectate' do
+      result = @get_table_state_use_case.call(params[:name])
       json(result)
     end
 
