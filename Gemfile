@@ -10,5 +10,6 @@ gem 'rack-test'
 gem 'rake'
 gem 'rspec'
 gem 'rubocop', require: false
+gem 'simplecov', require: false
 gem 'sinatra'
 gem 'sinatra-contrib'

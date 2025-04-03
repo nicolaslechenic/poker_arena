@@ -272,11 +272,41 @@ To run Poker Arena locally for testing:
 
 3. **Run the server**
    ```
-    rackup -p 3000
+   rackup -p 3000
    ```
 
 4. **Access the API**
    The API will be available at `http://localhost:3000`
+
+## Testing and Code Coverage
+
+Poker Arena uses RSpec for testing and SimpleCov for code coverage analysis.
+
+1. **Run the tests**
+   ```
+   bundle exec rspec
+   ```
+
+2. **View code coverage report**
+   
+   After running the tests, SimpleCov generates a coverage report in the `coverage` directory. Open `coverage/index.html` in your browser to view the report:
+   
+   ```
+   open coverage/index.html
+   ```
+   
+   The report shows:
+   - Overall code coverage percentage
+   - Coverage by file and line
+   - Grouped coverage by component type (Controllers, Models, etc.)
+   - Lines that are not covered by tests
+
+3. **Improving coverage**
+   
+   To improve code coverage:
+   - Write tests for uncovered files
+   - Add test cases for uncovered lines
+   - Focus on critical components like controllers and use cases
 
 
 ## Project Status

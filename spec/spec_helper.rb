@@ -1,5 +1,16 @@
 # frozen_string_literal: true
 
+require 'simplecov'
+SimpleCov.start do
+  add_filter '/spec/'
+  add_group 'Controllers', 'lib/controllers'
+  add_group 'Models', 'lib/models'
+  add_group 'Repositories', 'lib/repositories'
+  add_group 'Serializers', 'lib/serializers'
+  add_group 'Services', 'lib/services'
+  add_group 'Use Cases', 'lib/use_cases'
+end
+
 require 'pry'
 require 'yaml'
 require 'poker_arena'

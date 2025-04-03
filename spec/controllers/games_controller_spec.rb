@@ -3,7 +3,7 @@
 require 'spec_helper'
 require 'rack/test'
 
-RSpec.describe PokerArena::GamesController do
+RSpec.describe PokerArena::GamesController, type: :controller do
   include Rack::Test::Methods
 
   let(:players_repository) { PokerArena::PlayersRepository.new }
@@ -19,40 +19,6 @@ RSpec.describe PokerArena::GamesController do
 
     table.seat_in(player1)
     table.seat_in(player2)
-  end
-
-  # Create a test controller class that inherits from GamesController
-  let(:test_controller_class) do
-    Class.new(PokerArena::GamesController) do
-      configure do
-        disable :protection
-        set :environment, :test
-        set :show_exceptions, false
-        set :raise_errors, true
-      end
-
-      # Override methods for testing
-      def table
-        @tables_repository.find(params[:name].capitalize) ||
-          raise(StandardError, "Table not found: #{params[:name]}")
-      end
-
-      def player
-        @players_repository.find(params[:token]) ||
-          raise(StandardError, "Player not found: #{params[:token]}")
-      end
-    end
-  end
-
-  def app
-    tables_repo = tables_repository
-    players_repo = players_repository
-
-    test_controller_class.new(
-      ->(_env) { [404, { 'Content-Type' => 'text/plain' }, ['Not Found']] },
-      tables_repository: tables_repo,
-      players_repository: players_repo
-    )
   end
 
   describe 'POST /api/tables/:name/start' do
