@@ -14,24 +14,11 @@ module PokerArena
       def call(table_name, player_token, action_type, value)
         table = @tables_repository.find(table_name.capitalize)
         player = @players_repository.find(player_token)
-        current_set = table.sets.last
 
-        return @presenter.error('Not your turn') unless current_player?(table, player, current_set)
         return @presenter.error('Invalid action type') unless Action::TYPES.include?(action_type.to_sym)
 
-        current_game = current_set.games.last
-        action = Action.new(
-          player: player,
-          type: action_type.to_sym,
-          value: value.to_f
-        )
-        current_game.add_action(action)
-
-        update_pot(table, action)
-
-        if @game_service.round_completed?(table, current_set, current_game)
-          @game_progression_service.advance_game_status(table, current_set, current_game)
-        end
+        result = table.process_action(player, action_type.to_sym, value.to_f)
+        return @presenter.error('Not your turn') unless result
 
         @presenter.action_success
       end

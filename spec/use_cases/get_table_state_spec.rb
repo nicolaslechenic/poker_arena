@@ -43,10 +43,11 @@ RSpec.describe PokerArena::UseCases::GetTableState do
         
         game_data = result[:game]
         expect(game_data[:status]).to eq(:preflop)
+
         expect(game_data[:pot]).to eq(table.small_blind + table.big_blind)
         expect(game_data[:board]).to be_a(Hash)
         expect(game_data[:players].count).to eq(2)
-        
+
         game_data[:players].each do |player_data|
           expect(player_data).not_to have_key(:cards)
           expect(player_data[:pseudo]).to be_a(String)

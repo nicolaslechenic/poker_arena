@@ -27,12 +27,15 @@ module PokerArena
       @stack += amount
     end
 
-    def stack_to_stakes(amount)
-      raise ArgumentError unless stack >= amount
-
-      @stack -= amount
-      @stakes += amount
-    end
+  def stack_to_stakes(amount)
+    # If the player doesn't have enough money, they go all-in with what they have
+    actual_amount = [stack, amount].min
+    
+    @stack -= actual_amount
+    @stakes += actual_amount
+    
+    actual_amount
+  end
 
     def delete_stakes
       stakes_value = stakes
