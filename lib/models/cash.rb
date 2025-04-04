@@ -4,14 +4,12 @@ module PokerArena
   class Cash
     INIT_BANKROLL = 10_000
 
-    attr_reader :bankroll, :stakes
-    attr_accessor :stack
+    attr_reader :stakes
+    attr_accessor :stack, :bankroll
 
     def initialize(bankroll: INIT_BANKROLL)
       @bankroll = INIT_BANKROLL
-      # stack is a part of bankroll reserved to the current set
       @stack = 0
-      # stakes is a part of stack reserved to the current game
       @stakes = 0
     end
 
@@ -27,15 +25,14 @@ module PokerArena
       @stack += amount
     end
 
-  def stack_to_stakes(amount)
-    # If the player doesn't have enough money, they go all-in with what they have
-    actual_amount = [stack, amount].min
-    
-    @stack -= actual_amount
-    @stakes += actual_amount
-    
-    actual_amount
-  end
+    def stack_to_stakes(amount)
+      actual_amount = [stack, amount].min
+
+      @stack -= actual_amount
+      @stakes += actual_amount
+
+      actual_amount
+    end
 
     def delete_stakes
       stakes_value = stakes

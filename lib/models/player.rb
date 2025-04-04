@@ -20,7 +20,7 @@ module PokerArena
 
       cards << card
     end
-    
+
     def all_in?
       @all_in
     end

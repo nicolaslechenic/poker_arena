@@ -40,7 +40,7 @@ RSpec.describe PokerArena::UseCases::GetTableState do
 
         expect(result[:status]).to eq(200)
         expect(result[:state]).to eq('active')
-        
+
         game_data = result[:game]
         expect(game_data[:status]).to eq(:preflop)
 

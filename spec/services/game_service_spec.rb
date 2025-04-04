@@ -89,10 +89,10 @@ RSpec.describe PokerArena::Services::GameService do
     it 'returns the total bet amount for a player' do
       small_blind_pos = (table.sets.last.button_position + 1) % table.players.count
       big_blind_pos = (table.sets.last.button_position + 2) % table.players.count
-      
+
       small_blind_player = table.players[small_blind_pos]
       big_blind_player = table.players[big_blind_pos]
-      
+
       expect(service.player_bet(small_blind_player, game)).to eq(table.small_blind)
       expect(service.player_bet(big_blind_player, game)).to eq(table.big_blind)
     end
@@ -136,12 +136,12 @@ RSpec.describe PokerArena::Services::GameService do
         PokerArena::Card.new('Ah'),
         PokerArena::Card.new('Kh')
       ]
-      
+
       player2.cards = [
         PokerArena::Card.new('2c'),
         PokerArena::Card.new('3d')
       ]
-      
+
       board_cards = [
         PokerArena::Card.new('Qh'),
         PokerArena::Card.new('Jh'),
@@ -149,10 +149,10 @@ RSpec.describe PokerArena::Services::GameService do
         PokerArena::Card.new('9s'),
         PokerArena::Card.new('8d')
       ]
-      
+
       new_board = PokerArena::Board.new
       board_cards.each { |card| new_board.receive_card(card) }
-      
+
       table.instance_variable_set(:@board, new_board)
     end
 

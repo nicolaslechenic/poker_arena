@@ -12,7 +12,7 @@ RSpec.describe PokerArena::UseCases::InitializeTables do
 
       use_case.call
       expect(tables_repository.all.count).to eq(tables_repository.names.count)
-      
+
       table_names = tables_repository.all.map(&:name)
       expect(table_names.uniq.count).to eq(table_names.count)
       expect(table_names - tables_repository.names).to be_empty
@@ -30,7 +30,7 @@ RSpec.describe PokerArena::UseCases::InitializeTables do
         use_case.call
 
         expect(tables_repository.all.count).to eq(tables_repository.names.count)
-        
+
         table_names = tables_repository.all.map(&:name)
         expect(table_names.uniq.count).to eq(table_names.count)
         expect(table_names - tables_repository.names).to be_empty
@@ -47,9 +47,9 @@ RSpec.describe PokerArena::UseCases::InitializeTables do
 
       it 'does not create any new tables' do
         expect(tables_repository.all.count).to eq(tables_repository.names.count)
-        
+
         use_case.call
-        
+
         expect(tables_repository.all.count).to eq(tables_repository.names.count)
       end
     end

@@ -70,30 +70,30 @@ RSpec.describe PokerArena::Services::GameProgressionService do
       before do
         current_game.status = :river
         5.times { table.dealer.deal(table.board) }
-        
+
         player1.cards = [
           PokerArena::Card.new('Ah'),
           PokerArena::Card.new('Kh')
         ]
-        
+
         player2.cards = [
           PokerArena::Card.new('2c'),
           PokerArena::Card.new('3d')
         ]
-        
+
         table.pot = 10.0
       end
 
       it 'ends the hand and determines the winner' do
         expect(current_game.status).to eq(:river)
-        
+
         initial_button_position = current_set.button_position
         initial_pot = table.pot
         initial_player1_cash = player1.cash.amount
         initial_player2_cash = player2.cash.amount
-        
+
         service.advance_game_status(table, current_set, current_game)
-        
+
         expect(current_set.button_position).to eq((initial_button_position + 1) % table.players.count)
         expect(table.pot).to eq(0)
         expect(player1.cash.amount + player2.cash.amount).to eq(initial_player1_cash + initial_player2_cash + initial_pot)
@@ -107,12 +107,12 @@ RSpec.describe PokerArena::Services::GameProgressionService do
         PokerArena::Card.new('Ah'),
         PokerArena::Card.new('Kh')
       ]
-      
+
       player2.cards = [
         PokerArena::Card.new('2c'),
         PokerArena::Card.new('3d')
       ]
-      
+
       board_cards = [
         PokerArena::Card.new('Qh'),
         PokerArena::Card.new('Jh'),
@@ -120,19 +120,19 @@ RSpec.describe PokerArena::Services::GameProgressionService do
         PokerArena::Card.new('9s'),
         PokerArena::Card.new('8d')
       ]
-      
+
       new_board = PokerArena::Board.new
       board_cards.each { |card| new_board.receive_card(card) }
-      
+
       table.instance_variable_set(:@board, new_board)
       table.pot = 10.0
     end
 
     it 'awards the pot to the player with the best hand' do
       initial_player1_cash = player1.cash.amount
-      
+
       service.determine_winner(table)
-      
+
       expect(player1.cash.amount).to eq(initial_player1_cash + 10.0)
       expect(table.pot).to eq(0)
     end

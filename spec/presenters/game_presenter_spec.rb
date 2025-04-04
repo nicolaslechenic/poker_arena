@@ -22,7 +22,7 @@ RSpec.describe PokerArena::Presenters::GamePresenter do
 
     it 'returns data for the current player' do
       result = presenter.current_player_data(table, current_set, game_service)
-      
+
       expect(result).to be_a(Hash)
       expect(result[:pseudo]).to be_a(String)
       expect(result[:position]).to be_a(Integer)
@@ -41,7 +41,7 @@ RSpec.describe PokerArena::Presenters::GamePresenter do
 
     it 'returns data for the board' do
       result = presenter.board_data(board)
-      
+
       expect(result).to be_a(Hash)
       expect(result).to have_key(:flop)
       expect(result).to have_key(:turn)
@@ -52,19 +52,19 @@ RSpec.describe PokerArena::Presenters::GamePresenter do
   describe '#players_data' do
     it 'returns data for all players' do
       result = presenter.players_data(table, player1)
-      
+
       expect(result).to be_an(Array)
       expect(result.count).to eq(2)
-      
+
       player1_data = result.find { |p| p[:pseudo] == player1.pseudo }
       player2_data = result.find { |p| p[:pseudo] == player2.pseudo }
-      
+
       expect(player1_data).to be_a(Hash)
       expect(player1_data[:pseudo]).to eq(player1.pseudo)
       expect(player1_data[:stack]).to be_a(Numeric)
       expect(player1_data[:position]).to be_a(Integer)
       expect(player1_data[:cards]).to be_an(Array)
-      
+
       expect(player2_data).to be_a(Hash)
       expect(player2_data[:pseudo]).to eq(player2.pseudo)
       expect(player2_data[:stack]).to be_a(Numeric)
@@ -79,7 +79,7 @@ RSpec.describe PokerArena::Presenters::GamePresenter do
 
     it 'returns the complete game state' do
       result = presenter.game_state(table, player1, current_set, current_game, game_service)
-      
+
       expect(result).to be_a(Hash)
       expect(result[:status]).to eq(:preflop)
       expect(result[:pot]).to be_a(Float)
@@ -92,7 +92,7 @@ RSpec.describe PokerArena::Presenters::GamePresenter do
   describe '#waiting_state' do
     it 'returns a waiting state response' do
       result = presenter.waiting_state
-      
+
       expect(result).to be_a(Hash)
       expect(result[:status]).to eq(200)
       expect(result[:state]).to eq('waiting')
@@ -104,7 +104,7 @@ RSpec.describe PokerArena::Presenters::GamePresenter do
     it 'returns an active state response' do
       game_data = { status: :preflop, pot: 10.0 }
       result = presenter.active_state(game_data)
-      
+
       expect(result).to be_a(Hash)
       expect(result[:status]).to eq(200)
       expect(result[:state]).to eq('active')
@@ -115,7 +115,7 @@ RSpec.describe PokerArena::Presenters::GamePresenter do
   describe '#action_success' do
     it 'returns a success response for an action' do
       result = presenter.action_success
-      
+
       expect(result).to be_a(Hash)
       expect(result[:status]).to eq(200)
       expect(result[:message]).to eq('Action processed')
@@ -125,7 +125,7 @@ RSpec.describe PokerArena::Presenters::GamePresenter do
   describe '#game_start_success' do
     it 'returns a success response for game start' do
       result = presenter.game_start_success
-      
+
       expect(result).to be_a(Hash)
       expect(result[:status]).to eq(200)
       expect(result[:message]).to eq('Game started')
@@ -135,7 +135,7 @@ RSpec.describe PokerArena::Presenters::GamePresenter do
   describe '#error' do
     it 'returns an error response' do
       result = presenter.error('Test error')
-      
+
       expect(result).to be_a(Hash)
       expect(result[:status]).to eq(400)
       expect(result[:error]).to eq('Test error')
@@ -143,7 +143,7 @@ RSpec.describe PokerArena::Presenters::GamePresenter do
 
     it 'allows custom status code' do
       result = presenter.error('Test error', 500)
-      
+
       expect(result).to be_a(Hash)
       expect(result[:status]).to eq(500)
       expect(result[:error]).to eq('Test error')
