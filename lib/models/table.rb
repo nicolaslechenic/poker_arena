@@ -90,6 +90,12 @@ module PokerArena
 
       game.status = :preflop
 
+      # If any player is all-in after posting blinds, advance the game status
+      active_players = players.reject { |p| player_folded?(p, game) }
+      if active_players.any?(&:all_in?)
+        advance_game_status
+      end
+
       true
     end
 
@@ -113,6 +119,11 @@ module PokerArena
         sb_action.value = actual_sb
       end
 
+      # If the player has no more chips after posting the small blind, they are all-in
+      if sb_player.cash.amount == 0
+        sb_player.all_in = true
+      end
+
       bb_player = players[big_blind_pos]
       bb_action = Action.new(
         player: bb_player,
@@ -125,6 +136,11 @@ module PokerArena
       if actual_bb < big_blind
         bb_player.all_in = true
         bb_action.value = actual_bb
+      end
+
+      # If the player has no more chips after posting the big blind, they are all-in
+      if bb_player.cash.amount == 0
+        bb_player.all_in = true
       end
 
       @pot += actual_sb + actual_bb
@@ -192,6 +208,11 @@ module PokerArena
           action.value = actual_amount
         end
 
+        # If the player has no more chips after this action, they are all-in
+        if player.cash.amount == 0
+          player.all_in = true
+        end
+
         @pot += actual_amount
       end
 
@@ -251,7 +272,8 @@ module PokerArena
       active_players = players.reject { |p| player_folded?(p, current_game) }
       all_in_players = active_players.select(&:all_in?)
 
-      if all_in_players.count == active_players.count
+      # If any player is all-in at the start of the game, we need to advance to the river
+      if active_players.any?(&:all_in?)
         case current_game.status
         when :preflop
           current_game.status = :flop

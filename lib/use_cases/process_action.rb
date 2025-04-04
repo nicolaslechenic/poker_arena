@@ -12,7 +12,7 @@ module PokerArena
       end
 
       def call(table_name, player_token, action_type, value)
-        table = @tables_repository.find(table_name.capitalize)
+        table = @tables_repository.find(table_name)
         player = @players_repository.find(player_token)
 
         return @presenter.error('Invalid action type') unless Action::TYPES.include?(action_type.to_sym)

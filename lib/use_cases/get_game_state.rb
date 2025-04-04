@@ -11,7 +11,7 @@ module PokerArena
       end
 
       def call(table_name, player_token)
-        table = @tables_repository.find(table_name.capitalize)
+        table = @tables_repository.find(table_name)
         player = @players_repository.find(player_token)
         current_set = table.sets.last
         current_game = current_set&.games&.last

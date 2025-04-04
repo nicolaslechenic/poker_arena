@@ -2,16 +2,34 @@
 
 module PokerArena
   class TablesRepository
+    # Pokemon Locations and Final Fantasy (VII, VIII, IX) Locations
     NAMES =
       %w[
-        Tatooine
-        Harrenhal
-        Winterfell
-        Eyrie
-        Dragonstone
-        Coruscant
-        Dagobah
-        Kamino
+        pallet-town
+        viridian-city
+        pewter-city
+        cerulean-city
+        lavender-town
+        celadon-city
+        saffron-city
+        vermilion-city
+        cinnabar-island
+        indigo-plateau
+        midgar
+        gold-saucer
+        nibelheim
+        junon
+        cosmo-canyon
+        balamb-garden
+        esthar
+        timber
+        dollet
+        fishermans-horizon
+        alexandria
+        lindblum
+        treno
+        black-mage-village
+        burmecia
       ].freeze
 
     def initialize

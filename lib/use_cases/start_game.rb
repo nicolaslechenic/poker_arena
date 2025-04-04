@@ -9,7 +9,7 @@ module PokerArena
       end
 
       def call(table_name, _player_token)
-        table = @tables_repository.find(table_name.capitalize)
+        table = @tables_repository.find(table_name)
 
         return @presenter.error('Not enough players to start a game') if table.players.count < 2
 
