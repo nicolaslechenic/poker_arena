@@ -17,5 +17,12 @@ module PokerArena
         deck.restore_card(card)
       end
     end
+
+    def deal_cards_to_players(players)
+      players.each do |player|
+        player.cards = []
+        2.times { deal(player) }
+      end
+    end
   end
 end

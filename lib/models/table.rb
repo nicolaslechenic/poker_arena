@@ -21,6 +21,12 @@ module PokerArena
       @dealer = dealer
       @players = []
       @sets = []
+      @player_manager = PlayerManager.new(self)
+      @blind_manager = BlindManager.new(self)
+      @turn_manager = TurnManager.new(self)
+      @action_processor = ActionProcessor.new(self)
+      @game_progression = Services::GameProgressionService.new
+      @pot_manager = PotManager.new(self)
 
       return unless @name.nil?
 
@@ -48,24 +54,11 @@ module PokerArena
     end
 
     def seat_in(player)
-      raise RangeError if full?
-      raise TypeError unless player.is_a?(Player)
-      raise IndexError if players&.first == player
-
-      min_required = big_blind * 10
-      raise StandardError, "Not enough bankroll (minimum #{min_required})" if player.cash.bankroll < min_required
-
-      target_stack = big_blind * 100
-      transfer_amount = [target_stack, player.cash.bankroll].min
-
-      player.cash.bankroll_to_stack(transfer_amount)
-
-      @players << player
-      @sets << Set.new(players: @players) if full?
+      @player_manager.seat_in(player)
     end
 
     def seat_out(player)
-      @players.delete(player)
+      @player_manager.seat_out(player)
     end
 
     def full?
@@ -81,282 +74,47 @@ module PokerArena
       game = Game.new(status: :blinds)
       current_set.add_game(game)
 
-      players.each do |player|
-        player.cards = []
-        2.times { dealer.deal(player) }
-      end
+      # Distribuer les cartes aux joueurs
+      @dealer.deal_cards_to_players(players)
 
-      collect_blinds(game)
+      # Collecter les blinds
+      @blind_manager.collect_blinds(game, current_set)
 
       game.status = :preflop
 
-      # If any player is all-in after posting blinds, advance the game status
-      active_players = players.reject { |p| player_folded?(p, game) }
-      if active_players.any?(&:all_in?)
+      # Si un joueur est all-in après les blinds, avancer le jeu
+      if @turn_manager.any_player_all_in?(game)
         advance_game_status
       end
 
       true
     end
 
-    def collect_blinds(game)
-      current_set = @sets.last
-      button_pos = current_set.button_position
-      small_blind_pos = (button_pos + 1) % players.count
-      big_blind_pos = (button_pos + 2) % players.count
-
-      sb_player = players[small_blind_pos]
-      sb_action = Action.new(
-        player: sb_player,
-        type: :bet,
-        value: small_blind
-      )
-      game.add_action(sb_action)
-      actual_sb = sb_player.cash.stack_to_stakes(small_blind)
-
-      if actual_sb < small_blind
-        sb_player.all_in = true
-        sb_action.value = actual_sb
-      end
-
-      # If the player has no more chips after posting the small blind, they are all-in
-      if sb_player.cash.amount == 0
-        sb_player.all_in = true
-      end
-
-      bb_player = players[big_blind_pos]
-      bb_action = Action.new(
-        player: bb_player,
-        type: :bet,
-        value: big_blind
-      )
-      game.add_action(bb_action)
-      actual_bb = bb_player.cash.stack_to_stakes(big_blind)
-
-      if actual_bb < big_blind
-        bb_player.all_in = true
-        bb_action.value = actual_bb
-      end
-
-      # If the player has no more chips after posting the big blind, they are all-in
-      if bb_player.cash.amount == 0
-        bb_player.all_in = true
-      end
-
-      @pot += actual_sb + actual_bb
-    end
-
     def current_player
-      return nil if @sets.empty?
-
-      current_set = @sets.last
-      current_game = current_set.games.last
-
-      if current_game.status == :preflop && current_game.actions.count <= 2
-        return players[(current_set.button_position + 3) % players.count]
-      end
-
-      last_action = current_game.actions.last
-      return players[current_set.button_position] if last_action.nil?
-
-      last_player_pos = players.index(last_action.player)
-      next_player_pos = (last_player_pos + 1) % players.count
-
-      while player_folded?(players[next_player_pos], current_game) || players[next_player_pos].all_in?
-        next_player_pos = (next_player_pos + 1) % players.count
-
-        next unless next_player_pos == (last_player_pos + 1) % players.count
-
-        active_players = players.reject { |p| player_folded?(p, current_game) }
-        return active_players.first if active_players.any?
-
-        return nil
-      end
-
-      players[next_player_pos]
+      @turn_manager.current_player
     end
 
     def player_folded?(player, game)
-      game.actions.select { |a| a.player == player }.any? { |a| a.type == :fold }
+      @turn_manager.player_folded?(player, game)
     end
 
     def process_action(player, action_type, value = 0)
-      return false if @sets.empty?
-      return false if player != current_player
-
-      current_set = @sets.last
-      current_game = current_set.games.last
-
-      if player.all_in? && !%i[check fold].include?(action_type)
-        action_type = :check
-        value = 0
-      end
-
-      action = Action.new(
-        player: player,
-        type: action_type,
-        value: value
-      )
-
-      current_game.add_action(action)
-
-      if %i[bet call raise].include?(action_type)
-        actual_amount = player.cash.stack_to_stakes(value)
-
-        if actual_amount < value
-          player.all_in = true
-          action.value = actual_amount
-        end
-
-        # If the player has no more chips after this action, they are all-in
-        if player.cash.amount == 0
-          player.all_in = true
-        end
-
-        @pot += actual_amount
-      end
-
-      advance_game_status if round_completed?
-
-      true
+      @action_processor.process(player, action_type, value)
     end
 
     def round_completed?
-      return false if @sets.empty?
-
-      current_set = @sets.last
-      current_game = current_set.games.last
-
-      active_players = players.reject { |p| player_folded?(p, current_game) }
-
-      all_in_players = active_players.select(&:all_in?)
-      return true if all_in_players.count == active_players.count - 1
-
-      return true if all_in_players.count == active_players.count
-
-      return false if active_players.any? { |p| player_bet(p, current_game) < current_bet(current_game) }
-
-      last_bet_pos = last_bet_position(current_game)
-      return false if last_bet_pos.nil?
-
-      current_pos = players.index(current_player)
-      (last_bet_pos + 1) % players.count == current_pos
-    end
-
-    def last_bet_position(game)
-      bet_actions = game.actions.select { |a| %i[bet raise].include?(a.type) }
-      return nil if bet_actions.empty?
-
-      last_bet = bet_actions.last
-      players.index(last_bet.player)
-    end
-
-    def player_bet(player, game)
-      game.actions.select { |a| a.player == player && %i[bet call raise].include?(a.type) }
-          .map(&:value)
-          .sum
-    end
-
-    def current_bet(game)
-      game.actions.select { |a| %i[bet raise].include?(a.type) }
-          .map(&:value)
-          .max || 0
+      @turn_manager.round_completed?
     end
 
     def advance_game_status
-      return if @sets.empty?
-
       current_set = @sets.last
       current_game = current_set.games.last
-
-      active_players = players.reject { |p| player_folded?(p, current_game) }
-      all_in_players = active_players.select(&:all_in?)
-
-      # If any player is all-in at the start of the game, we need to advance to the river
-      if active_players.any?(&:all_in?)
-        case current_game.status
-        when :preflop
-          current_game.status = :flop
-          3.times { dealer.deal(board) }
-          current_game.status = :turn
-          dealer.deal(board)
-          current_game.status = :river
-          dealer.deal(board)
-          determine_winner
-          current_set.button_position = (current_set.button_position + 1) % players.count
-        when :flop
-          current_game.status = :turn
-          dealer.deal(board)
-          current_game.status = :river
-          dealer.deal(board)
-          determine_winner
-          current_set.button_position = (current_set.button_position + 1) % players.count
-        when :turn
-          current_game.status = :river
-          dealer.deal(board)
-          determine_winner
-          current_set.button_position = (current_set.button_position + 1) % players.count
-        when :river
-          determine_winner
-          current_set.button_position = (current_set.button_position + 1) % players.count
-        end
-      elsif all_in_players.count == active_players.count - 1
-        case current_game.status
-        when :preflop
-          current_game.status = :flop
-          3.times { dealer.deal(board) }
-        when :flop
-          current_game.status = :turn
-          dealer.deal(board)
-        when :turn
-          current_game.status = :river
-          dealer.deal(board)
-        when :river
-          determine_winner
-          current_set.button_position = (current_set.button_position + 1) % players.count
-        end
-      else
-        case current_game.status
-        when :preflop
-          current_game.status = :flop
-          3.times { dealer.deal(board) }
-        when :flop
-          current_game.status = :turn
-          dealer.deal(board)
-        when :turn
-          current_game.status = :river
-          dealer.deal(board)
-        when :river
-          determine_winner
-          current_set.button_position = (current_set.button_position + 1) % players.count
-        end
-      end
+      @game_progression.advance_game_status(self, current_set, current_game)
     end
 
     def determine_winner
       current_game = @sets.last.games.last
-      active_players = players.reject { |p| player_folded?(p, current_game) }
-
-      if active_players.count == 1
-        winner = active_players.first
-      else
-        best_hand = nil
-        winner = nil
-
-        active_players.each do |player|
-          all_cards = player.cards + board.cards
-
-          hand = Hand.new(cards: all_cards)
-
-          if best_hand.nil? || hand > best_hand
-            best_hand = hand
-            winner = player
-          end
-        end
-      end
-
-      winner.cash.amount += @pot
-      @pot = 0
+      @pot_manager.distribute_pot(current_game)
     end
   end
 end
