@@ -4,6 +4,7 @@ module PokerArena
   module Interfaces
     module Controllers
       class GamesController < Sinatra::Base
+        
         def initialize(app, options)
           super(app)
           @tables_repository = options.fetch(:tables_repository)
@@ -14,13 +15,15 @@ module PokerArena
           @get_table_state_use_case = Application::UseCases::GetTableState.new(@tables_repository)
         end
 
-        post '/api/tables/:name/start' do
+        post %r{/api/tables/([^/]+)/start/?} do |name|
+          params[:name] = name
           merge_params
           result = @start_game_use_case.call(params[:name], params[:token])
           json(result)
         end
 
-        post '/api/tables/:name/action' do
+        post %r{/api/tables/([^/]+)/action/?} do |name|
+          params[:name] = name
           merge_params
           result = @process_action_use_case.call(
             params[:name],
@@ -31,12 +34,14 @@ module PokerArena
           json(result)
         end
 
-        get '/api/tables/:name/state' do
+        get %r{/api/tables/([^/]+)/state/?} do |name|
+          params[:name] = name
           result = @get_game_state_use_case.call(params[:name], params[:token])
           json(result)
         end
 
-        get '/api/tables/:name/spectate' do
+        get %r{/api/tables/([^/]+)/spectate/?} do |name|
+          params[:name] = name
           result = @get_table_state_use_case.call(params[:name])
           json(result)
         end

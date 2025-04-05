@@ -4,12 +4,13 @@ module PokerArena
   module Interfaces
     module Controllers
       class PlayersController < Sinatra::Base
+        
         def initialize(app, options)
           super(app)
           @players_repository = options.fetch(:players_repository)
         end
 
-        get '/api/players' do
+        get %r{/api/players/?} do
           players =
             @players_repository.all.map do |player|
               Serializers::PlayerSerializer.new(player: player).call(without: [:token])
@@ -18,7 +19,7 @@ module PokerArena
           json(players: players)
         end
 
-        post '/api/players' do
+        post %r{/api/players/?} do
           params.merge!(JSON.parse(request.body.read))
 
           player = Domain::Entities::Player.new(pseudo: params[:pseudo])
