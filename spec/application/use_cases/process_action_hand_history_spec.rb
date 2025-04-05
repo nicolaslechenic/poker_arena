@@ -63,8 +63,6 @@ describe 'ProcessAction with HandHistory' do
       process_action_use_case.call(table_name, player1.token, 'call', 0.5)
       process_action_use_case.call(table_name, player2.token, 'check', 0)
 
-      # binding.pry
-
       table = tables_repository.find(table_name)
       table.advance_game_status
 

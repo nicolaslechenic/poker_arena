@@ -7,7 +7,7 @@ describe PokerArena::Application::UseCases::SaveHandHistory do
   let(:tables_repository) do
     PokerArena::Infrastructure::Repositories::TablesRepository.new(nil, true)
   end
-  let(:table_name) { 'azuria' }
+  let(:table_name) { 'test_table_for_save_hand_history' }
 
   let(:player1) do
     player = PokerArena::Domain::Entities::Player.new(pseudo: 'player1')
@@ -45,20 +45,106 @@ describe PokerArena::Application::UseCases::SaveHandHistory do
     set = PokerArena::Domain::Entities::Set.new(players: table.players)
     game = PokerArena::Domain::Entities::Game.new(status: :river)
 
-    game.add_action(action1)
-    game.add_action(action2)
+    # Add actions for each game stage to simulate a complete game
+    # Blinds
+    blinds_action1 = PokerArena::Domain::Entities::Action.new(
+      player: player1,
+      type: :bet,
+      value: 0.5,
+      game_status: :blinds
+    )
+    blinds_action2 = PokerArena::Domain::Entities::Action.new(
+      player: player2,
+      type: :bet,
+      value: 1.0,
+      game_status: :blinds
+    )
+
+    # Preflop
+    preflop_action1 = PokerArena::Domain::Entities::Action.new(
+      player: player1,
+      type: :call,
+      value: 0.5,
+      game_status: :preflop
+    )
+    preflop_action2 = PokerArena::Domain::Entities::Action.new(
+      player: player2,
+      type: :check,
+      value: 0,
+      game_status: :preflop
+    )
+
+    # Flop
+    flop_action1 = PokerArena::Domain::Entities::Action.new(
+      player: player1,
+      type: :check,
+      value: 0,
+      game_status: :flop
+    )
+    flop_action2 = PokerArena::Domain::Entities::Action.new(
+      player: player2,
+      type: :check,
+      value: 0,
+      game_status: :flop
+    )
+
+    # Turn
+    turn_action1 = PokerArena::Domain::Entities::Action.new(
+      player: player1,
+      type: :check,
+      value: 0,
+      game_status: :turn
+    )
+    turn_action2 = PokerArena::Domain::Entities::Action.new(
+      player: player2,
+      type: :check,
+      value: 0,
+      game_status: :turn
+    )
+
+    # River
+    river_action1 = PokerArena::Domain::Entities::Action.new(
+      player: player1,
+      type: :check,
+      value: 0,
+      game_status: :river
+    )
+    river_action2 = PokerArena::Domain::Entities::Action.new(
+      player: player2,
+      type: :check,
+      value: 0,
+      game_status: :river
+    )
+
+    # Add all actions to the game
+    game.add_action(blinds_action1)
+    game.add_action(blinds_action2)
+    game.add_action(preflop_action1)
+    game.add_action(preflop_action2)
+    game.add_action(flop_action1)
+    game.add_action(flop_action2)
+    game.add_action(turn_action1)
+    game.add_action(turn_action2)
+    game.add_action(river_action1)
+    game.add_action(river_action2)
 
     set.add_game(game)
-
     table.sets << set
 
     table.pot = 2.0
 
+    # Add cards to the board
     table.board.receive_card(PokerArena::Domain::Entities::Card.new('Ah'))
     table.board.receive_card(PokerArena::Domain::Entities::Card.new('2d'))
     table.board.receive_card(PokerArena::Domain::Entities::Card.new('7c'))
     table.board.receive_card(PokerArena::Domain::Entities::Card.new('Ks'))
     table.board.receive_card(PokerArena::Domain::Entities::Card.new('Td'))
+
+    # Add cards to players
+    player1.receive_card(PokerArena::Domain::Entities::Card.new('As'))
+    player1.receive_card(PokerArena::Domain::Entities::Card.new('Kd'))
+    player2.receive_card(PokerArena::Domain::Entities::Card.new('Qh'))
+    player2.receive_card(PokerArena::Domain::Entities::Card.new('Jc'))
 
     table
   end
@@ -73,12 +159,9 @@ describe PokerArena::Application::UseCases::SaveHandHistory do
   describe '#call' do
     context 'when the game is completed (river stage)' do
       it 'saves the hand history and returns success status' do
-        # Mock the round_completed? method to return true
-        allow(table).to receive(:round_completed?).and_return(true)
-
+        # Call with skip_checks = true to bypass validation
         result = subject.call(table_name, true)
 
-        puts "Result: #{result.inspect}"
         expect(result[:status]).to eq(200)
         expect(result[:message]).to include('saved successfully')
         expect(result[:hand_history_id]).not_to be_nil

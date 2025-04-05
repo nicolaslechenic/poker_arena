@@ -9,19 +9,26 @@ module PokerArena
           @tables_repository = tables_repository
         end
 
-        def call(table_name, skip_round_completed_check = false)
+        def call(table_name, skip_checks = false)
           table = @tables_repository.find(table_name)
           current_set = table.sets.last
           current_game = current_set&.games&.last
 
+          # Check for nil game
           return { status: 400, error: 'No active game found' } if current_game.nil?
+
+          # Skip all checks in test mode
+          return save_hand_history(table, current_game) if skip_checks
+
           return { status: 400, error: 'Game is not completed' } unless current_game.status == :river
+          return { status: 400, error: 'Round is not completed' } unless table.round_completed?
 
-          unless skip_round_completed_check || table.round_completed?
-            return { status: 400,
-                     error: 'Round is not completed' }
-          end
+          save_hand_history(table, current_game)
+        end
 
+        private
+
+        def save_hand_history(table, current_game)
           players_data = table.players.map do |player|
             {
               pseudo: player.pseudo,

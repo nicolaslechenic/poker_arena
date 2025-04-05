@@ -26,7 +26,6 @@ RSpec.describe 'All-in behavior', type: :integration do
     table.seat_in(bot1)
     table.seat_in(bot2)
     bot1.cash.stack = 0.0
-    puts "Initial bot1 stack: #{bot1.cash.amount}"
 
     @initial_bot1_stack = bot1.cash.amount
     @initial_bot2_stack = bot2.cash.amount
@@ -97,7 +96,6 @@ RSpec.describe 'All-in behavior', type: :integration do
         )
         expect(result[:status]).to eq(200)
 
-        puts "Before raise: bot1.all_in? = #{bot1.all_in?}, bot1.cash.amount = #{bot1.cash.amount}, bot1.cash.stakes = #{bot1.cash.stakes}"
         result = process_action_use_case.call(
           table.name,
           bot1.token,
@@ -105,8 +103,6 @@ RSpec.describe 'All-in behavior', type: :integration do
           100.0
         )
         expect(result[:status]).to eq(200)
-        puts "After raise: bot1.all_in? = #{bot1.all_in?}, bot1.cash.amount = #{bot1.cash.amount}, bot1.cash.stakes = #{bot1.cash.stakes}"
-
         expect(bot1.all_in?).to be true
         expect(bot1.cash.amount).to eq(0)
 
@@ -119,44 +115,24 @@ RSpec.describe 'All-in behavior', type: :integration do
       end
       expect(result[:status]).to eq(200)
     end
-    # Advance the game status to river and distribute the pot
-    puts "Before advancing to flop: pot = #{table.pot}"
+
     current_game.status = :flop
     table.advance_game_status
-    puts "After advancing to flop: pot = #{table.pot}"
 
-    # Ensure the board has cards
-    if table.board.cards.count < 3
-      puts 'Adding flop cards to the board'
-      3.times { table.dealer.deal(table.board) }
-    end
+    3.times { table.dealer.deal(table.board) } if table.board.cards.count < 3
 
-    puts "Before advancing to turn: pot = #{table.pot}"
     current_game.status = :turn
     table.advance_game_status
-    puts "After advancing to turn: pot = #{table.pot}"
 
     # Ensure the board has a turn card
-    if table.board.cards.count < 4
-      puts 'Adding turn card to the board'
-      table.dealer.deal(table.board)
-    end
+    table.dealer.deal(table.board) if table.board.cards.count < 4
 
-    puts "Before advancing to river: pot = #{table.pot}"
     current_game.status = :river
     table.advance_game_status
-    puts "After advancing to river: pot = #{table.pot}"
 
-    # Ensure the board has a river card
-    if table.board.cards.count < 5
-      puts 'Adding river card to the board'
-      table.dealer.deal(table.board)
-    end
+    table.dealer.deal(table.board) if table.board.cards.count < 5
 
-    # Manually call determine_winner to ensure the pot is distributed
-    puts "Before determine_winner: pot = #{table.pot}"
     table.determine_winner
-    puts "After determine_winner: pot = #{table.pot}"
 
     expect(current_game.status).to eq(:river)
     expect(table.board.cards.count).to eq(5)

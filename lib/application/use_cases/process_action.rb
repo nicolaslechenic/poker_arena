@@ -21,8 +21,6 @@ module PokerArena
             return @presenter.error('Invalid action type')
           end
 
-          # The table.process_action method now delegates to the GameOrchestrator
-          # which handles the game flow and coordinates the different services
           result = table.process_action(player, action_type.to_sym, value.to_f)
           return @presenter.error('Not your turn') unless result
 
