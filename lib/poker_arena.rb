@@ -4,32 +4,33 @@ require 'bcrypt'
 require 'pry'
 require 'sinatra'
 require 'sinatra/json'
-require './lib/serializers/application_serializer'
-require './lib/models/combo'
+require './lib/interfaces/serializers/application_serializer'
+require './lib/domain/entities/combo'
 
-Dir['./lib/models/**/*.rb'].each { |file| require file }
-Dir['./lib/serializers/*.rb'].each { |file| require file }
-Dir['./lib/repositories/*.rb'].each { |file| require file }
-Dir['./lib/services/*.rb'].each { |file| require file }
-Dir['./lib/presenters/*.rb'].each { |file| require file }
-Dir['./lib/use_cases/*.rb'].each { |file| require file }
-Dir['./lib/controllers/*_controller.rb'].each { |file| require file }
+Dir['./lib/domain/entities/**/*.rb'].each { |file| require file }
+Dir['./lib/domain/services/**/*.rb'].each { |file| require file }
+Dir['./lib/infrastructure/repositories/*.rb'].each { |file| require file }
+Dir['./lib/infrastructure/persistence/*.rb'].each { |file| require file }
+Dir['./lib/interfaces/serializers/*.rb'].each { |file| require file }
+Dir['./lib/interfaces/presenters/*.rb'].each { |file| require file }
+Dir['./lib/interfaces/controllers/*_controller.rb'].each { |file| require file }
+Dir['./lib/application/use_cases/*.rb'].each { |file| require file }
 
 module PokerArena
   class Launcher < Sinatra::Base
-    players_repository  = PlayersRepository.new
-    tables_repository   = TablesRepository.new
+    players_repository  = Infrastructure::Repositories::PlayersRepository.new
+    tables_repository   = Infrastructure::Repositories::TablesRepository.new
 
-    UseCases::InitializeTables.new(tables_repository).call
+    Application::UseCases::InitializeTables.new(tables_repository).call
 
-    use(PlayersController, players_repository: players_repository)
+    use(Interfaces::Controllers::PlayersController, players_repository: players_repository)
     use(
-      TablesController,
+      Interfaces::Controllers::TablesController,
       tables_repository: tables_repository,
       players_repository: players_repository
     )
     use(
-      GamesController,
+      Interfaces::Controllers::GamesController,
       tables_repository: tables_repository,
       players_repository: players_repository
     )

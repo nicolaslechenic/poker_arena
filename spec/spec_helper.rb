@@ -3,12 +3,12 @@
 require 'simplecov'
 SimpleCov.start do
   add_filter '/spec/'
-  add_group 'Controllers', 'lib/controllers'
-  add_group 'Models', 'lib/models'
-  add_group 'Repositories', 'lib/repositories'
-  add_group 'Serializers', 'lib/serializers'
-  add_group 'Services', 'lib/services'
-  add_group 'Use Cases', 'lib/use_cases'
+  add_group 'Controllers', 'lib/interfaces/web'
+  add_group 'Models', 'lib/domain/entities'
+  add_group 'Repositories', 'lib/infrastructure/repositories'
+  add_group 'Serializers', 'lib/interfaces/serializers'
+  add_group 'Services', 'lib/domain/services'
+  add_group 'Use Cases', 'lib/application/use_cases'
 end
 
 require 'pry'

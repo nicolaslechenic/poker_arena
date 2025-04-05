@@ -4,7 +4,7 @@ module ControllerHelpers
   def self.included(base)
     base.class_eval do
       let(:controller_class) do
-        Class.new(PokerArena::GamesController) do
+        Class.new(PokerArena::Interfaces::Controllers::GamesController) do
           configure do
             disable :protection
             set :environment, :test

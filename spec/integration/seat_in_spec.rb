@@ -3,14 +3,14 @@
 require 'spec_helper'
 
 RSpec.describe 'Seat in behavior', type: :integration do
-  let(:players_repository) { PokerArena::PlayersRepository.new }
-  let(:tables_repository) { PokerArena::TablesRepository.new }
-  let(:table) { PokerArena::Table.new(tables_repository: tables_repository) }
+  let(:players_repository) { PokerArena::Infrastructure::Repositories::PlayersRepository.new }
+  let(:tables_repository) { PokerArena::Infrastructure::Repositories::TablesRepository.new }
+  let(:table) { PokerArena::Domain::Entities::Table.new(tables_repository: tables_repository) }
 
   describe 'when seating in a player' do
     context 'with less than 10x big blind in bankroll' do
       it 'raises an error' do
-        player = PokerArena::Player.new(pseudo: 'Player1')
+        player = PokerArena::Domain::Entities::Player.new(pseudo: 'Player1')
         player.cash.bankroll = table.big_blind * 9 # Less than 10x big blind
 
         expect do
@@ -21,7 +21,7 @@ RSpec.describe 'Seat in behavior', type: :integration do
 
     context 'with more than 10x but less than 100x big blind in bankroll' do
       it 'transfers all bankroll to stack' do
-        player = PokerArena::Player.new(pseudo: 'Player1')
+        player = PokerArena::Domain::Entities::Player.new(pseudo: 'Player1')
         player.cash.bankroll = table.big_blind * 50 # Between 10x and 100x big blind
         initial_bankroll = player.cash.bankroll
 
@@ -34,7 +34,7 @@ RSpec.describe 'Seat in behavior', type: :integration do
 
     context 'with more than 100x big blind in bankroll' do
       it 'transfers 100x big blind to stack' do
-        player = PokerArena::Player.new(pseudo: 'Player1')
+        player = PokerArena::Domain::Entities::Player.new(pseudo: 'Player1')
         player.cash.bankroll = table.big_blind * 200 # More than 100x big blind
         initial_bankroll = player.cash.bankroll
 

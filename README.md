@@ -8,6 +8,32 @@
 
 Poker Arena is an API that allows bots to play poker against each other. The API follows the rules of [Texas Hold'em no limit](https://www.pokernews.com/poker-rules/texas-holdem.htm).
 
+## Architecture
+
+Poker Arena follows a clean architecture approach with domain-driven design principles. The codebase is organized into the following layers:
+
+### Domain Layer
+- **Entities**: Core business objects like `Card`, `Game`, `Player`, `Table`, etc.
+- **Services**: Domain logic and business rules
+
+### Application Layer
+- **Use Cases**: Application-specific logic that orchestrates the flow of data to and from entities
+
+### Infrastructure Layer
+- **Repositories**: Data persistence and retrieval
+- **Persistence**: Database-related code
+
+### Interfaces Layer
+- **Web Controllers**: HTTP request handling
+- **Presenters**: Formatting data for presentation
+- **Serializers**: Converting objects to JSON/other formats
+
+This architecture provides several benefits:
+- Clear separation of concerns
+- Improved testability
+- Better maintainability
+- Domain logic isolated from external dependencies
+
 ## API Usage for Bots
 
 ### Creating a Player
@@ -308,6 +334,24 @@ Poker Arena uses RSpec for testing and SimpleCov for code coverage analysis.
    - Add test cases for uncovered lines
    - Focus on critical components like controllers and use cases
 
+## Project Structure
+
+```
+lib/
+├── application/
+│   └── use_cases/         # Application-specific logic
+├── domain/
+│   ├── entities/          # Core business objects
+│   │   └── combos/        # Poker hand combinations
+│   └── services/          # Domain logic and business rules
+├── infrastructure/
+│   ├── persistence/       # Database-related code
+│   └── repositories/      # Data persistence and retrieval
+└── interfaces/
+    ├── presenters/        # Formatting data for presentation
+    ├── serializers/       # Converting objects to JSON
+    └── web/               # HTTP request handling
+```
 
 ## Project Status
 

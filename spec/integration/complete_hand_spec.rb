@@ -3,14 +3,18 @@
 require 'spec_helper'
 
 RSpec.describe 'Complete poker hand between two bots', type: :integration do
-  let(:players_repository) { PokerArena::PlayersRepository.new }
-  let(:tables_repository) { PokerArena::TablesRepository.new }
-  let(:table) { PokerArena::Table.new(tables_repository: tables_repository) }
-  let(:bot1) { PokerArena::Player.new(pseudo: 'Bot1') }
-  let(:bot2) { PokerArena::Player.new(pseudo: 'Bot2') }
-  let(:start_game_use_case) { PokerArena::UseCases::StartGame.new(tables_repository) }
-  let(:process_action_use_case) { PokerArena::UseCases::ProcessAction.new(tables_repository, players_repository) }
-  let(:get_game_state_use_case) { PokerArena::UseCases::GetGameState.new(tables_repository, players_repository) }
+  let(:players_repository) { PokerArena::Infrastructure::Repositories::PlayersRepository.new }
+  let(:tables_repository) { PokerArena::Infrastructure::Repositories::TablesRepository.new }
+  let(:table) { PokerArena::Domain::Entities::Table.new(tables_repository: tables_repository) }
+  let(:bot1) { PokerArena::Domain::Entities::Player.new(pseudo: 'Bot1') }
+  let(:bot2) { PokerArena::Domain::Entities::Player.new(pseudo: 'Bot2') }
+  let(:start_game_use_case) { PokerArena::Application::UseCases::StartGame.new(tables_repository) }
+  let(:process_action_use_case) do
+    PokerArena::Application::UseCases::ProcessAction.new(tables_repository, players_repository)
+  end
+  let(:get_game_state_use_case) do
+    PokerArena::Application::UseCases::GetGameState.new(tables_repository, players_repository)
+  end
 
   before do
     players_repository.persist(bot1)

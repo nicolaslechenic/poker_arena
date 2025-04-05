@@ -1,0 +1,27 @@
+# frozen_string_literal: true
+
+module PokerArena
+  module Domain
+    module Entities
+      class Hand
+        include Comparable
+
+        attr_reader :cards, :best_combo, :highest_score
+
+        def initialize(cards:)
+          @cards = cards
+          @best_combo = Combo.best(cards)
+          @highest_score = @best_combo.score
+        end
+
+        def <=>(other)
+          highest_score <=> other.highest_score
+        end
+
+        def type
+          "(#{best_combo.type.split('_').join(' ').capitalize})"
+        end
+      end
+    end
+  end
+end
