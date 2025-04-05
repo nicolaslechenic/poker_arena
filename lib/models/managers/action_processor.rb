@@ -13,7 +13,6 @@ module PokerArena
       current_set = @table.sets.last
       current_game = current_set.games.last
 
-      # Si le joueur est all-in, il ne peut que check ou fold
       if player.all_in? && !%i[check fold].include?(action_type)
         action_type = :check
         value = 0
@@ -42,13 +41,11 @@ module PokerArena
     def process_betting_action(player, action_type, value, action)
       actual_amount = player.cash.stack_to_stakes(value)
 
-      # Si le joueur n'a pas assez de jetons, il est all-in
       if actual_amount < value
         player.all_in = true
         action.value = actual_amount
       end
 
-      # Si le joueur n'a plus de jetons après cette action, il est all-in
       if player.cash.amount.zero?
         player.all_in = true
       end

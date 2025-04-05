@@ -7,7 +7,6 @@ require 'sinatra/json'
 require './lib/serializers/application_serializer'
 require './lib/models/combo'
 
-# Load all files in the lib directory
 Dir['./lib/models/**/*.rb'].each { |file| require file }
 Dir['./lib/serializers/*.rb'].each { |file| require file }
 Dir['./lib/repositories/*.rb'].each { |file| require file }
@@ -21,7 +20,6 @@ module PokerArena
     players_repository  = PlayersRepository.new
     tables_repository   = TablesRepository.new
 
-    # Initialize predefined tables
     UseCases::InitializeTables.new(tables_repository).call
 
     use(PlayersController, players_repository: players_repository)

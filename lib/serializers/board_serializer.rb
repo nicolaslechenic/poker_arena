@@ -10,7 +10,6 @@ module PokerArena
 
     private
 
-    # Have to be flat
     def full_json
       {
         flop: board.flop,

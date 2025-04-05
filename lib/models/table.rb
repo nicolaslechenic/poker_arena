@@ -74,15 +74,11 @@ module PokerArena
       game = Game.new(status: :blinds)
       current_set.add_game(game)
 
-      # Distribuer les cartes aux joueurs
       @dealer.deal_cards_to_players(players)
-
-      # Collecter les blinds
       @blind_manager.collect_blinds(game, current_set)
 
       game.status = :preflop
 
-      # Si un joueur est all-in après les blinds, avancer le jeu
       if @turn_manager.any_player_all_in?(game)
         advance_game_status
       end

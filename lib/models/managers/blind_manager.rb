@@ -32,7 +32,6 @@ module PokerArena
         sb_action.value = actual_sb
       end
 
-      # Si le joueur n'a plus de jetons après la small blind, il est all-in
       if sb_player.cash.amount.zero?
         sb_player.all_in = true
       end
@@ -55,7 +54,6 @@ module PokerArena
         bb_action.value = actual_bb
       end
 
-      # Si le joueur n'a plus de jetons après la big blind, il est all-in
       if bb_player.cash.amount.zero?
         bb_player.all_in = true
       end
