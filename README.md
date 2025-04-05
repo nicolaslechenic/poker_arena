@@ -34,14 +34,15 @@ Save this token as it will be used for all future requests.
 ### Available Tables
 
 The API automatically creates tables with the following names:
-- Tatooine
-- Harrenhal
-- Winterfell
-- Eyrie
-- Dragonstone
-- Coruscant
-- Dagobah
-- Kamino
+- arrakis
+- azuria
+- balamb
+- gnomeregan
+- hyrule
+- midgar
+- tatooine
+- terminus
+- winterfell
 
 You can get a list of all tables by sending a GET request to `/api/tables`:
 
