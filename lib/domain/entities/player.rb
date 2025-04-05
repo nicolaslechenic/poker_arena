@@ -26,6 +26,12 @@ module PokerArena
         def all_in?
           @all_in
         end
+
+        def ==(other)
+          return false unless other.is_a?(Player)
+
+          pseudo == other.pseudo && token == other.token
+        end
       end
     end
   end

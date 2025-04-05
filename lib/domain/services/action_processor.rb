@@ -20,7 +20,10 @@ module PokerArena
             value = 0
           end
 
-          action = create_action(player, action_type, value)
+          # For call actions, ensure the value is set correctly
+          value = current_game.current_bet if action_type == :call && value.zero?
+
+          action = create_action(player, action_type, value, current_game.status)
           current_game.add_action(action)
 
           process_betting_action(player, action_type, value, action) if %i[bet call raise].include?(action_type)
@@ -32,11 +35,12 @@ module PokerArena
 
         private
 
-        def create_action(player, action_type, value)
+        def create_action(player, action_type, value, game_status)
           Entities::Action.new(
             player: player,
             type: action_type,
-            value: value
+            value: value,
+            game_status: game_status
           )
         end
 

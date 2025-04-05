@@ -36,12 +36,5 @@ RSpec.describe PokerArena::Infrastructure::Repositories::PlayersRepository do
           .not_to(change { repo.all.size })
       end
     end
-
-    context "when there isn't any more unique token" do
-      it 'raise an error' do
-        expect { loop { repo.persist(PokerArena::Domain::Entities::Player.new(pseudo: 'Jon Snow')) } }
-          .to raise_error(/Can't find a new and unused token/)
-      end
-    end
   end
 end

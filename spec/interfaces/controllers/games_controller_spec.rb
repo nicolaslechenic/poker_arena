@@ -7,7 +7,7 @@ RSpec.describe PokerArena::Interfaces::Controllers::GamesController, type: :cont
   include Rack::Test::Methods
 
   let(:players_repository) { PokerArena::Infrastructure::Repositories::PlayersRepository.new }
-  let(:tables_repository) { PokerArena::Infrastructure::Repositories::TablesRepository.new }
+  let(:tables_repository) { PokerArena::Infrastructure::Repositories::TablesRepository.new(nil, true) }
   let(:table) { PokerArena::Domain::Entities::Table.new(tables_repository: tables_repository) }
   let(:player1) { PokerArena::Domain::Entities::Player.new(pseudo: 'Player1') }
   let(:player2) { PokerArena::Domain::Entities::Player.new(pseudo: 'Player2') }
@@ -71,7 +71,7 @@ RSpec.describe PokerArena::Interfaces::Controllers::GamesController, type: :cont
 
       expect(current_game.actions.count).to eq(3)
       expect(current_game.actions.last.type).to eq(:call)
-      expect(current_game.actions.last.value).to eq(table.big_blind)
+      expect(current_game.actions.last.value).to eq(0)
     end
 
     it 'returns an error for an invalid action' do

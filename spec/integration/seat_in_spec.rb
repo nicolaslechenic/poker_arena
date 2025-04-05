@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe 'Seat in behavior', type: :integration do
   let(:players_repository) { PokerArena::Infrastructure::Repositories::PlayersRepository.new }
-  let(:tables_repository) { PokerArena::Infrastructure::Repositories::TablesRepository.new }
+  let(:tables_repository) { PokerArena::Infrastructure::Repositories::TablesRepository.new(nil, true) }
   let(:table) { PokerArena::Domain::Entities::Table.new(tables_repository: tables_repository) }
 
   describe 'when seating in a player' do

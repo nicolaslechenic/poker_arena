@@ -4,7 +4,6 @@ module PokerArena
   module Interfaces
     module Controllers
       class PlayersController < Sinatra::Base
-        
         def initialize(app, options)
           super(app)
           @players_repository = options.fetch(:players_repository)

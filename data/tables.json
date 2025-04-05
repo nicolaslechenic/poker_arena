@@ -1,0 +1,137 @@
+{
+  "arrakis": {
+    "name": "arrakis",
+    "limit": 100,
+    "big_blind": 1.0,
+    "small_blind": 0.5,
+    "max_players": 2,
+    "pot": 0.0,
+    "players": [],
+    "board": {
+      "flop": [],
+      "turn": null,
+      "river": null
+    },
+    "sets": []
+  },
+  "azuria": {
+    "name": "azuria",
+    "limit": 100,
+    "big_blind": 1.0,
+    "small_blind": 0.5,
+    "max_players": 2,
+    "pot": 0.0,
+    "players": [],
+    "board": {
+      "flop": [],
+      "turn": null,
+      "river": null
+    },
+    "sets": []
+  },
+  "balamb": {
+    "name": "balamb",
+    "limit": 100,
+    "big_blind": 1.0,
+    "small_blind": 0.5,
+    "max_players": 2,
+    "pot": 0.0,
+    "players": [],
+    "board": {
+      "flop": [],
+      "turn": null,
+      "river": null
+    },
+    "sets": []
+  },
+  "gnomeregan": {
+    "name": "gnomeregan",
+    "limit": 100,
+    "big_blind": 1.0,
+    "small_blind": 0.5,
+    "max_players": 2,
+    "pot": 0.0,
+    "players": [],
+    "board": {
+      "flop": [],
+      "turn": null,
+      "river": null
+    },
+    "sets": []
+  },
+  "hyrule": {
+    "name": "hyrule",
+    "limit": 100,
+    "big_blind": 1.0,
+    "small_blind": 0.5,
+    "max_players": 2,
+    "pot": 0.0,
+    "players": [],
+    "board": {
+      "flop": [],
+      "turn": null,
+      "river": null
+    },
+    "sets": []
+  },
+  "midgar": {
+    "name": "midgar",
+    "limit": 100,
+    "big_blind": 1.0,
+    "small_blind": 0.5,
+    "max_players": 2,
+    "pot": 0.0,
+    "players": [],
+    "board": {
+      "flop": [],
+      "turn": null,
+      "river": null
+    },
+    "sets": []
+  },
+  "tatooine": {
+    "name": "tatooine",
+    "limit": 100,
+    "big_blind": 1.0,
+    "small_blind": 0.5,
+    "max_players": 2,
+    "pot": 0.0,
+    "players": [],
+    "board": {
+      "flop": [],
+      "turn": null,
+      "river": null
+    },
+    "sets": []
+  },
+  "terminus": {
+    "name": "terminus",
+    "limit": 100,
+    "big_blind": 1.0,
+    "small_blind": 0.5,
+    "max_players": 2,
+    "pot": 0.0,
+    "players": [],
+    "board": {
+      "flop": [],
+      "turn": null,
+      "river": null
+    },
+    "sets": []
+  },
+  "winterfell": {
+    "name": "winterfell",
+    "limit": 100,
+    "big_blind": 1.0,
+    "small_blind": 0.5,
+    "max_players": 2,
+    "pot": 0.0,
+    "players": [],
+    "board": {
+      "flop": [],
+      "turn": null,
+      "river": null
+    },
+    "sets": []
+  }
+}

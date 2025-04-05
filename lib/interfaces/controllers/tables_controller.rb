@@ -4,7 +4,6 @@ module PokerArena
   module Interfaces
     module Controllers
       class TablesController < Sinatra::Base
-
         def initialize(app, options)
           super(app)
           @tables_repository = options.fetch(:tables_repository)
@@ -15,7 +14,7 @@ module PokerArena
         get %r{/api/tables/?} do
           tables =
             @tables_repository.all.map do |table|
-              Serializers::TableSerializer.new(table: table).call(without: %i[small_blind big_blind pot])
+              Serializers::TableSerializer.new(table: table).call
             end
 
           json(tables: tables)
@@ -72,7 +71,7 @@ module PokerArena
         end
 
         def table
-          @tables_repository.find(params[:name].capitalize)
+          @tables_repository.find(params[:name])
         end
 
         def player

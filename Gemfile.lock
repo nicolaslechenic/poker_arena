@@ -156,6 +156,7 @@ DEPENDENCIES
   bcrypt
   guard
   guard-rspec
+  json
   pry
   puma
   rack-cors

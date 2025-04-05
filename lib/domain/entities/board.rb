@@ -6,7 +6,7 @@ module PokerArena
       class Board
         MAX_CARDS = 5
 
-        attr_reader :cards
+        attr_accessor :cards
 
         def initialize
           @cards = []

@@ -12,21 +12,14 @@ module PokerArena
         def call(table_name, _player_token)
           table = @tables_repository.find(table_name)
 
-          return @presenter.error('Not enough players to start a game') if table.players.count < 2
-
-          if table.sets.empty? || table.sets.last.games.last&.status == :river
-            table.sets << Domain::Entities::Set.new(players: table.players)
+          begin
+            # The table.start_game method now delegates to the GameOrchestrator
+            # which handles the game flow and coordinates the different services
+            table.start_game
+            @presenter.game_start_success
+          rescue StandardError => e
+            @presenter.error(e.message)
           end
-
-          current_set = table.sets.last
-          game = Domain::Entities::Game.new(status: :blinds)
-          current_set.add_game(game)
-
-          deal_cards_to_players(table)
-          collect_blinds(table, game)
-          game.status = :preflop
-
-          @presenter.game_start_success
         end
 
         private

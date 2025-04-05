@@ -1,0 +1,24 @@
+{
+  "player_token_1": {
+    "token": "player_token_1",
+    "pseudo": "Jon Snow",
+    "cash": {
+      "bankroll": 10000,
+      "stack": 0,
+      "stakes": 0
+    },
+    "cards": [],
+    "all_in": false
+  },
+  "player_token_2": {
+    "token": "player_token_2",
+    "pseudo": "Player2",
+    "cash": {
+      "bankroll": 10000,
+      "stack": 0,
+      "stakes": 0
+    },
+    "cards": [],
+    "all_in": false
+  }
+}

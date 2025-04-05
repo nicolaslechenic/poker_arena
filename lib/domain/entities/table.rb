@@ -13,7 +13,8 @@ module PokerArena
           end
         end
 
-        attr_reader :name, :players, :board, :dealer, :sets
+        attr_reader :name, :players, :board, :dealer, :sets, :player_manager, :blind_manager,
+                    :turn_manager, :action_processor, :game_progression, :pot_manager
         attr_accessor :pot
 
         def initialize(tables_repository:, board: Board.new, dealer: Dealer.new)
@@ -29,6 +30,7 @@ module PokerArena
           @action_processor = Services::ActionProcessor.new(self)
           @game_progression = Services::GameProgressionService.new
           @pot_manager = Services::PotManager.new(self)
+          @game_orchestrator = Services::GameOrchestrator.new(self)
 
           return unless @name.nil?
 
@@ -68,22 +70,7 @@ module PokerArena
         end
 
         def start_game
-          raise StandardError, 'Not enough players' if players.count < 2
-
-          @sets << Set.new(players: @players) if @sets.empty? || @sets.last.games.last&.status == :river
-
-          current_set = @sets.last
-          game = Game.new(status: :blinds)
-          current_set.add_game(game)
-
-          @dealer.deal_cards_to_players(players)
-          @blind_manager.collect_blinds(game, current_set)
-
-          game.status = :preflop
-
-          advance_game_status if @turn_manager.any_player_all_in?(game)
-
-          true
+          @game_orchestrator.start_game
         end
 
         def current_player
@@ -95,22 +82,19 @@ module PokerArena
         end
 
         def process_action(player, action_type, value = 0)
-          @action_processor.process(player, action_type, value)
+          @game_orchestrator.process_action(player, action_type, value)
         end
 
         def round_completed?
-          @turn_manager.round_completed?
+          @game_orchestrator.round_completed?
         end
 
         def advance_game_status
-          current_set = @sets.last
-          current_game = current_set.games.last
-          @game_progression.advance_game_status(self, current_set, current_game)
+          @game_orchestrator.advance_game_status
         end
 
         def determine_winner
-          current_game = @sets.last.games.last
-          @pot_manager.distribute_pot(current_game)
+          @game_orchestrator.determine_winner
         end
       end
     end

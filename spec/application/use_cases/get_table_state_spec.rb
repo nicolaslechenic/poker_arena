@@ -3,12 +3,29 @@
 require 'spec_helper'
 
 RSpec.describe PokerArena::Application::UseCases::GetTableState do
-  let(:players_repository) { PokerArena::Infrastructure::Repositories::PlayersRepository.new }
-  let(:tables_repository) { PokerArena::Infrastructure::Repositories::TablesRepository.new }
-  let(:table) { PokerArena::Domain::Entities::Table.new(tables_repository: tables_repository) }
-  let(:player1) { PokerArena::Domain::Entities::Player.new(pseudo: 'Player1') }
-  let(:player2) { PokerArena::Domain::Entities::Player.new(pseudo: 'Player2') }
-  let(:use_case) { described_class.new(tables_repository) }
+  let(:players_repository) do
+    PokerArena::Infrastructure::Repositories::PlayersRepository.new
+  end
+
+  let(:tables_repository) do
+    PokerArena::Infrastructure::Repositories::TablesRepository.new(nil, true)
+  end
+
+  let(:table) do
+    PokerArena::Domain::Entities::Table.new(tables_repository: tables_repository)
+  end
+
+  let(:player1) do
+    PokerArena::Domain::Entities::Player.new(pseudo: 'Player1')
+  end
+
+  let(:player2) do
+    PokerArena::Domain::Entities::Player.new(pseudo: 'Player2')
+  end
+
+  let(:use_case) do
+    described_class.new(tables_repository)
+  end
 
   before do
     players_repository.persist(player1)
@@ -31,6 +48,38 @@ RSpec.describe PokerArena::Application::UseCases::GetTableState do
     end
 
     context 'when a game is in progress' do
+      let(:expected_result) do
+        {
+          status: 200,
+          state: 'active',
+          game: {
+            board: {
+              flop: [],
+              turn: nil,
+              river: nil
+            },
+            current_player: {
+              pseudo: 'Player2',
+              position: 1
+            },
+            status: :preflop,
+            pot: (table.small_blind + table.big_blind),
+            players: [
+              {
+                pseudo: 'Player1',
+                stack: 99,
+                position: 0
+              },
+              {
+                pseudo: 'Player2',
+                stack: 99.5,
+                position: 1
+              }
+            ]
+          }
+        }
+      end
+
       before do
         table.start_game
       end
@@ -38,22 +87,7 @@ RSpec.describe PokerArena::Application::UseCases::GetTableState do
       it 'returns the current game state without player cards' do
         result = use_case.call(table.name)
 
-        expect(result[:status]).to eq(200)
-        expect(result[:state]).to eq('active')
-
-        game_data = result[:game]
-        expect(game_data[:status]).to eq(:preflop)
-
-        expect(game_data[:pot]).to eq(table.small_blind + table.big_blind)
-        expect(game_data[:board]).to be_a(Hash)
-        expect(game_data[:players].count).to eq(2)
-
-        game_data[:players].each do |player_data|
-          expect(player_data).not_to have_key(:cards)
-          expect(player_data[:pseudo]).to be_a(String)
-          expect(player_data[:stack]).to be_a(Numeric)
-          expect(player_data[:position]).to be_a(Integer)
-        end
+        expect(result).to eq(expected_result)
       end
     end
   end

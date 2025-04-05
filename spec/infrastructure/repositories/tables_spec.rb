@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe PokerArena::Infrastructure::Repositories::TablesRepository do
   describe '#persist' do
-    let(:repo) { described_class.new }
+    let(:repo) { described_class.new(nil, true) }
     let(:unpersisted_table) { PokerArena::Domain::Entities::Table.new(tables_repository: repo) }
 
     it 'adds the table into the repository' do

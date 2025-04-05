@@ -53,14 +53,41 @@ module PokerArena
 
           current_set = @table.sets.last
           current_game = current_set.games.last
+          current_status = current_game.status
 
           active_players = @table.players.reject { |p| player_folded?(p, current_game) }
 
           all_in_players = active_players.select(&:all_in?)
-          return true if all_in_players.count == active_players.count - 1
-          return true if all_in_players.count == active_players.count
+          return true if not_enougth_active_players?(all_in_players, active_players)
 
           return false if active_players.any? { |p| player_bet(p, current_game) < current_bet(current_game) }
+
+          if current_status == :preflop
+            if current_game.actions.count >= 4
+              player_last_actions = {}
+              current_game.actions.each do |action|
+                next if action.game_status == :blinds
+
+                player_last_actions[action.player.object_id] = action
+              end
+
+              if (player_last_actions.size == active_players.size) && active_players.all? do |p|
+                player_bet(p, current_game) == current_bet(current_game)
+              end
+                return true
+              end
+            end
+          else
+            current_status_actions = current_game.actions.select { |a| a.game_status == current_status }
+            return false if current_status_actions.empty?
+
+            if current_status_actions.all? { |a| a.type == :check }
+              active_player_ids = active_players.map(&:object_id)
+              action_player_ids = current_status_actions.map { |a| a.player.object_id }
+
+              return true if (active_player_ids - action_player_ids).empty?
+            end
+          end
 
           last_bet_pos = last_bet_position(current_game)
           return false if last_bet_pos.nil?
@@ -70,6 +97,10 @@ module PokerArena
         end
 
         private
+
+        def not_enougth_active_players?(all_in_players, active_players)
+          (all_in_players.count + 1) >= active_players.count
+        end
 
         def last_bet_position(game)
           bet_actions = game.actions.select { |a| %i[bet raise].include?(a.type) }

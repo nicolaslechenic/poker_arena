@@ -23,7 +23,6 @@ module PokerArena
               max_players: table.max_players,
               available_players: table.available_players,
               pot: table.pot
-
             }
         end
       end

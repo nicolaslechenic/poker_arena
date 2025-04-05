@@ -24,7 +24,8 @@ module PokerArena
           sb_action = Entities::Action.new(
             player: sb_player,
             type: :bet,
-            value: @table.small_blind
+            value: @table.small_blind,
+            game_status: :blinds
           )
           game.add_action(sb_action)
           actual_sb = sb_player.cash.stack_to_stakes(@table.small_blind)
@@ -44,7 +45,8 @@ module PokerArena
           bb_action = Entities::Action.new(
             player: bb_player,
             type: :bet,
-            value: @table.big_blind
+            value: @table.big_blind,
+            game_status: :blinds
           )
           game.add_action(bb_action)
           actual_bb = bb_player.cash.stack_to_stakes(@table.big_blind)

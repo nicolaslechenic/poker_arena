@@ -11,7 +11,7 @@ module PokerArena
         def seat_in(player)
           raise RangeError if @table.full?
           raise TypeError unless player.is_a?(Entities::Player)
-          raise IndexError if @table.players&.first == player
+          raise IndexError if @table.players.any? { |p| p.equal?(player) }
 
           min_required = @table.big_blind * 10
           raise StandardError, "Not enough bankroll (minimum #{min_required})" if player.cash.bankroll < min_required

@@ -22,6 +22,8 @@ module PokerArena
         end
 
         def deal_flop(table)
+          # Ensure the board is cleared before dealing new cards
+          table.board.cards = []
           3.times { table.dealer.deal(table.board) }
         end
 
@@ -46,6 +48,9 @@ module PokerArena
         def end_hand(table, set)
           determine_winner(table)
           move_button(table, set)
+
+          # Ensure the pot is reset to 0
+          table.pot = 0
         end
 
         def move_button(table, set)

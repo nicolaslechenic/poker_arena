@@ -17,7 +17,8 @@ module PokerArena
           @full_json ||=
             {
               pseudo: player.pseudo,
-              token: player.token
+              token: player.token,
+              bankroll: player.cash.bankroll
             }
         end
       end

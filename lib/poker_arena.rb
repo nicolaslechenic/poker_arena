@@ -20,6 +20,7 @@ module PokerArena
   class Launcher < Sinatra::Base
     players_repository  = Infrastructure::Repositories::PlayersRepository.new
     tables_repository   = Infrastructure::Repositories::TablesRepository.new
+    hand_histories_repository = Infrastructure::Repositories::HandHistoriesRepository.new
 
     Application::UseCases::InitializeTables.new(tables_repository).call
 
@@ -29,10 +30,19 @@ module PokerArena
       tables_repository: tables_repository,
       players_repository: players_repository
     )
+    # Update the ProcessAction use case to include hand_histories_repository
+    process_action_use_case = Application::UseCases::ProcessAction.new(
+      tables_repository,
+      players_repository,
+      hand_histories_repository
+    )
+
     use(
       Interfaces::Controllers::GamesController,
       tables_repository: tables_repository,
-      players_repository: players_repository
+      players_repository: players_repository,
+      hand_histories_repository: hand_histories_repository,
+      process_action_use_case: process_action_use_case
     )
   end
 end

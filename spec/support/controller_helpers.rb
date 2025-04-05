@@ -17,6 +17,10 @@ module ControllerHelpers
               raise(StandardError, "Table not found: #{params[:name]}")
           end
 
+          def initialize(app = nil, options = {})
+            super(app, options)
+          end
+
           def player
             @players_repository.find(params[:token]) ||
               raise(StandardError, "Player not found: #{params[:token]}")
@@ -25,10 +29,13 @@ module ControllerHelpers
       end
 
       def app
+        hand_histories_repository = PokerArena::Infrastructure::Repositories::HandHistoriesRepository.new
+
         controller_class.new(
           ->(_env) { [404, { 'Content-Type' => 'text/plain' }, ['Not Found']] },
           tables_repository: tables_repository,
-          players_repository: players_repository
+          players_repository: players_repository,
+          hand_histories_repository: hand_histories_repository
         )
       end
     end

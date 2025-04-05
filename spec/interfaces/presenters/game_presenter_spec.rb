@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe PokerArena::Interfaces::Presenters::GamePresenter do
   let(:presenter) { described_class.new }
-  let(:tables_repository) { PokerArena::Infrastructure::Repositories::TablesRepository.new }
+  let(:tables_repository) { PokerArena::Infrastructure::Repositories::TablesRepository.new(nil, true) }
   let(:table) { PokerArena::Domain::Entities::Table.new(tables_repository: tables_repository) }
   let(:player1) { PokerArena::Domain::Entities::Player.new(pseudo: 'Player1') }
   let(:player2) { PokerArena::Domain::Entities::Player.new(pseudo: 'Player2') }
