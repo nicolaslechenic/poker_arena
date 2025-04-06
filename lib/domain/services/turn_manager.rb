@@ -68,7 +68,7 @@ module PokerArena
             return false if player_bet_amount < current_bet_amount
           end
 
-          current_round_actions = 
+          current_round_actions =
             if current_status == :preflop
               current_game.actions.select { |a| a.game_status == :preflop }
             else
@@ -79,15 +79,15 @@ module PokerArena
 
           active_player_ids = active_players.map(&:object_id)
           action_player_ids = current_round_actions.map { |a| a.player.object_id }.uniq
-          
+
           missing_players = active_player_ids - action_player_ids
           return false unless missing_players.empty?
 
-          last_bet_raise = 
+          last_bet_raise =
             current_round_actions.reverse.find { |a| %i[bet raise].include?(a.type) }
-          
+
           return true if last_bet_raise.nil?
-          
+
           last_bet_index = current_round_actions.index(last_bet_raise)
           actions_after_bet = current_round_actions[last_bet_index + 1..]
 

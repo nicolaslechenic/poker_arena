@@ -1,0 +1,24 @@
+{
+  "vilain-token": {
+    "token": "vilain-token",
+    "pseudo": "Vilain",
+    "cash": {
+      "bankroll": 10000,
+      "stack": 0,
+      "stakes": 0
+    },
+    "cards": [],
+    "all_in": false
+  },
+  "hero-token": {
+    "token": "hero-token",
+    "pseudo": "Hero",
+    "cash": {
+      "bankroll": 10000,
+      "stack": 0,
+      "stakes": 0
+    },
+    "cards": [],
+    "all_in": false
+  }
+}

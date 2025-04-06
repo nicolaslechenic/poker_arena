@@ -31,7 +31,7 @@ module PokerArena
       players_repository: players_repository
     )
 
-    process_action_use_case = 
+    process_action_use_case =
       Application::UseCases::ProcessAction.new(
         tables_repository,
         players_repository,

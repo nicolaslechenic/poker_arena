@@ -22,13 +22,11 @@ module PokerArena
 
         DATA_DIR = File.join(Dir.pwd, 'data')
 
-        def initialize(file_path = nil, test_mode = false)
+        def initialize(file_path = nil)
           @file_path = file_path || File.join(DATA_DIR, 'tables.json')
           @serializer = Persistence::TableSerializer.new
           @store = Persistence::JsonStore.new(@file_path)
           @tables = {}
-
-          return if test_mode
 
           # Initialize tables from NAMES if they don't exist
           NAMES.each do |name|
@@ -39,7 +37,6 @@ module PokerArena
             persist(table)
           end
 
-          # Load tables from store
           @store.all.each do |data|
             table = @serializer.deserialize(data, self)
             @tables[table.name] = table

@@ -24,6 +24,12 @@ module PokerArena
           result = table.process_action(player, action_type.to_sym, value.to_f)
           return @presenter.error('Not your turn') unless result
 
+          # Persist the table to save the updated pot
+          @tables_repository.persist(table)
+
+          # Persist the player to save the updated stack and stakes
+          @players_repository.persist(player)
+
           save_hand_history_if_completed(table)
 
           @presenter.action_success
@@ -34,25 +40,25 @@ module PokerArena
 
           current_set = table.sets.last
           current_game = current_set&.games&.last
-          
+
           return unless current_game
           return if hand_history_exists_for_game?(table, current_game)
-          
-          if should_save_hand_history?(table, current_game)
-            save_hand_history(table, current_set, current_game)
-          end
+
+          return unless should_save_hand_history?(table, current_game)
+
+          save_hand_history(table, current_set, current_game)
         end
-        
+
         def should_save_hand_history?(table, current_game)
           is_river_completed?(current_game, table.players) ||
             only_one_active_player?(current_game) ||
             table.round_completed?
         end
-        
+
         def is_river_completed?(current_game, players)
           current_game.status == :river && all_players_acted_in_river?(current_game, players)
         end
-        
+
         def only_one_active_player?(current_game)
           active_players_count(current_game) <= 1
         end
@@ -71,7 +77,7 @@ module PokerArena
         def active_players_count(game)
           all_players = game.actions.map(&:player).uniq
 
-          folded_players = 
+          folded_players =
             game.actions.select { |a| a.type == :fold }.map(&:player).uniq
 
           all_players.size - folded_players.size

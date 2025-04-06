@@ -1,3 +1,4 @@
 configuration/database.yml
 coverage/
-data/
+data/*.json
+*.log

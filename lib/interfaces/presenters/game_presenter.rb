@@ -24,27 +24,28 @@ module PokerArena
           }
         end
 
-        def players_data(table, current_player)
-          table.players.map do |p|
+        def players_data(table, current_player, players_repository)
+          table.players.map do |player|
+            player_infos = players_repository.find(player.token)
             data = {
-              pseudo: p.pseudo,
-              stack: p.cash.amount,
-              position: table.players.index(p)
+              pseudo: player.pseudo,
+              stack: player_infos.cash.stack,
+              position: table.players.index(player)
             }
 
-            data[:cards] = p.cards.map(&:litteral) if p == current_player
+            data[:cards] = player.cards.map(&:litteral) if player == current_player
 
             data
           end
         end
 
-        def game_state(table, current_player, current_set, current_game, game_service)
+        def game_state(table, current_player, current_set, current_game, game_service, players_repository)
           {
             status: current_game.status,
             pot: table.pot,
             current_player: current_player_data(table, current_set, game_service),
             board: board_data(table.board),
-            players: players_data(table, current_player)
+            players: players_data(table, current_player, players_repository)
           }
         end
 

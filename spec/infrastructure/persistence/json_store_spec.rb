@@ -112,7 +112,7 @@ describe PokerArena::Infrastructure::Persistence::JsonStore do
 
     it 'persists the clearing to the file' do
       store.clear
-      
+
       new_store = described_class.new(temp_file.path)
 
       expect(new_store.all).to be_empty

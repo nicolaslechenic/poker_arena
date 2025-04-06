@@ -8,7 +8,7 @@ module PokerArena
           @table = table
         end
 
-        def seat_in(player)
+        def seat_in!(player)
           raise RangeError if @table.full?
           raise TypeError unless player.is_a?(Entities::Player)
           raise IndexError if @table.players.any? { |p| p.equal?(player) }

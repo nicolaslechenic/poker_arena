@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'logger'
+
 module PokerArena
   module Domain
     module Entities
@@ -58,7 +60,14 @@ module PokerArena
         end
 
         def seat_in(player)
-          @player_manager.seat_in(player)
+          @player_manager.seat_in!(player)
+          true
+        rescue StandardError => e
+          logger =
+            Logger.new(File.join(File.dirname(__FILE__), '../../../poker_arena.log'))
+
+          logger.error("#001 - Failed to seat in player: #{e.message}")
+          false
         end
 
         def seat_out(player)
@@ -82,7 +91,14 @@ module PokerArena
         end
 
         def process_action(player, action_type, value = 0)
-          @game_orchestrator.process_action(player, action_type, value)
+          logger = Logger.new(File.join(File.dirname(__FILE__), '../../../poker_arena.log'))
+          logger.info("#002 - Processing action: #{action_type} with value #{value} for player #{player.pseudo}")
+
+          result = @game_orchestrator.process_action(player, action_type, value)
+
+          logger.info("#003 - Action processed. New pot: #{@pot}")
+
+          result
         end
 
         def round_completed?

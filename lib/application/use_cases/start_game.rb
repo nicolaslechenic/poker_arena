@@ -4,8 +4,9 @@ module PokerArena
   module Application
     module UseCases
       class StartGame
-        def initialize(tables_repository)
+        def initialize(tables_repository, players_repository = nil)
           @tables_repository = tables_repository
+          @players_repository = players_repository
           @presenter = Interfaces::Presenters::GamePresenter.new
         end
 
@@ -14,6 +15,16 @@ module PokerArena
 
           begin
             table.start_game
+            # Persist the table to save the updated pot
+            @tables_repository.persist(table)
+
+            # Persist the players to save their updated stacks and stakes
+            if @players_repository
+              table.players.each do |player|
+                @players_repository.persist(player)
+              end
+            end
+
             @presenter.game_start_success
           rescue StandardError => e
             @presenter.error(e.message)

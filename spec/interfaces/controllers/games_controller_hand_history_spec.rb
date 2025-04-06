@@ -159,7 +159,7 @@ describe PokerArena::Interfaces::Controllers::GamesController do
     it 'returns an error when there is no active game' do
       post '/api/tables/balamb/save_hand_history'
 
-      expect(last_response.status).to eq(200) 
+      expect(last_response.status).to eq(200)
 
       response_body = JSON.parse(last_response.body)
       expect(response_body['status']).to eq(400)

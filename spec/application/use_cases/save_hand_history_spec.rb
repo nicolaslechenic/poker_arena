@@ -142,7 +142,7 @@ describe PokerArena::Application::UseCases::SaveHandHistory do
   describe '#call' do
     context 'when the game is completed (river stage)' do
       before { table }
-      
+
       it 'saves the hand history and returns success status' do
         result = subject.call(table_name, true)
 

@@ -19,7 +19,8 @@ module PokerArena
 
           return @presenter.waiting_state if current_game.nil?
 
-          game_data = @presenter.game_state(table, player, current_set, current_game, @game_service)
+          game_data = @presenter.game_state(table, player, current_set, current_game, @game_service,
+                                            @players_repository)
 
           @presenter.active_state(game_data)
         end

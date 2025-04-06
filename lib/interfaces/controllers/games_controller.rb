@@ -9,7 +9,7 @@ module PokerArena
           @tables_repository = options.fetch(:tables_repository)
           @players_repository = options.fetch(:players_repository)
           @hand_histories_repository = options.fetch(:hand_histories_repository)
-          @start_game_use_case = Application::UseCases::StartGame.new(@tables_repository)
+          @start_game_use_case = Application::UseCases::StartGame.new(@tables_repository, @players_repository)
           @process_action_use_case = options.fetch(:process_action_use_case,
                                                    Application::UseCases::ProcessAction.new(@tables_repository,
                                                                                             @players_repository))
