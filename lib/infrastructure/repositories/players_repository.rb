@@ -42,11 +42,8 @@ module PokerArena
             return true
           end
 
-          token = unused_token
-          player.instance_variable_set(:@token, token)
-
           serialized_data = @serializer.serialize(player)
-          @store.save(token, serialized_data)
+          @store.save(player.token, serialized_data)
 
           true
         end
@@ -58,15 +55,6 @@ module PokerArena
 
         def clear
           @store.clear
-        end
-
-        private
-
-        def unused_token
-          @token_counter ||= 0
-          @token_counter += 1
-
-          "player_token_#{@token_counter}"
         end
       end
     end

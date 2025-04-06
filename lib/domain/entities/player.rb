@@ -14,6 +14,7 @@ module PokerArena
           @pseudo = pseudo
           @cash = cash
           @all_in = false
+          @token = SecureRandom.hex(10)
         end
 
         def receive_card(card)
