@@ -11,7 +11,6 @@ describe PokerArena::Interfaces::Controllers::GamesController do
   let(:players_repository) { PokerArena::Infrastructure::Repositories::PlayersRepository.new }
   let(:table_name) { 'azuria' }
 
-  # Create a hand history for testing
   let(:hand_history) do
     PokerArena::Domain::Entities::HandHistory.new(
       id: nil,
@@ -35,7 +34,6 @@ describe PokerArena::Interfaces::Controllers::GamesController do
     )
   end
 
-  # Set up the app
   let(:controller_class) do
     Class.new(PokerArena::Interfaces::Controllers::GamesController) do
       configure do
@@ -84,7 +82,7 @@ describe PokerArena::Interfaces::Controllers::GamesController do
     it 'returns a 404 error when the hand history is not found' do
       get '/api/hand_histories/999'
 
-      expect(last_response.status).to eq(200) # The controller returns 200 with error in body
+      expect(last_response.status).to eq(200)
 
       response_body = JSON.parse(last_response.body)
       expect(response_body['status']).to eq(404)
@@ -94,7 +92,6 @@ describe PokerArena::Interfaces::Controllers::GamesController do
 
   describe 'GET /api/tables/:name/hand_histories' do
     it 'returns all hand histories for a table' do
-      # Add another hand history for the same table
       hand_histories_repository.persist(hand_history)
 
       get "/api/tables/#{table_name}/hand_histories"
@@ -120,7 +117,6 @@ describe PokerArena::Interfaces::Controllers::GamesController do
 
   describe 'POST /api/tables/:name/save_hand_history' do
     it 'saves the current hand as a history' do
-      # Set up a table with a completed game
       table = tables_repository.find(table_name)
       player1 = PokerArena::Domain::Entities::Player.new(pseudo: 'player1')
       player2 = PokerArena::Domain::Entities::Player.new(pseudo: 'player2')
@@ -139,17 +135,14 @@ describe PokerArena::Interfaces::Controllers::GamesController do
       set.add_game(game)
       table.sets << set
 
-      # Add cards to the board
       table.board.receive_card(PokerArena::Domain::Entities::Card.new('Ah'))
       table.board.receive_card(PokerArena::Domain::Entities::Card.new('2d'))
       table.board.receive_card(PokerArena::Domain::Entities::Card.new('7c'))
       table.board.receive_card(PokerArena::Domain::Entities::Card.new('Ks'))
       table.board.receive_card(PokerArena::Domain::Entities::Card.new('Td'))
 
-      # Mock the round_completed? method to return true
       allow(table).to receive(:round_completed?).and_return(true)
 
-      # Initial count of hand histories
       initial_count = hand_histories_repository.all.size
 
       post "/api/tables/#{table_name}/save_hand_history"
@@ -160,14 +153,13 @@ describe PokerArena::Interfaces::Controllers::GamesController do
       expect(response_body['status']).to eq(200)
       expect(response_body['message']).to include('saved successfully')
 
-      # Check if a new hand history was saved
       expect(hand_histories_repository.all.size).to eq(initial_count + 1)
     end
 
     it 'returns an error when there is no active game' do
       post '/api/tables/balamb/save_hand_history'
 
-      expect(last_response.status).to eq(200) # The controller returns 200 with error in body
+      expect(last_response.status).to eq(200) 
 
       response_body = JSON.parse(last_response.body)
       expect(response_body['status']).to eq(400)

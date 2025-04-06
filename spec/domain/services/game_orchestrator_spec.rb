@@ -53,7 +53,7 @@ RSpec.describe PokerArena::Domain::Services::GameOrchestrator do
 
       expect(orchestrator.process_action(first_to_act, :call, table.big_blind)).to be true
 
-      expect(current_game.actions.count).to eq(3) # 2 blinds + 1 call
+      expect(current_game.actions.count).to eq(3)
       expect(current_game.actions.last.type).to eq(:call)
     end
 
@@ -76,19 +76,14 @@ RSpec.describe PokerArena::Domain::Services::GameOrchestrator do
       current_game = table.sets.last.games.last
       expect(current_game.status).to eq(:preflop)
 
-      # Process actions to complete the preflop round
       first_to_act_pos = (table.sets.last.button_position + 3) % table.players.count
       first_to_act = table.players[first_to_act_pos]
       second_to_act_pos = (first_to_act_pos + 1) % table.players.count
       second_to_act = table.players[second_to_act_pos]
 
-      # The process_action method will automatically advance the game status
-      # if the round is completed, so we don't need to call advance_game_status manually
       orchestrator.process_action(first_to_act, :call, table.big_blind)
       orchestrator.process_action(second_to_act, :call, 0)
 
-      # After the preflop actions, the game should advance to flop or turn
-      # depending on the implementation
       expect(%i[flop turn].include?(current_game.status)).to be true
       expect(table.board.cards.count).to be >= 3
     end
@@ -102,33 +97,25 @@ RSpec.describe PokerArena::Domain::Services::GameOrchestrator do
     it 'determines the winner and distributes the pot' do
       table.sets.last.games.last
 
-      # Set up a scenario where player1 folds
       first_to_act_pos = (table.sets.last.button_position + 3) % table.players.count
       first_to_act = table.players[first_to_act_pos]
 
       orchestrator.process_action(first_to_act, :fold, 0)
 
-      # Pot before distribution
       initial_pot = table.pot
       expect(initial_pot).to be > 0
-
-      # Determine winner
       orchestrator.determine_winner
-
-      # Pot after distribution
       expect(table.pot).to eq(0)
     end
   end
 
   describe 'complete game flow' do
     it 'handles a complete hand correctly' do
-      # Start the game
       orchestrator.start_game
 
       current_set = table.sets.last
       current_game = current_set.games.last
 
-      # Process preflop actions
       first_to_act_pos = (current_set.button_position + 3) % table.players.count
       first_to_act = table.players[first_to_act_pos]
       second_to_act_pos = (first_to_act_pos + 1) % table.players.count

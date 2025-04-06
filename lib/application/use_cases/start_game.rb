@@ -13,8 +13,6 @@ module PokerArena
           table = @tables_repository.find(table_name)
 
           begin
-            # The table.start_game method now delegates to the GameOrchestrator
-            # which handles the game flow and coordinates the different services
             table.start_game
             @presenter.game_start_success
           rescue StandardError => e

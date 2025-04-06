@@ -51,7 +51,6 @@ module PokerArena
           json(result)
         end
 
-        # Hand history endpoints
         get %r{/api/hand_histories/([^/]+)/?} do |id|
           result = @get_hand_history_use_case.call(id)
           json(result)

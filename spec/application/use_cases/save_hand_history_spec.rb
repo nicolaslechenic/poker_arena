@@ -7,7 +7,8 @@ describe PokerArena::Application::UseCases::SaveHandHistory do
   let(:tables_repository) do
     PokerArena::Infrastructure::Repositories::TablesRepository.new(nil, true)
   end
-  let(:table_name) { 'test_table_for_save_hand_history' }
+
+  let(:table_name) { 'azuria' }
 
   let(:player1) do
     player = PokerArena::Domain::Entities::Player.new(pseudo: 'player1')
@@ -21,32 +22,17 @@ describe PokerArena::Application::UseCases::SaveHandHistory do
     player
   end
 
-  let(:action1) do
-    PokerArena::Domain::Entities::Action.new(
-      player: player1,
-      type: :bet,
-      value: 1.0
-    )
-  end
-
-  let(:action2) do
-    PokerArena::Domain::Entities::Action.new(
-      player: player2,
-      type: :call,
-      value: 1.0
-    )
-  end
-
   let(:table) do
     table = tables_repository.find(table_name)
+
+    table.instance_variable_set('@players', [])
+    table.instance_variable_set('@sets', [])
     table.players << player1
     table.players << player2
 
     set = PokerArena::Domain::Entities::Set.new(players: table.players)
     game = PokerArena::Domain::Entities::Game.new(status: :river)
 
-    # Add actions for each game stage to simulate a complete game
-    # Blinds
     blinds_action1 = PokerArena::Domain::Entities::Action.new(
       player: player1,
       type: :bet,
@@ -116,7 +102,6 @@ describe PokerArena::Application::UseCases::SaveHandHistory do
       game_status: :river
     )
 
-    # Add all actions to the game
     game.add_action(blinds_action1)
     game.add_action(blinds_action2)
     game.add_action(preflop_action1)
@@ -133,14 +118,12 @@ describe PokerArena::Application::UseCases::SaveHandHistory do
 
     table.pot = 2.0
 
-    # Add cards to the board
     table.board.receive_card(PokerArena::Domain::Entities::Card.new('Ah'))
     table.board.receive_card(PokerArena::Domain::Entities::Card.new('2d'))
     table.board.receive_card(PokerArena::Domain::Entities::Card.new('7c'))
     table.board.receive_card(PokerArena::Domain::Entities::Card.new('Ks'))
     table.board.receive_card(PokerArena::Domain::Entities::Card.new('Td'))
 
-    # Add cards to players
     player1.receive_card(PokerArena::Domain::Entities::Card.new('As'))
     player1.receive_card(PokerArena::Domain::Entities::Card.new('Kd'))
     player2.receive_card(PokerArena::Domain::Entities::Card.new('Qh'))
@@ -158,8 +141,9 @@ describe PokerArena::Application::UseCases::SaveHandHistory do
 
   describe '#call' do
     context 'when the game is completed (river stage)' do
+      before { table }
+      
       it 'saves the hand history and returns success status' do
-        # Call with skip_checks = true to bypass validation
         result = subject.call(table_name, true)
 
         expect(result[:status]).to eq(200)

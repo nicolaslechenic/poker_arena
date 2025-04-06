@@ -18,10 +18,8 @@ describe PokerArena::Infrastructure::Persistence::JsonStore do
     end
 
     it 'loads data from file if it exists' do
-      # Write some data to the file
       File.write(temp_file.path, '{"1": {"name": "Test"}}')
 
-      # Create a new store that should load this data
       new_store = described_class.new(temp_file.path)
 
       expect(new_store.instance_variable_get(:@data)).to eq({ '1' => { 'name' => 'Test' } })
@@ -68,7 +66,6 @@ describe PokerArena::Infrastructure::Persistence::JsonStore do
     it 'persists the data to the file' do
       store.save('1', { 'name' => 'Test' })
 
-      # Create a new store that should load the persisted data
       new_store = described_class.new(temp_file.path)
 
       expect(new_store.find('1')).to eq({ 'name' => 'Test' })
@@ -96,7 +93,6 @@ describe PokerArena::Infrastructure::Persistence::JsonStore do
     it 'persists the deletion to the file' do
       store.delete('1')
 
-      # Create a new store that should load the persisted data
       new_store = described_class.new(temp_file.path)
 
       expect(new_store.find('1')).to be_nil
@@ -116,8 +112,7 @@ describe PokerArena::Infrastructure::Persistence::JsonStore do
 
     it 'persists the clearing to the file' do
       store.clear
-
-      # Create a new store that should load the persisted data
+      
       new_store = described_class.new(temp_file.path)
 
       expect(new_store.all).to be_empty

@@ -86,7 +86,6 @@ RSpec.describe 'Complete poker hand between two bots', type: :integration do
     )
     expect(result[:status]).to eq(200)
 
-    # Force the game status to advance for testing
     table.advance_game_status if current_game.status == :preflop
 
     expect(current_game.status).to eq(:flop)
@@ -108,7 +107,6 @@ RSpec.describe 'Complete poker hand between two bots', type: :integration do
     )
     expect(result[:status]).to eq(200)
 
-    # Force the game status to advance for testing
     table.advance_game_status if current_game.status == :flop
 
     expect(current_game.status).to eq(:turn)
@@ -138,11 +136,9 @@ RSpec.describe 'Complete poker hand between two bots', type: :integration do
     )
     expect(result[:status]).to eq(200)
 
-    # Manually distribute the pot
     folding_player = first_to_act
     winning_player = next_to_act
 
-    # Manually set the game status to river and distribute the pot
     current_game.status = :river
     table.determine_winner
     current_set.button_position = 1
@@ -154,13 +150,8 @@ RSpec.describe 'Complete poker hand between two bots', type: :integration do
     folding_player == bot1 ? @initial_bot1_stack : @initial_bot2_stack
     initial_winning_stack = winning_player == bot1 ? @initial_bot1_stack : @initial_bot2_stack
 
-    # The winning player's cash amount should be greater than the initial stack
-    # because they've won the pot
     expect(winning_player.cash.amount).to be > initial_winning_stack
-
     expect(winning_player.cash.amount).not_to eq(initial_winning_stack)
-    # The total amount of money in the system should remain the same
-    # (within a small margin of error due to floating point arithmetic)
     expect(bot1.cash.amount + bot2.cash.amount).to be_within(1.5).of(@initial_bot1_stack + @initial_bot2_stack)
   end
 end

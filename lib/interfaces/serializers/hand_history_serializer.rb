@@ -32,7 +32,6 @@ module PokerArena
         private
 
         def serialize_actions(actions)
-          # Group actions by street for better organization
           {
             preflop: actions.select { |action| action[:game_status] == :preflop },
             flop: actions.select { |action| action[:game_status] == :flop },

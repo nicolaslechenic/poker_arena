@@ -35,7 +35,6 @@ module PokerArena
             next if @store.find(name)
 
             table = Domain::Entities::Table.new(tables_repository: self)
-            # Force the name to be the one we want
             table.instance_variable_set('@name', name)
             persist(table)
           end

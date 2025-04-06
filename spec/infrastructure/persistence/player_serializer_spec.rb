@@ -11,7 +11,6 @@ describe PokerArena::Infrastructure::Persistence::PlayerSerializer do
     player.cash.stack = 100.0
     player.all_in = false
 
-    # Add some cards
     player.cards = [
       PokerArena::Domain::Entities::Card.new('Ah'),
       PokerArena::Domain::Entities::Card.new('Kd')

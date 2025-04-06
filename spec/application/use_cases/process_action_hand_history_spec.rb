@@ -76,8 +76,6 @@ describe 'ProcessAction with HandHistory' do
 
       table.advance_game_status
 
-      # allow_any_instance_of(PokerArena::Domain::Entities::Table).to receive(:round_completed?).and_return(true)
-
       process_action_use_case.call(table_name, player1.token, 'check', 0)
       process_action_use_case.call(table_name, player2.token, 'check', 0)
 

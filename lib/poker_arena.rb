@@ -30,12 +30,13 @@ module PokerArena
       tables_repository: tables_repository,
       players_repository: players_repository
     )
-    # Update the ProcessAction use case to include hand_histories_repository
-    process_action_use_case = Application::UseCases::ProcessAction.new(
-      tables_repository,
-      players_repository,
-      hand_histories_repository
-    )
+
+    process_action_use_case = 
+      Application::UseCases::ProcessAction.new(
+        tables_repository,
+        players_repository,
+        hand_histories_repository
+      )
 
     use(
       Interfaces::Controllers::GamesController,

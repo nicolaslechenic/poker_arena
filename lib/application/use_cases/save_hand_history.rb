@@ -14,10 +14,8 @@ module PokerArena
           current_set = table.sets.last
           current_game = current_set&.games&.last
 
-          # Check for nil game
           return { status: 400, error: 'No active game found' } if current_game.nil?
 
-          # Skip all checks in test mode
           return save_hand_history(table, current_game) if skip_checks
 
           return { status: 400, error: 'Game is not completed' } unless current_game.status == :river
@@ -37,7 +35,6 @@ module PokerArena
             }
           end
 
-          # Format actions data
           actions_data = current_game.actions.map do |action|
             {
               player_position: table.players.index(action.player),
@@ -48,26 +45,23 @@ module PokerArena
             }
           end
 
-          # Format board cards
           board_cards = {
             flop: table.board.flop,
             turn: table.board.turn,
             river: table.board.river
           }
 
-          # Create hand history
           hand_history = Domain::Entities::HandHistory.new(
-            id: nil, # Will be assigned by repository
+            id: nil,
             table_name: table.name,
             players: players_data,
             actions: actions_data,
             board_cards: board_cards,
             pot: table.pot,
-            winners: [], # This would need to be populated with winner information
+            winners: [],
             timestamp: Time.now
           )
 
-          # Save to repository
           saved_history = @hand_histories_repository.persist(hand_history)
 
           {

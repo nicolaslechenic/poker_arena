@@ -34,40 +34,46 @@ module PokerArena
 
           current_set = table.sets.last
           current_game = current_set&.games&.last
-
-          # Check if the game is completed (either at river stage or all players but one have folded)
-          if current_game &&
-             ((current_game.status == :river && all_players_acted_in_river?(current_game, table.players)) ||
-              active_players_count(current_game) <= 1 ||
-              table.round_completed?) &&
-             !hand_history_exists_for_game?(table, current_game)
-
+          
+          return unless current_game
+          return if hand_history_exists_for_game?(table, current_game)
+          
+          if should_save_hand_history?(table, current_game)
             save_hand_history(table, current_set, current_game)
           end
         end
+        
+        def should_save_hand_history?(table, current_game)
+          is_river_completed?(current_game, table.players) ||
+            only_one_active_player?(current_game) ||
+            table.round_completed?
+        end
+        
+        def is_river_completed?(current_game, players)
+          current_game.status == :river && all_players_acted_in_river?(current_game, players)
+        end
+        
+        def only_one_active_player?(current_game)
+          active_players_count(current_game) <= 1
+        end
 
         def all_players_acted_in_river?(game, players)
-          # Get all active players (players who haven't folded)
           active_players = players.reject do |player|
             game.actions.any? { |a| a.player == player && a.type == :fold }
           end
 
-          # Get all players who have acted in the river stage
           river_actions = game.actions.select { |a| a.game_status == :river }
           river_players = river_actions.map(&:player).uniq
 
-          # Check if all active players have acted in the river stage
           active_players.all? { |player| river_players.include?(player) }
         end
 
         def active_players_count(game)
-          # Get all unique players who have acted in this game
           all_players = game.actions.map(&:player).uniq
 
-          # Get all unique players who have folded
-          folded_players = game.actions.select { |a| a.type == :fold }.map(&:player).uniq
+          folded_players = 
+            game.actions.select { |a| a.type == :fold }.map(&:player).uniq
 
-          # Active players = all players - folded players
           all_players.size - folded_players.size
         end
 

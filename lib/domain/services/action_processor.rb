@@ -20,7 +20,6 @@ module PokerArena
             value = 0
           end
 
-          # For call actions, ensure the value is set correctly
           value = current_game.current_bet if action_type == :call && value.zero?
 
           action = create_action(player, action_type, value, current_game.status)

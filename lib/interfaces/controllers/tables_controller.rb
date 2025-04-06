@@ -10,7 +10,6 @@ module PokerArena
           @players_repository = options.fetch(:players_repository)
         end
 
-        # Handle both with and without trailing slash
         get %r{/api/tables/?} do
           tables =
             @tables_repository.all.map do |table|

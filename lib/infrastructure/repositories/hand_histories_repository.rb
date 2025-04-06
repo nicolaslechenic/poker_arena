@@ -36,7 +36,6 @@ module PokerArena
             id = @next_id.to_s
             @next_id += 1
 
-            # Create a new hand history with the assigned ID
             new_hand_history = Domain::Entities::HandHistory.new(
               id: id,
               table_name: hand_history.table_name,

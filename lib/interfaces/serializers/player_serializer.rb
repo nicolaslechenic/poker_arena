@@ -12,7 +12,6 @@ module PokerArena
 
         private
 
-        # Have to be flat
         def full_json
           @full_json ||=
             {

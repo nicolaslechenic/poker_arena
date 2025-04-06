@@ -56,57 +56,47 @@ module PokerArena
           current_status = current_game.status
 
           active_players = @table.players.reject { |p| player_folded?(p, current_game) }
-
           return true if active_players.size <= 1
 
           all_in_players = active_players.select(&:all_in?)
-          return true if all_in_players.size >= active_players.size - 1
+          non_all_in_players = active_players - all_in_players
+          return true if non_all_in_players.size <= 1 && !all_in_players.empty?
 
           current_bet_amount = current_bet(current_game)
-
-          active_players.each do |player|
-            next if player.all_in?
-
-            return false if player_bet(player, current_game) < current_bet_amount
+          non_all_in_players.each do |player|
+            player_bet_amount = player_bet(player, current_game)
+            return false if player_bet_amount < current_bet_amount
           end
 
-          if current_status == :preflop
-            # Get all actions in the preflop round (excluding blinds)
-            preflop_actions = current_game.actions.select { |a| a.game_status == :preflop }
+          current_round_actions = 
+            if current_status == :preflop
+              current_game.actions.select { |a| a.game_status == :preflop }
+            else
+              current_game.actions.select { |a| a.game_status == current_status }
+            end
 
-            # If no preflop actions yet, round is not completed
-            return false if preflop_actions.empty?
+          return false if current_round_actions.empty?
 
-            # Check if all active players have acted in the preflop
-            active_player_ids = active_players.map(&:object_id)
-            action_player_ids = preflop_actions.map { |a| a.player.object_id }
-
-            # If some active players haven't acted yet, the round is not completed
-          else
-            # For other rounds, check if all active players have acted in this round
-            current_round_actions = current_game.actions.select { |a| a.game_status == current_status }
-
-            # If no actions in this round yet, round is not completed
-            return false if current_round_actions.empty?
-
-            # Check if all active players have acted in this round
-            active_player_ids = active_players.map(&:object_id)
-            action_player_ids = current_round_actions.map { |a| a.player.object_id }
-
-            # If some active players haven't acted yet, the round is not completed
-          end
+          active_player_ids = active_players.map(&:object_id)
+          action_player_ids = current_round_actions.map { |a| a.player.object_id }.uniq
+          
           missing_players = active_player_ids - action_player_ids
           return false unless missing_players.empty?
 
-          # Check if we've gone around the table since the last bet/raise
-          last_bet_pos = last_bet_position(current_game)
+          last_bet_raise = 
+            current_round_actions.reverse.find { |a| %i[bet raise].include?(a.type) }
+          
+          return true if last_bet_raise.nil?
+          
+          last_bet_index = current_round_actions.index(last_bet_raise)
+          actions_after_bet = current_round_actions[last_bet_index + 1..]
 
-          # If there was no bet/raise, and all players have acted, the round is completed
-          return true if last_bet_pos.nil?
+          return false if actions_after_bet.empty?
 
-          # If there was a bet/raise, check if we've gone around to the next player
-          current_pos = @table.players.index(current_player)
-          (last_bet_pos + 1) % @table.players.count == current_pos
+          players_who_need_to_act = active_players.reject { |p| p == last_bet_raise.player || p.all_in? }
+          players_who_acted_after_bet = actions_after_bet.map(&:player).uniq
+
+          (players_who_need_to_act - players_who_acted_after_bet).empty?
         end
 
         private

@@ -90,7 +90,7 @@ describe PokerArena::Infrastructure::Repositories::HandHistoriesRepository do
     before do
       repository.persist(hand_history)
       repository.persist(hand_history2)
-      repository.persist(hand_history) # Another history for the same table
+      repository.persist(hand_history)
     end
 
     it 'returns all hand histories for the given table' do

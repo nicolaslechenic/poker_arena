@@ -61,9 +61,6 @@ RSpec.describe 'All-in behavior', type: :integration do
     end
 
     if bot1.all_in?
-      # Skip the pot check for now
-      # The total amount of money in the system should remain the same
-      # (within a small margin of error due to floating point arithmetic)
       expect(bot1.cash.amount + bot2.cash.amount).to be_within(1.5).of(@initial_bot1_stack + @initial_bot2_stack)
     else
       first_to_act_pos = (current_set.button_position + 3) % table.players.count
@@ -124,7 +121,6 @@ RSpec.describe 'All-in behavior', type: :integration do
     current_game.status = :turn
     table.advance_game_status
 
-    # Ensure the board has a turn card
     table.dealer.deal(table.board) if table.board.cards.count < 4
 
     current_game.status = :river

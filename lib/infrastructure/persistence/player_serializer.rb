@@ -19,16 +19,9 @@ module PokerArena
             pseudo: data['pseudo']
           )
 
-          # Set token
           player.instance_variable_set('@token', data['token'])
-
-          # Set cash
           player.instance_variable_set('@cash', deserialize_cash(data['cash']))
-
-          # Set cards
           player.cards = deserialize_cards(data['cards'])
-
-          # Set all_in
           player.all_in = data['all_in']
 
           player

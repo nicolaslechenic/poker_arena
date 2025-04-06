@@ -37,6 +37,9 @@ module PokerArena
           sets = deserialize_sets(data['sets'] || [], table, players)
           table.instance_variable_set('@sets', sets)
 
+          # Ensure all services are properly initialized
+          # These are already initialized in the Table constructor, so we don't need to set them again
+          
           table
         end
 

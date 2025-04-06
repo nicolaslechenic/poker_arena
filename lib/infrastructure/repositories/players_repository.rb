@@ -63,11 +63,9 @@ module PokerArena
         private
 
         def unused_token
-          # For tests, we'll use a simple counter to avoid collisions
           @token_counter ||= 0
           @token_counter += 1
 
-          # Use a deterministic token for tests
           "player_token_#{@token_counter}"
         end
       end
