@@ -13,7 +13,8 @@ module PokerArena
             'board_cards' => serialize_board_cards(hand_history.board_cards),
             'pot' => hand_history.pot,
             'winners' => serialize_winners(hand_history.winners),
-            'timestamp' => hand_history.timestamp.to_s
+            'timestamp' => hand_history.timestamp.to_s,
+            'player_cards' => hand_history.player_cards
           }
         end
 
@@ -26,7 +27,8 @@ module PokerArena
             board_cards: deserialize_board_cards(data['board_cards']),
             pot: data['pot'],
             winners: deserialize_winners(data['winners']),
-            timestamp: Time.parse(data['timestamp'])
+            timestamp: Time.parse(data['timestamp']),
+            player_cards: data['player_cards'] || {}
           )
         end
 

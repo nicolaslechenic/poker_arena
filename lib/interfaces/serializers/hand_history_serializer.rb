@@ -11,6 +11,7 @@ module PokerArena
         def call(options = {})
           without = options.fetch(:without, [])
           with = options.fetch(:with, {})
+          player_token = options.fetch(:player_token, nil)
 
           result = {
             id: @hand_history.id,
@@ -20,7 +21,8 @@ module PokerArena
             players: @hand_history.players,
             actions: serialize_actions(@hand_history.actions),
             board_cards: @hand_history.board_cards,
-            winners: @hand_history.winners
+            winners: @hand_history.winners,
+            player_cards: serialize_player_cards(@hand_history.player_cards, player_token)
           }
 
           result.merge!(with)
@@ -38,6 +40,29 @@ module PokerArena
             turn: actions.select { |action| action[:game_status] == :turn },
             river: actions.select { |action| action[:game_status] == :river }
           }
+        end
+
+        def serialize_player_cards(player_cards, player_token)
+          return {} unless player_cards
+
+          # If no player token is provided, return empty cards
+          return {} unless player_token
+
+          # Find the player's pseudo from the token
+          player_pseudo = find_player_pseudo(player_token)
+          return {} unless player_pseudo
+
+          # Return only the cards for the current player
+          filtered_cards = {}
+          filtered_cards[player_pseudo] = player_cards[player_pseudo] if player_cards[player_pseudo]
+
+          filtered_cards
+        end
+
+        def find_player_pseudo(player_token)
+          # In a real implementation, we would look up the player's pseudo from the token
+          # For now, we'll assume the token is the pseudo
+          player_token
         end
       end
     end

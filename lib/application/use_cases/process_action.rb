@@ -24,10 +24,8 @@ module PokerArena
           result = table.process_action(player, action_type.to_sym, value.to_f)
           return @presenter.error('Not your turn') unless result
 
-          # Persist the table to save the updated pot
           @tables_repository.persist(table)
 
-          # Persist the player to save the updated stack and stakes
           @players_repository.persist(player)
 
           save_hand_history_if_completed(table)
@@ -42,17 +40,8 @@ module PokerArena
           current_game = current_set&.games&.last
 
           return unless current_game
-          return if hand_history_exists_for_game?(table, current_game)
-
-          return unless should_save_hand_history?(table, current_game)
 
           save_hand_history(table, current_set, current_game)
-        end
-
-        def should_save_hand_history?(table, current_game)
-          is_river_completed?(current_game, table.players) ||
-            only_one_active_player?(current_game) ||
-            table.round_completed?
         end
 
         def is_river_completed?(current_game, players)
@@ -117,6 +106,11 @@ module PokerArena
             river: table.board.river
           }
 
+          player_cards = {}
+          table.players.each do |player|
+            player_cards[player.pseudo] = player.cards.map(&:litteral) unless player.cards.empty?
+          end
+
           hand_history = Domain::Entities::HandHistory.new(
             id: nil,
             table_name: table.name,
@@ -125,7 +119,8 @@ module PokerArena
             board_cards: board_cards,
             pot: table.pot,
             winners: [],
-            timestamp: Time.now
+            timestamp: Time.now,
+            player_cards: player_cards
           )
 
           @hand_histories_repository.persist(hand_history)

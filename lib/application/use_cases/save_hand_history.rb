@@ -51,6 +51,11 @@ module PokerArena
             river: table.board.river
           }
 
+          player_cards = {}
+          table.players.each do |player|
+            player_cards[player.pseudo] = player.cards.map(&:litteral) unless player.cards.empty?
+          end
+
           hand_history = Domain::Entities::HandHistory.new(
             id: nil,
             table_name: table.name,
@@ -59,7 +64,8 @@ module PokerArena
             board_cards: board_cards,
             pot: table.pot,
             winners: [],
-            timestamp: Time.now
+            timestamp: Time.now,
+            player_cards: player_cards
           )
 
           saved_history = @hand_histories_repository.persist(hand_history)

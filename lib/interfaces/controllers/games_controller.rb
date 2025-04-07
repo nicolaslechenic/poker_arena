@@ -16,6 +16,8 @@ module PokerArena
           @get_game_state_use_case = Application::UseCases::GetGameState.new(@tables_repository, @players_repository)
           @get_table_state_use_case = Application::UseCases::GetTableState.new(@tables_repository)
           @get_hand_history_use_case = Application::UseCases::GetHandHistory.new(@hand_histories_repository)
+          @get_table_history_use_case = Application::UseCases::GetTableHistory.new(@hand_histories_repository,
+                                                                                   @players_repository)
           @save_hand_history_use_case = Application::UseCases::SaveHandHistory.new(@hand_histories_repository,
                                                                                    @tables_repository)
         end
@@ -52,12 +54,20 @@ module PokerArena
         end
 
         get %r{/api/hand_histories/([^/]+)/?} do |id|
-          result = @get_hand_history_use_case.call(id)
+          player_token = params[:token]
+          result = @get_hand_history_use_case.call(id, player_token)
           json(result)
         end
 
         get %r{/api/tables/([^/]+)/hand_histories/?} do |name|
-          result = @get_hand_history_use_case.get_table_histories(name)
+          player_token = params[:token]
+          result = @get_hand_history_use_case.get_table_histories(name, player_token)
+          json(result)
+        end
+
+        get %r{/api/tables/([^/]+)/history/?} do |name|
+          player_token = params[:token]
+          result = @get_table_history_use_case.call(name, player_token)
           json(result)
         end
 

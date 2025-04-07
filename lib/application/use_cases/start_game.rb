@@ -15,10 +15,8 @@ module PokerArena
 
           begin
             table.start_game
-            # Persist the table to save the updated pot
             @tables_repository.persist(table)
 
-            # Persist the players to save their updated stacks and stakes
             if @players_repository
               table.players.each do |player|
                 @players_repository.persist(player)

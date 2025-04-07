@@ -4,9 +4,10 @@ module PokerArena
   module Domain
     module Entities
       class HandHistory
-        attr_reader :id, :table_name, :players, :actions, :board_cards, :pot, :timestamp, :winners
+        attr_reader :id, :table_name, :players, :actions, :board_cards, :pot, :timestamp, :winners, :player_cards
 
-        def initialize(id:, table_name:, players:, actions:, board_cards:, pot:, winners: [], timestamp: Time.now)
+        def initialize(id:, table_name:, players:, actions:, board_cards:, pot:, winners: [], timestamp: Time.now,
+                       player_cards: {})
           @id = id
           @table_name = table_name
           @players = players
@@ -15,6 +16,7 @@ module PokerArena
           @pot = pot
           @winners = winners
           @timestamp = timestamp
+          @player_cards = player_cards
         end
 
         def player_actions(player_position)
