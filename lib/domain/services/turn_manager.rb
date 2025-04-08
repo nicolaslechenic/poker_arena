@@ -30,7 +30,7 @@ module PokerArena
 
             next unless next_player_pos == (last_player_pos + 1) % @table.players.count
 
-            active_players = @table.players.reject { |p| player_folded?(p, current_game) }
+            active_players = @table.active_players(current_game)
             return active_players.first if active_players.any?
 
             return nil
@@ -40,11 +40,15 @@ module PokerArena
         end
 
         def player_folded?(player, game)
-          game.actions.select { |a| a.player == player }.any? { |a| a.type == :fold }
+          game.actions.each do |action|
+            return true if action.player == player && action.type == :fold
+          end
+
+          false
         end
 
         def any_player_all_in?(game)
-          active_players = @table.players.reject { |p| player_folded?(p, game) }
+          active_players = @table.active_players(game)
           active_players.any?(&:all_in?)
         end
 
@@ -55,7 +59,7 @@ module PokerArena
           current_game = current_set.games.last
           current_status = current_game.status
 
-          active_players = @table.players.reject { |p| player_folded?(p, current_game) }
+          active_players = @table.active_players(current_game)
           return true if active_players.size <= 1
 
           all_in_players = active_players.select(&:all_in?)

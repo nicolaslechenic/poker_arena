@@ -4,15 +4,15 @@ module PokerArena
   module Domain
     module Services
       class GameProgressionService
-        def advance_game_status(table, current_set, current_game)
-          status_handlers = {
-            preflop: ->(table, game) { advance_to_flop(table, game) },
-            flop: ->(table, game) { advance_to_turn(table, game) },
-            turn: ->(table, game) { advance_to_river(table, game) },
-            river: ->(table, _game) { end_hand(table, current_set) }
-          }
+        STATUS_PROGRESSION = {
+          preflop: ->(table, game) { advance_to_flop(table, game) },
+          flop: ->(table, game) { advance_to_turn(table, game) },
+          turn: ->(table, game) { advance_to_river(table, game) },
+          river: ->(table, _game) { end_hand(table, current_set) }
+        }.freeze
 
-          handler = status_handlers[current_game.status]
+        def advance_game_status(table, _current_set, current_game)
+          handler = STATUS_PROGRESSION[current_game.status]
           handler&.call(table, current_game)
         end
 

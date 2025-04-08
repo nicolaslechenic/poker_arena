@@ -78,7 +78,7 @@ RSpec.describe PokerArena::Interfaces::Presenters::GamePresenter do
     let(:current_game) { current_set.games.last }
 
     it 'returns the complete game state' do
-      result = presenter.game_state(table, player1, current_set, current_game, game_service)
+      result = presenter.game_state(table, player1, game_service)
 
       expect(result).to be_a(Hash)
       expect(result[:status]).to eq(:preflop)

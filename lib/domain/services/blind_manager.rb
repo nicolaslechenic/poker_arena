@@ -9,6 +9,7 @@ module PokerArena
         end
 
         def collect_blinds(game, current_set)
+          # TODO: Buggy (2 players and button at last position)
           button_pos = current_set.button_position
           small_blind_pos = (button_pos + 1) % @table.players.count
           big_blind_pos = (button_pos + 2) % @table.players.count

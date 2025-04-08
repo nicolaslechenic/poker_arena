@@ -13,20 +13,18 @@ module PokerArena
         def call(table_name, _player_token)
           table = @tables_repository.find(table_name)
 
-          begin
-            table.start_game
-            @tables_repository.persist(table)
+          table.start_game
+          @tables_repository.persist(table)
 
-            if @players_repository
-              table.players.each do |player|
-                @players_repository.persist(player)
-              end
+          if @players_repository
+            table.players.each do |player|
+              @players_repository.persist(player)
             end
-
-            @presenter.game_start_success
-          rescue StandardError => e
-            @presenter.error(e.message)
           end
+
+          @presenter.game_start_success
+        rescue StandardError => e
+          @presenter.error(e.message)
         end
 
         private

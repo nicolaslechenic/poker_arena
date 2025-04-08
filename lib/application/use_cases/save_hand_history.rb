@@ -27,23 +27,25 @@ module PokerArena
         private
 
         def save_hand_history(table, current_game)
-          players_data = table.players.map do |player|
-            {
-              pseudo: player.pseudo,
-              position: table.players.index(player),
-              initial_stack: player.cash.stack + player.cash.stakes
-            }
-          end
+          players_data =
+            table.players.map do |player|
+              {
+                pseudo: player.pseudo,
+                position: table.players.index(player),
+                initial_stack: player.cash.stack + player.cash.stakes
+              }
+            end
 
-          actions_data = current_game.actions.map do |action|
-            {
-              player_position: table.players.index(action.player),
-              player_pseudo: action.player.pseudo,
-              type: action.type,
-              value: action.value,
-              game_status: current_game.status
-            }
-          end
+          actions_data =
+            current_game.actions.map do |action|
+              {
+                player_position: table.players.index(action.player),
+                player_pseudo: action.player.pseudo,
+                type: action.type,
+                value: action.value,
+                game_status: current_game.status
+              }
+            end
 
           board_cards = {
             flop: table.board.flop,
@@ -52,23 +54,26 @@ module PokerArena
           }
 
           player_cards = {}
+
           table.players.each do |player|
             player_cards[player.pseudo] = player.cards.map(&:litteral) unless player.cards.empty?
           end
 
-          hand_history = Domain::Entities::HandHistory.new(
-            id: nil,
-            table_name: table.name,
-            players: players_data,
-            actions: actions_data,
-            board_cards: board_cards,
-            pot: table.pot,
-            winners: [],
-            timestamp: Time.now,
-            player_cards: player_cards
-          )
+          hand_history =
+            Domain::Entities::HandHistory.new(
+              id: nil,
+              table_name: table.name,
+              players: players_data,
+              actions: actions_data,
+              board_cards: board_cards,
+              pot: table.pot,
+              winners: [],
+              timestamp: Time.now,
+              player_cards: player_cards
+            )
 
-          saved_history = @hand_histories_repository.persist(hand_history)
+          saved_history =
+            @hand_histories_repository.persist(hand_history)
 
           {
             status: 200,

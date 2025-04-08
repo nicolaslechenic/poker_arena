@@ -5,11 +5,11 @@ module PokerArena
     module Services
       class GameService
         def player_folded?(player, game)
-          game.actions.select { |a| a.player == player }.any? { |a| a.type == :fold }
-        end
+          game.actions.each do |action|
+            return true if action.player == player && action.type == :fold
+          end
 
-        def active_players(table, game)
-          table.players.reject { |p| player_folded?(p, game) }
+          false
         end
 
         def current_player_position(table, set)
@@ -22,10 +22,6 @@ module PokerArena
 
         def preflop_beginning?(game)
           game.status == :preflop && game.actions.count <= 2
-        end
-
-        def preflop_first_player_position(set)
-          (set.button_position + 3) % set.players.count
         end
 
         def find_next_active_player_position(table, set, game)
@@ -43,9 +39,14 @@ module PokerArena
         end
 
         def player_bet(player, game)
-          game.actions.select { |a| a.player == player && %i[bet call raise].include?(a.type) }
-              .map(&:value)
-              .sum
+          actions_with_value =
+            game.actions.select do |action|
+              action.player == player && %i[bet call raise].include?(action.type)
+            end
+
+          actions_with_value
+            .map(&:value)
+            .sum
         end
 
         def current_bet(game)
@@ -62,9 +63,27 @@ module PokerArena
         end
 
         def all_active_players_have_equal_bets?(table, game)
-          active_players = table.players.reject { |p| player_folded?(p, game) }
-          current_bet_amount = current_bet(game)
-          active_players.all? { |p| player_bet(p, game) == current_bet_amount }
+          active_players = table.active_players(game)
+
+          player_bets =
+            active_players.map do |player|
+              player_bet(player, game)
+            end
+
+          player_bets.uniq.count == 1
+        end
+
+        def find_best_hand_player(players, board)
+          players.max_by do |player|
+            all_cards = player.cards + board.cards
+            PokerArena::Domain::Entities::Combo.best(all_cards).score
+          end
+        end
+
+        private
+
+        def preflop_first_player_position(set)
+          (set.button_position + 3) % set.players.count
         end
 
         def all_players_acted_after_last_bet?(table, set, game)
@@ -81,13 +100,6 @@ module PokerArena
 
           last_bet = bet_actions.last
           table.players.index(last_bet.player)
-        end
-
-        def find_best_hand_player(players, board)
-          players.max_by do |player|
-            all_cards = player.cards + board.cards
-            PokerArena::Domain::Entities::Combo.best(all_cards).score
-          end
         end
       end
     end

@@ -43,24 +43,22 @@ module PokerArena
         end
 
         def serialize_player_cards(player_cards, player_token)
-          return {} unless player_cards
+          return {} unless player_cards && player_token
 
-          # If no player token is provided, return empty cards
-          return {} unless player_token
-
-          # Find the player's pseudo from the token
           player_pseudo = find_player_pseudo(player_token)
           return {} unless player_pseudo
 
-          # Return only the cards for the current player
           filtered_cards = {}
-          filtered_cards[player_pseudo] = player_cards[player_pseudo] if player_cards[player_pseudo]
+          if player_cards[player_pseudo]
+            filtered_cards[player_pseudo] =
+              player_cards[player_pseudo]
+          end
 
           filtered_cards
         end
 
         def find_player_pseudo(player_token)
-          # In a real implementation, we would look up the player's pseudo from the token
+          # We would look up the player's pseudo from the token
           # For now, we'll assume the token is the pseudo
           player_token
         end

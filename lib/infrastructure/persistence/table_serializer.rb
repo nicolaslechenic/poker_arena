@@ -123,8 +123,11 @@ module PokerArena
 
           games_data.map do |game_data|
             game = Domain::Entities::Game.new(set: set)
+            # TODO: Clean (Beurk)
             game.instance_variable_set('@status', game_data['status'].to_sym)
             actions = deserialize_actions(game_data['actions'], game, players)
+
+            # TODO: Clean (Beurk)
             game.instance_variable_set('@actions', actions)
             game
           end

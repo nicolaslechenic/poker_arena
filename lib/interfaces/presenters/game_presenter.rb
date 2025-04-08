@@ -39,7 +39,10 @@ module PokerArena
           end
         end
 
-        def game_state(table, current_player, current_set, current_game, game_service, players_repository)
+        def game_state(table, current_player, game_service, players_repository)
+          current_set = table.sets.last
+          current_game = current_set&.games&.last
+
           {
             status: current_game.status,
             pot: table.pot,

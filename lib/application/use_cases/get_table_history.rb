@@ -46,9 +46,7 @@ module PokerArena
           histories_by_set = {}
 
           histories.each do |history|
-            set_id = "##{history.id}"
-
-            histories_by_set[set_id] = {
+            histories_by_set["##{history.id}"] = {
               positions: format_positions(history),
               dealer: determine_dealer_position(history),
               games: format_games(history, current_player)
@@ -73,6 +71,7 @@ module PokerArena
           0
         end
 
+        # TODO: to many responsibility BEURK!!!
         def format_games(history, current_player)
           games = []
           rounds = %i[blinds preflop flop turn river showdown]
@@ -84,14 +83,16 @@ module PokerArena
             player_stacks[player[:pseudo]] = player[:initial_stack]
           end
 
+          # TODO: Beurk, iterate over select into each block...
           rounds.each do |round|
-            round_actions = if round == :blinds
-                              history.actions.select do |a|
-                                a[:type] == :bet && %i[blinds preflop].include?(a[:game_status])
-                              end.first(2)
-                            else
-                              round == :showdown ? [] : history.actions_by_street(round)
-                            end
+            round_actions =
+              if round == :blinds
+                history.actions.select do |action|
+                  action[:type] == :bet && %i[blinds preflop].include?(action[:game_status])
+                end.first(2)
+              else
+                round == :showdown ? [] : history.actions_by_street(round)
+              end
 
             next if round_actions.empty? && round != :showdown
 

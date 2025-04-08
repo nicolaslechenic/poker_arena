@@ -9,7 +9,7 @@ module PokerArena
         end
 
         def distribute_pot(current_game)
-          active_players = @table.players.reject { |p| player_folded?(p, current_game) }
+          active_players = @table.active_players(current_game)
 
           if active_players.count == 1
             award_pot_to_winner(active_players.first)

@@ -39,6 +39,10 @@ module PokerArena
           raise ArgumentError, 'No more available table names in that repository'
         end
 
+        def active_players(game)
+          players.reject { |player| player_folded?(player, game) }
+        end
+
         def max_players
           MAX_PLAYERS
         end

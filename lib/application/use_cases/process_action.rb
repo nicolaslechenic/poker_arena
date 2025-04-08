@@ -13,6 +13,7 @@ module PokerArena
           @presenter = Interfaces::Presenters::GamePresenter.new
         end
 
+        # TODO: to many responsibility
         def call(table_name, player_token, action_type, value)
           table = @tables_repository.find(table_name)
           player = @players_repository.find(player_token)

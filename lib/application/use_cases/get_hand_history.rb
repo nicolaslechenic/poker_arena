@@ -10,7 +10,10 @@ module PokerArena
 
         def call(id, player_token = nil)
           hand_history = @hand_histories_repository.find(id)
-          serialized_history = Interfaces::Serializers::HandHistorySerializer.new(hand_history: hand_history).call(player_token: player_token)
+          serialized_history =
+            Interfaces::Serializers::HandHistorySerializer.new(
+              hand_history: hand_history
+            ).call(player_token: player_token)
 
           {
             status: 200,

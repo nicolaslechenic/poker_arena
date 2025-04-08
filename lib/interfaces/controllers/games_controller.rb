@@ -9,17 +9,34 @@ module PokerArena
           @tables_repository = options.fetch(:tables_repository)
           @players_repository = options.fetch(:players_repository)
           @hand_histories_repository = options.fetch(:hand_histories_repository)
-          @start_game_use_case = Application::UseCases::StartGame.new(@tables_repository, @players_repository)
-          @process_action_use_case = options.fetch(:process_action_use_case,
-                                                   Application::UseCases::ProcessAction.new(@tables_repository,
-                                                                                            @players_repository))
-          @get_game_state_use_case = Application::UseCases::GetGameState.new(@tables_repository, @players_repository)
-          @get_table_state_use_case = Application::UseCases::GetTableState.new(@tables_repository)
-          @get_hand_history_use_case = Application::UseCases::GetHandHistory.new(@hand_histories_repository)
-          @get_table_history_use_case = Application::UseCases::GetTableHistory.new(@hand_histories_repository,
-                                                                                   @players_repository)
-          @save_hand_history_use_case = Application::UseCases::SaveHandHistory.new(@hand_histories_repository,
-                                                                                   @tables_repository)
+          @start_game_use_case =
+            Application::UseCases::StartGame.new(@tables_repository, @players_repository)
+
+          process_action = Application::UseCases::ProcessAction.new(
+            @tables_repository,
+            @players_repository
+          )
+
+          @process_action_use_case = options.fetch(:process_action_use_case, process_action)
+
+          @get_game_state_use_case =
+            Application::UseCases::GetGameState.new(@tables_repository, @players_repository)
+          @get_table_state_use_case =
+            Application::UseCases::GetTableState.new(@tables_repository)
+          @get_hand_history_use_case =
+            Application::UseCases::GetHandHistory.new(@hand_histories_repository)
+
+          @get_table_history_use_case =
+            Application::UseCases::GetTableHistory.new(
+              @hand_histories_repository,
+              @players_repository
+            )
+
+          @save_hand_history_use_case =
+            Application::UseCases::SaveHandHistory.new(
+              @hand_histories_repository,
+              @tables_repository
+            )
         end
 
         post %r{/api/tables/([^/]+)/start/?} do |name|
