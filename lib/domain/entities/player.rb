@@ -6,8 +6,25 @@ module PokerArena
       class Player
         MAX_CARDS = 2
 
-        attr_reader :token, :pseudo, :stack, :cash
-        attr_accessor :cards, :all_in
+        class << self
+          def build(**data)
+            player =
+              new(
+                pseudo: data[:pseudo],
+                cash: data[:cash]
+              )
+
+            player.token = data[:token]
+            player.all_in = data[:all_in]
+            player.all_in = data[:all_in]
+            player.cards = data[:cards]
+
+            player
+          end
+        end
+
+        attr_reader :pseudo, :stack, :cash
+        attr_accessor :cards, :all_in, :token, :cash
 
         def initialize(pseudo:, cash: Cash.new)
           @cards = []

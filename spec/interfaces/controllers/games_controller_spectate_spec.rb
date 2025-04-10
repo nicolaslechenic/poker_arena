@@ -7,7 +7,7 @@ RSpec.describe 'Spectator API', type: :controller do
   include Rack::Test::Methods
 
   let(:players_repository) { PokerArena::Infrastructure::Repositories::PlayersRepository.new }
-  let(:tables_repository) { PokerArena::Infrastructure::Repositories::TablesRepository.new(nil, true) }
+  let(:tables_repository) { PokerArena::Infrastructure::Repositories::TablesRepository.new }
   let(:table) { PokerArena::Domain::Entities::Table.new(tables_repository: tables_repository) }
   let(:player1) { PokerArena::Domain::Entities::Player.new(pseudo: 'Player1') }
   let(:player2) { PokerArena::Domain::Entities::Player.new(pseudo: 'Player2') }

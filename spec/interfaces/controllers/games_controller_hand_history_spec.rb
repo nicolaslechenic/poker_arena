@@ -7,7 +7,7 @@ describe PokerArena::Interfaces::Controllers::GamesController do
   include Rack::Test::Methods
 
   let(:hand_histories_repository) { PokerArena::Infrastructure::Repositories::HandHistoriesRepository.new }
-  let(:tables_repository) { PokerArena::Infrastructure::Repositories::TablesRepository.new(nil, true) }
+  let(:tables_repository) { PokerArena::Infrastructure::Repositories::TablesRepository.new }
   let(:players_repository) { PokerArena::Infrastructure::Repositories::PlayersRepository.new }
   let(:table_name) { 'azuria' }
 

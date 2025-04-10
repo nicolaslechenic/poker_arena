@@ -15,9 +15,9 @@ module PokerArena
           end
         end
 
-        attr_reader :name, :players, :board, :dealer, :sets, :player_manager, :blind_manager,
+        attr_reader :players, :board, :dealer, :sets, :player_manager, :blind_manager,
                     :turn_manager, :action_processor, :game_progression, :pot_manager
-        attr_accessor :pot
+        attr_accessor :pot, :name
 
         def initialize(tables_repository:, board: Board.new, dealer: Dealer.new)
           @name = self.class.available_names(tables_repository).sample

@@ -6,8 +6,7 @@ module PokerArena
       class Game
         STATUSES = %i[blinds preflop flop turn river].freeze
 
-        attr_accessor :status
-        attr_reader :actions
+        attr_accessor :status, :actions
 
         def initialize(status:)
           @status = status

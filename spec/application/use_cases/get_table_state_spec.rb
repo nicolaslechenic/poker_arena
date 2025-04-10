@@ -8,7 +8,7 @@ RSpec.describe PokerArena::Application::UseCases::GetTableState do
   end
 
   let(:tables_repository) do
-    PokerArena::Infrastructure::Repositories::TablesRepository.new(nil, true)
+    PokerArena::Infrastructure::Repositories::TablesRepository.new
   end
 
   let(:table) do

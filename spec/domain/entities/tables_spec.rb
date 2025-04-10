@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe PokerArena::Domain::Entities::Table do
-  let(:repo) { PokerArena::Infrastructure::Repositories::TablesRepository.new(nil, true) }
+  let(:repo) { PokerArena::Infrastructure::Repositories::TablesRepository.new }
   let(:table) { described_class.new(tables_repository: repo) }
 
   describe '#initialize' do

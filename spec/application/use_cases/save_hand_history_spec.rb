@@ -5,7 +5,7 @@ require 'spec_helper'
 describe PokerArena::Application::UseCases::SaveHandHistory do
   let(:hand_histories_repository) { PokerArena::Infrastructure::Repositories::HandHistoriesRepository.new }
   let(:tables_repository) do
-    PokerArena::Infrastructure::Repositories::TablesRepository.new(nil, true)
+    PokerArena::Infrastructure::Repositories::TablesRepository.new
   end
 
   let(:table_name) { 'azuria' }

@@ -28,12 +28,11 @@ module PokerArena
           @store = Persistence::JsonStore.new(@file_path)
           @tables = {}
 
-          # Initialize tables from NAMES if they don't exist
           NAMES.each do |name|
             next if @store.find(name)
 
             table = Domain::Entities::Table.new(tables_repository: self)
-            table.instance_variable_set('@name', name)
+            table.name = name
             persist(table)
           end
 

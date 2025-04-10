@@ -15,16 +15,13 @@ module PokerArena
         end
 
         def deserialize(data)
-          player = Domain::Entities::Player.new(
-            pseudo: data['pseudo']
+          Domain::Entities::Player.build(
+            pseudo: data['pseudo'],
+            token: data['token'],
+            all_in: data['all_in'],
+            cash: deserialize_cash(data['cash']),
+            cards: deserialize_cards(data['cards'])
           )
-
-          player.instance_variable_set('@token', data['token'])
-          player.instance_variable_set('@cash', deserialize_cash(data['cash']))
-          player.cards = deserialize_cards(data['cards'])
-          player.all_in = data['all_in']
-
-          player
         end
 
         private

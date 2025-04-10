@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe PokerArena::Application::UseCases::InitializeTables do
   let(:tables_repository) do
-    PokerArena::Infrastructure::Repositories::TablesRepository.new(nil, true)
+    PokerArena::Infrastructure::Repositories::TablesRepository.new
   end
 
   let(:use_case) { described_class.new(tables_repository) }

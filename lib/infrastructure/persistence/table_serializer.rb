@@ -100,7 +100,7 @@ module PokerArena
           return [] unless sets_data
 
           sets_data.map do |set_data|
-            set = Domain::Entities::Set.new(table: table)
+            set = Domain::Entities::Set.new(players: table.players)
             games = deserialize_games(set_data['games'], set, players)
             set.instance_variable_set('@games', games)
             set
@@ -118,17 +118,14 @@ module PokerArena
           end
         end
 
-        def deserialize_games(games_data, set, players)
+        def deserialize_games(games_data, _set, players)
           return [] unless games_data
 
           games_data.map do |game_data|
-            game = Domain::Entities::Game.new(set: set)
-            # TODO: Clean (Beurk)
-            game.instance_variable_set('@status', game_data['status'].to_sym)
+            game_data['status'].to_sym
+            game = Domain::Entities::Game.new(status: game_data['status'].to_sym)
             actions = deserialize_actions(game_data['actions'], game, players)
-
-            # TODO: Clean (Beurk)
-            game.instance_variable_set('@actions', actions)
+            game.actions = actions
             game
           end
         end
@@ -156,7 +153,7 @@ module PokerArena
               player: player,
               type: action_data['type'].to_sym,
               value: action_data['value'],
-              game: game
+              game_status: game.status
             )
           end.compact
         end
