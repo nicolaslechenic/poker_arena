@@ -12,7 +12,7 @@ RSpec.describe PokerArena::Application::UseCases::GetTableState do
   end
 
   let(:table) do
-    PokerArena::Domain::Entities::Table.new(tables_repository: tables_repository)
+    PokerArena::Domain::Entities::Table.new(name: "plop")
   end
 
   let(:player1) do

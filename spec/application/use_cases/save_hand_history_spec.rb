@@ -136,7 +136,6 @@ describe PokerArena::Application::UseCases::SaveHandHistory do
 
   before do
     hand_histories_repository.clear
-    PokerArena::Application::UseCases::InitializeTables.new(tables_repository).call
   end
 
   describe '#call' do

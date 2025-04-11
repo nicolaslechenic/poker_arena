@@ -16,7 +16,6 @@ module PokerArena
 
             player.token = data[:token]
             player.all_in = data[:all_in]
-            player.all_in = data[:all_in]
             player.cards = data[:cards]
 
             player

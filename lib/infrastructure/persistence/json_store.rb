@@ -7,6 +7,9 @@ module PokerArena
   module Infrastructure
     module Persistence
       class JsonStore
+
+        attr_reader :data
+        
         def initialize(file_path)
           @file_path = file_path
           @data = {}

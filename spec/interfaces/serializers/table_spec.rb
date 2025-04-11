@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe PokerArena::Interfaces::Serializers::TableSerializer do
   it 'return expected json format' do
     repo = PokerArena::Infrastructure::Repositories::TablesRepository.new
-    table = PokerArena::Domain::Entities::Table.new(tables_repository: repo)
+    table = PokerArena::Domain::Entities::Table.new(name: "arrakis")
     repo.persist(table)
 
     expect(described_class.new(table: table).call).to eql(

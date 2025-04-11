@@ -22,6 +22,8 @@ module PokerArena
 
         DATA_DIR = File.join(Dir.pwd, 'data')
 
+        attr_reader :store, :tables
+
         def initialize(file_path = nil)
           @file_path = file_path || File.join(DATA_DIR, 'tables.json')
           @serializer = Persistence::TableSerializer.new
@@ -31,8 +33,7 @@ module PokerArena
           NAMES.each do |name|
             next if @store.find(name)
 
-            table = Domain::Entities::Table.new(tables_repository: self)
-            table.name = name
+            table = Domain::Entities::Table.new(name:)
             persist(table)
           end
 

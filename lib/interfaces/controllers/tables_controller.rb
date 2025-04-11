@@ -19,19 +19,6 @@ module PokerArena
           json(tables: tables)
         end
 
-        get %r{/api/tables/create/?} do
-          current_table = Domain::Entities::Table.new(tables_repository: @tables_repository)
-
-          if @tables_repository.persist(current_table)
-            output =
-              Serializers::TableSerializer.new(table: current_table).call
-
-            json(status: 200, table: output)
-          else
-            json(status: 400)
-          end
-        end
-
         get %r{/api/tables/([^/]+)/?} do |name|
           params[:name] = name
           serialized_players =

@@ -5,7 +5,13 @@ require 'spec_helper'
 RSpec.describe 'All-in behavior', type: :integration do
   let(:players_repository) { PokerArena::Infrastructure::Repositories::PlayersRepository.new }
   let(:tables_repository) { PokerArena::Infrastructure::Repositories::TablesRepository.new }
-  let(:table) { PokerArena::Domain::Entities::Table.new(tables_repository: tables_repository) }
+  let(:table) do 
+    PokerArena::Domain::Entities::Table.build(
+      name: "arrakis",
+      players:
+    )  
+  end
+
   let(:bot1) { PokerArena::Domain::Entities::Player.new(pseudo: 'Bot1') }
   let(:bot2) { PokerArena::Domain::Entities::Player.new(pseudo: 'Bot2') }
   let(:start_game_use_case) { PokerArena::Application::UseCases::StartGame.new(tables_repository) }

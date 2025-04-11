@@ -22,8 +22,6 @@ module PokerArena
     tables_repository   = Infrastructure::Repositories::TablesRepository.new
     hand_histories_repository = Infrastructure::Repositories::HandHistoriesRepository.new
 
-    Application::UseCases::InitializeTables.new(tables_repository).call
-
     use(Interfaces::Controllers::PlayersController, players_repository: players_repository)
     use(
       Interfaces::Controllers::TablesController,

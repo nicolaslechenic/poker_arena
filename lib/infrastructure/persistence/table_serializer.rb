@@ -21,25 +21,19 @@ module PokerArena
         def deserialize(data, tables_repository = nil)
           board = deserialize_board(data['board']) || Domain::Entities::Board.new
           dealer = Domain::Entities::Dealer.new
-
-          table = Domain::Entities::Table.new(
-            tables_repository: tables_repository,
-            board: board,
-            dealer: dealer
-          )
-
-          table.instance_variable_set('@name', data['name'])
-          table.pot = data['pot'] || 0.0
-
           players = deserialize_players(data['players'] || [])
-          table.instance_variable_set('@players', players)
 
+          table = 
+            Domain::Entities::Table.build(
+              name: data["name"],
+              board: board,
+              dealer: dealer,
+              pot: data['pot'] || 0.0,
+              players:
+            )
           sets = deserialize_sets(data['sets'] || [], table, players)
-          table.instance_variable_set('@sets', sets)
 
-          # Ensure all services are properly initialized
-          # These are already initialized in the Table constructor, so we don't need to set them again
-
+          table.sets = sets
           table
         end
 

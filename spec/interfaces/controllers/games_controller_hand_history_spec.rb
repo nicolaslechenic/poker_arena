@@ -63,7 +63,6 @@ describe PokerArena::Interfaces::Controllers::GamesController do
 
   before do
     hand_histories_repository.clear
-    PokerArena::Application::UseCases::InitializeTables.new(tables_repository).call
     @persisted_history = hand_histories_repository.persist(hand_history)
   end
 

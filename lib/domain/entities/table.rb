@@ -10,17 +10,27 @@ module PokerArena
         LIMIT = 100
 
         class << self
-          def available_names(tables_repository)
-            tables_repository.names - tables_repository.all.map(&:name)
+          def build(**data)
+            table =
+              new(
+                name: data[:name],
+                board: data[:board],
+                dealer: data[:dealer]
+              )
+
+            table.players = data[:players]
+            table.pot = data[:pot]
+
+            table
           end
         end
 
-        attr_reader :players, :board, :dealer, :sets, :player_manager, :blind_manager,
+        attr_reader :players, :name, :board, :dealer, :sets, :player_manager, :blind_manager,
                     :turn_manager, :action_processor, :game_progression, :pot_manager
-        attr_accessor :pot, :name
+        attr_accessor :pot, :players, :sets
 
-        def initialize(tables_repository:, board: Board.new, dealer: Dealer.new)
-          @name = self.class.available_names(tables_repository).sample
+        def initialize(name:, board: Board.new, dealer: Dealer.new)
+          @name = name
           @pot = 0.0
           @board = board
           @dealer = dealer
@@ -33,10 +43,6 @@ module PokerArena
           @game_progression = Services::GameProgressionService.new
           @pot_manager = Services::PotManager.new(self)
           @game_orchestrator = Services::GameOrchestrator.new(self)
-
-          return unless @name.nil?
-
-          raise ArgumentError, 'No more available table names in that repository'
         end
 
         def active_players(game)

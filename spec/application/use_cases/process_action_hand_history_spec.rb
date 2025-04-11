@@ -45,7 +45,6 @@ describe 'ProcessAction with HandHistory' do
 
   before do
     hand_histories_repository.clear
-    PokerArena::Application::UseCases::InitializeTables.new(tables_repository).call
 
     table = tables_repository.find(table_name)
     table.seat_in(player1)

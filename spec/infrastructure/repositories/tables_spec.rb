@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe PokerArena::Infrastructure::Repositories::TablesRepository do
   describe '#persist' do
     let(:repo) { described_class.new(nil, true) }
-    let(:unpersisted_table) { PokerArena::Domain::Entities::Table.new(tables_repository: repo) }
+    let(:unpersisted_table) { PokerArena::Domain::Entities::Table.new(name: "plop") }
 
     it 'adds the table into the repository' do
       expect { repo.persist(unpersisted_table) }
@@ -16,7 +16,7 @@ RSpec.describe PokerArena::Infrastructure::Repositories::TablesRepository do
 
     context 'when the table has already been persisted' do
       let!(:already_persisted_table) do
-        PokerArena::Domain::Entities::Table.new(tables_repository: repo).tap do |table|
+        PokerArena::Domain::Entities::Table.new(name: "plop").tap do |table|
           repo.persist(table)
         end
       end

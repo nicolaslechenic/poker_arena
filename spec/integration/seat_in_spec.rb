@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe 'Seat in behavior', type: :integration do
   let(:players_repository) { PokerArena::Infrastructure::Repositories::PlayersRepository.new }
   let(:tables_repository) { PokerArena::Infrastructure::Repositories::TablesRepository.new }
-  let(:table) { PokerArena::Domain::Entities::Table.new(tables_repository: tables_repository) }
+  let(:table) { tables_repository.tables.first  }
 
   describe 'when seating in a player' do
     context 'with less than 10x big blind in bankroll' do
